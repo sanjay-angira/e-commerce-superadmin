@@ -1,0 +1,238 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Module Order Management</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard"><mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon></a>
+          <span class="dot"></span>
+          <span>Module Order</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div>
+          <p class="stat-label">Total Modules</p>
+          <p class="stat-value">{{ getTotalModulesCount() }}</p>
+        </div>
+        <div class="stat-icon"><mat-icon>view_module</mat-icon></div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <p class="stat-label">Total Categories</p>
+          <p class="stat-value">{{ getTotalCategoriesCount() }}</p>
+        </div>
+        <div class="stat-icon"><mat-icon>folder</mat-icon></div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <p class="stat-label">Uncategorized Modules</p>
+          <p class="stat-value">{{ uncategorizedModules().length }}</p>
+        </div>
+        <div class="stat-icon"><mat-icon>folder_off</mat-icon></div>
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <div class="vr-card joined center">
+        <mat-spinner diameter="36"></mat-spinner>
+      </div>
+    } @else {
+      <div class="toolbar-card">
+        <div class="toolbar-left">
+          <button mat-icon-button type="button" (click)="expandAllCategories()" matTooltip="Expand all categories">
+            <mat-icon>unfold_more</mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="collapseAllCategories()" matTooltip="Collapse all categories">
+            <mat-icon>unfold_less</mat-icon>
+          </button>
+        </div>
+        <button mat-flat-button color="primary" type="button" (click)="openAddModuleDialog()">
+          <mat-icon>add</mat-icon>
+          Add New Module
+        </button>
+      </div>
+
+      <div
+        class="category-list"
+        cdkDropList
+        [cdkDropListData]="categories()"
+        (cdkDropListDropped)="onCategoryDrop($event)"
+      >
+        <mat-accordion multi>
+          @for (category of categories(); track category.id) {
+            <mat-expansion-panel
+              cdkDrag
+              [cdkDragData]="category"
+              [expanded]="isCategoryExpanded(category.id)"
+              (opened)="onPanelOpened(category.id)"
+              (closed)="onPanelClosed(category.id)"
+              class="category-panel"
+            >
+              <mat-expansion-panel-header>
+                <div class="panel-header">
+                  <div class="panel-title">
+                    <span class="drag-handle" cdkDragHandle>
+                      <mat-icon>drag_indicator</mat-icon>
+                    </span>
+                    <span class="cat-icon">
+                      <mat-icon>{{ iconName(category.categoryIcon) }}</mat-icon>
+                    </span>
+                    <h2>{{ category.category }}</h2>
+                    <span class="count-chip">{{ category.modules.length }}</span>
+                    <span class="order-hint">Order: {{ category.order || 'N/A' }}</span>
+                  </div>
+                  <div class="panel-actions">
+                    <button
+                      mat-icon-button
+                      type="button"
+                      color="primary"
+                      (click)="openAddModuleDialog(category.category); $event.stopPropagation()"
+                      matTooltip="Add module to this category"
+                    >
+                      <mat-icon>add_circle</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      (click)="editCategory(category); $event.stopPropagation()"
+                      matTooltip="Edit category name"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      color="warn"
+                      (click)="deleteCategory(category); $event.stopPropagation()"
+                      matTooltip="Delete category"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-expansion-panel-header>
+
+              <div
+                class="module-drop"
+                cdkDropList
+                [id]="category.id"
+                [cdkDropListData]="category.modules"
+                [cdkDropListConnectedTo]="getAllCategoryIds()"
+                (cdkDropListDropped)="onModuleDrop($event)"
+              >
+                @for (module of category.modules; track module.id) {
+                  <div class="module-row" cdkDrag [cdkDragData]="module">
+                    <div class="module-main">
+                      <mat-icon class="row-drag">drag_indicator</mat-icon>
+                      <span class="mod-icon">
+                        <mat-icon>{{ iconName(module.icon) }}</mat-icon>
+                      </span>
+                      <div class="module-copy">
+                        <h4>{{ module.name }}</h4>
+                        <div class="meta">
+                          <span>Order: {{ module.order || 'N/A' }}</span>
+                          @if (module.router_link) {
+                            <span class="route">{{ module.router_link }}</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-actions">
+                      <button
+                        mat-icon-button
+                        type="button"
+                        (click)="editModule(module); $event.stopPropagation()"
+                        matTooltip="Edit module"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        type="button"
+                        color="warn"
+                        (click)="deleteModule(module); $event.stopPropagation()"
+                        matTooltip="Delete module"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="empty-drop">No modules in this category. Click + to add one.</div>
+                }
+              </div>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
+
+      @if (uncategorizedModules().length > 0) {
+        <div class="uncategorized">
+          <div class="uncat-header">
+            <div class="panel-title">
+              <span class="cat-icon gray">
+                <mat-icon>folder_off</mat-icon>
+              </span>
+              <h2>Uncategorized Modules</h2>
+              <span class="count-chip gray">{{ uncategorizedModules().length }}</span>
+            </div>
+            <button
+              mat-icon-button
+              type="button"
+              color="primary"
+              (click)="openAddModuleDialog()"
+              matTooltip="Add module without category"
+            >
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </div>
+          <div
+            class="module-drop dashed"
+            cdkDropList
+            [id]="uncategorizedId"
+            [cdkDropListData]="uncategorizedModules()"
+            [cdkDropListConnectedTo]="getAllCategoryIds()"
+            (cdkDropListDropped)="onModuleDrop($event)"
+          >
+            @for (module of uncategorizedModules(); track module.id) {
+              <div class="module-row card" cdkDrag [cdkDragData]="module">
+                <div class="module-main">
+                  <mat-icon class="row-drag">drag_indicator</mat-icon>
+                  <span class="mod-icon gray">
+                    <mat-icon>{{ iconName(module.icon) }}</mat-icon>
+                  </span>
+                  <div class="module-copy">
+                    <h4>{{ module.name }}</h4>
+                    <p class="meta">Order: {{ module.order || 'N/A' }}</p>
+                  </div>
+                </div>
+                <div class="row-actions">
+                  <button mat-icon-button type="button" (click)="editModule(module)" matTooltip="Edit module">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" color="warn" (click)="deleteModule(module)" matTooltip="Delete module">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (categories().length === 0 && uncategorizedModules().length === 0) {
+        <div class="vr-card joined vr-empty">
+          <mat-icon style="font-size:48px;width:48px;height:48px;opacity:.35">inbox</mat-icon>
+          <h3>No Modules Found</h3>
+          <p>There are no modules to display.</p>
+          <button mat-flat-button color="primary" type="button" (click)="openAddModuleDialog()">Add New Module</button>
+        </div>
+      }
+    }
+  </div>
+</div>

@@ -1,0 +1,72 @@
+<div class="dlg">
+  <div class="dlg-head" mat-dialog-title>
+    <div class="dlg-title">
+      <span class="dlg-icon">
+        <mat-icon fontIcon="edit"></mat-icon>
+      </span>
+      <div>
+        <h2>Rename Category</h2>
+        <p>Update the category name and heading icon</p>
+      </div>
+    </div>
+    <button mat-icon-button type="button" class="close-btn" (click)="cancel()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <mat-dialog-content>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Category Name</mat-label>
+        <input matInput formControlName="categoryName" />
+        @if (form.controls.categoryName.hasError('required') && form.controls.categoryName.touched) {
+          <mat-error>Category name is required</mat-error>
+        }
+        @if (form.controls.categoryName.hasError('categoryExists')) {
+          <mat-error>This category already exists</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Category Icon (heading)</mat-label>
+        <mat-select formControlName="categoryIcon">
+          <mat-select-trigger>
+            @if (form.controls.categoryIcon.value) {
+              <span class="icon-trigger">
+                <mat-icon [fontIcon]="form.controls.categoryIcon.value"></mat-icon>
+                {{ form.controls.categoryIcon.value }}
+              </span>
+            } @else {
+              -- Select Icon --
+            }
+          </mat-select-trigger>
+          <div class="icon-search" (click)="$event.stopPropagation()">
+            <input
+              type="text"
+              placeholder="Search icons..."
+              (input)="filterIcons($any($event.target).value)"
+            />
+            @if (iconSearchTerm) {
+              <div class="hint">Showing {{ filteredIcons.length }} of {{ availableIcons.length }} icons</div>
+            }
+          </div>
+          <mat-option value="">-- Select Icon --</mat-option>
+          @for (icon of filteredIcons; track icon) {
+            <mat-option [value]="icon">
+              <span class="icon-trigger">
+                <mat-icon [fontIcon]="icon"></mat-icon>
+                {{ icon }}
+              </span>
+            </mat-option>
+          }
+        </mat-select>
+        <mat-hint>Select an icon for the category heading</mat-hint>
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-flat-button color="primary" type="submit" class="submit-btn">Update Category</button>
+    </mat-dialog-actions>
+  </form>
+</div>

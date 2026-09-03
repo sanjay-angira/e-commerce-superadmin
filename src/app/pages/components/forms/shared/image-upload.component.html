@@ -1,0 +1,35 @@
+<div class="upload">
+  <div class="label">{{ label() }} @if (required()) { <span class="req">*</span> }</div>
+  @if (value) {
+    <div class="preview">
+      @if (isVideo()) {
+        <video [src]="value" controls></video>
+      } @else {
+        <img [src]="value" [alt]="label()" />
+      }
+      <button mat-icon-button type="button" (click)="clear()" aria-label="Remove">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+  <button
+    class="dropzone"
+    type="button"
+    (click)="fileInput.click()"
+    [disabled]="uploading() || disabled"
+  >
+    @if (uploading()) {
+      <mat-spinner diameter="22"></mat-spinner>
+    } @else {
+      <mat-icon>cloud_upload</mat-icon>
+      <span>{{ value ? 'Replace file' : 'Click to upload' }}</span>
+    }
+  </button>
+  <input
+    #fileInput
+    type="file"
+    hidden
+    [accept]="accept()"
+    (change)="onFile($event)"
+  />
+</div>

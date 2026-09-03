@@ -1,0 +1,74 @@
+@if (dedicatedForm(); as formCmp) {
+  <ng-container [ngComponentOutlet]="formCmp" [ngComponentOutletInputs]="formInputs()" />
+} @else {
+  <div class="vr-page">
+    <div class="vr-page-header-band">
+      <div class="vr-title-card">
+        <div class="vr-title-left">
+          <h1>{{ isEdit() ? 'Edit' : 'Add' }} {{ label }}</h1>
+          <div class="vr-breadcrumbs">
+            <a [routerLink]="['/admin', moduleKey()]">
+              <mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon>
+            </a>
+            <span class="dot"></span>
+            <a [routerLink]="['/admin', moduleKey()]">{{ label }}</a>
+            <span class="dot"></span>
+            <span>{{ isEdit() ? 'Edit' : 'Add' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vr-page-content vr-form-content">
+      <div class="vr-card vr-form-body">
+        @if (loading()) {
+          <div class="center"><mat-spinner diameter="36"></mat-spinner></div>
+        } @else if (!fields.length) {
+          <p>No editable form is configured for this module yet.</p>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+            @for (field of fields; track field.key) {
+              @if (field.type === 'toggle') {
+                <mat-slide-toggle [formControlName]="field.key">{{ field.label }}</mat-slide-toggle>
+              } @else if (field.type === 'select') {
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ field.label }}</mat-label>
+                  <mat-select [formControlName]="field.key">
+                    @for (opt of field.options || []; track opt.value) {
+                      <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              } @else if (field.type === 'textarea') {
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>{{ field.label }}</mat-label>
+                  <textarea matInput rows="4" [formControlName]="field.key"></textarea>
+                </mat-form-field>
+              } @else {
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ field.label }}</mat-label>
+                  <input
+                    matInput
+                    [type]="field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : field.type === 'email' ? 'email' : field.type === 'date' ? 'date' : 'text'"
+                    [formControlName]="field.key"
+                  />
+                </mat-form-field>
+              }
+            }
+
+            <div class="actions">
+              <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+                @if (saving()) {
+                  <mat-spinner diameter="18"></mat-spinner>
+                } @else {
+                  {{ isEdit() ? 'Update' : 'Create' }}
+                }
+              </button>
+              <a mat-stroked-button [routerLink]="['/admin', moduleKey()]">Cancel</a>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+}

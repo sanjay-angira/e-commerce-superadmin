@@ -1,0 +1,77 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Order detail</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/orders"><mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon></a>
+          <span class="dot"></span>
+          <a routerLink="/admin/orders">Orders</a>
+          <span class="dot"></span>
+          <span>{{ order()?.orderNumber || '—' }}</span>
+        </div>
+      </div>
+      <a mat-button routerLink="/admin/orders">Back to orders</a>
+    </div>
+  </div>
+
+  <div class="vr-page-content" style="margin-top: 0; padding-top: 1rem">
+    @if (loading()) {
+      <div class="center"><mat-spinner diameter="36"></mat-spinner></div>
+    } @else if (order()) {
+      <div class="grid">
+        <div class="vr-card panel">
+          <h3>Customer</h3>
+          <p><strong>{{ order()?.customerName || order()?.user?.name || '—' }}</strong></p>
+          <p>{{ order()?.phone || order()?.user?.phoneNumber || '—' }}</p>
+          <p>{{ order()?.email || order()?.user?.email || '—' }}</p>
+        </div>
+
+        <div class="vr-card panel">
+          <h3>Payment</h3>
+          <p>Method: {{ order()?.paymentMethod || '—' }}</p>
+          <p>Payment status: {{ order()?.paymentStatus || '—' }}</p>
+          <p>Order status: <span class="vr-status active">{{ order()?.orderStatus || '—' }}</span></p>
+          <p>Razorpay: {{ order()?.razorpayOrderId || '—' }}</p>
+          <p>Created: {{ order()?.createdAt | date: 'medium' }}</p>
+        </div>
+
+        <div class="vr-card panel full">
+          <h3>Shipping</h3>
+          <pre>{{ order()?.shippingAddress | json }}</pre>
+        </div>
+
+        <div class="vr-card panel full">
+          <h3>Items</h3>
+          <table mat-table [dataSource]="order()?.items || order()?.orderItems || []" class="vr-table">
+            <ng-container matColumnDef="productName">
+              <th mat-header-cell *matHeaderCellDef>Product</th>
+              <td mat-cell *matCellDef="let row">{{ row.productName || row.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef>Qty</th>
+              <td mat-cell *matCellDef="let row">{{ row.quantity }}</td>
+            </ng-container>
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef>Price</th>
+              <td mat-cell *matCellDef="let row">{{ row.price | currency: 'INR' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="total">
+              <th mat-header-cell *matHeaderCellDef>Total</th>
+              <td mat-cell *matCellDef="let row">{{ (row.total ?? row.price * row.quantity) | currency: 'INR' }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="itemColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: itemColumns"></tr>
+          </table>
+          <div class="totals">
+            <p>Subtotal: {{ order()?.subtotal | currency: 'INR' }}</p>
+            <p>Discount: {{ order()?.discount | currency: 'INR' }}</p>
+            <p><strong>Total: {{ order()?.total | currency: 'INR' }}</strong></p>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="vr-card" style="padding: 1.25rem">Order not found</div>
+    }
+  </div>
+</div>

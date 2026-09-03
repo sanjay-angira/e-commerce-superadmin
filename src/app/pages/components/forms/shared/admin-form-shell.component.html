@@ -1,0 +1,39 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>{{ title() }}</h1>
+        <div class="vr-breadcrumbs">
+          <a [routerLink]="['/admin', module()]">
+            <mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon>
+          </a>
+          <span class="dot"></span>
+          <a [routerLink]="['/admin', module()]">{{ module() }}</a>
+          <span class="dot"></span>
+          <span>{{ title() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content vr-form-content">
+    <div class="vr-card vr-form-body">
+      @if (loading()) {
+        <div class="center">
+          <mat-spinner diameter="36"></mat-spinner>
+          <p>Loading form...</p>
+        </div>
+      } @else if (loadError()) {
+        <div class="error">
+          <p>{{ loadError() }}</p>
+          <a mat-stroked-button [routerLink]="['/admin', module()]">Back to list</a>
+        </div>
+      } @else {
+        @if (submitError()) {
+          <div class="error-banner">{{ submitError() }}</div>
+        }
+        <ng-content />
+      }
+    </div>
+  </div>
+</div>

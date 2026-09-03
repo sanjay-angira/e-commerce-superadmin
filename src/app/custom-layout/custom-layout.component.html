@@ -1,0 +1,104 @@
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav
+    class="layout-sidenav"
+    [mode]="isHandset() ? 'over' : 'side'"
+    [opened]="!isHandset()"
+    #drawer
+  >
+    <div class="sidenav-inner">
+      <div class="brand-bar">
+        <app-auth-brand-logo variant="sidebar" />
+      </div>
+
+      <div class="sidenav-search">
+        <mat-icon>search</mat-icon>
+        <input
+          type="search"
+          placeholder="Search..."
+          maxlength="500"
+          [formControl]="searchControl"
+        />
+        @if (searchControl.value) {
+          <button type="button" class="search-clear" (click)="clearSearch()" aria-label="Clear search">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </div>
+
+      <div class="nav-scroll">
+        @if (menuLoading()) {
+          <div class="nav-status">
+            <mat-spinner diameter="28"></mat-spinner>
+          </div>
+        } @else if (!sections().length) {
+          <div class="nav-status muted">No modules found</div>
+        } @else {
+          @for (section of sections(); track section.title) {
+            <div class="nav-section">
+              <button
+                type="button"
+                class="nav-item nav-section-toggle"
+                [class.open]="isOpen(section.title)"
+                [class.active]="isOpen(section.title) || isSectionActive(section)"
+                [attr.aria-expanded]="isOpen(section.title)"
+                matRipple
+                matRippleColor="rgba(255, 255, 255, 0.06)"
+                (click)="toggleSection(section.title)"
+              >
+                <mat-icon [fontIcon]="section.icon || 'folder'"></mat-icon>
+                <span>{{ section.title }}</span>
+                <mat-icon class="nav-chevron">keyboard_arrow_right</mat-icon>
+              </button>
+              <div class="nav-dropdown" [class.open]="isOpen(section.title)">
+                <nav class="nav-dropdown-inner">
+                  @for (item of section.items; track item.href + item.label) {
+                    <a
+                      class="nav-item nav-child"
+                      [routerLink]="item.href"
+                      routerLinkActive="active"
+                      matRipple
+                      matRippleColor="rgba(255, 255, 255, 0.06)"
+                      (click)="isHandset() && drawer.close()"
+                    >
+                      <mat-icon [fontIcon]="item.icon"></mat-icon>
+                      <span>{{ item.label }}</span>
+                    </a>
+                  }
+                </nav>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="layout-toolbar">
+      <button mat-icon-button type="button" (click)="drawer.toggle()" aria-label="Toggle menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">Super Admin</span>
+      <span class="spacer"></span>
+      <button mat-button type="button" [matMenuTriggerFor]="profileMenu">
+        <mat-icon>account_circle</mat-icon>
+        {{ displayName() }}
+      </button>
+      <mat-menu #profileMenu="matMenu">
+        <a mat-menu-item routerLink="/admin/profile">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </a>
+        <mat-divider></mat-divider>
+        <button mat-menu-item type="button" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <main class="layout-content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

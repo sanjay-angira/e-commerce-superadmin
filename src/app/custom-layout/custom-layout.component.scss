@@ -1,0 +1,241 @@
+.layout-container {
+  height: 100vh;
+  background: var(--vr-page-bg);
+}
+
+.layout-sidenav {
+  width: var(--vr-sidenav-width);
+  background: var(--vr-sidenav-bg) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--vr-sidenav-text);
+  /* Material 3 drawers use corner-large by default — keep square like vr-admin */
+  --mat-sidenav-container-shape: 0px;
+}
+
+.layout-sidenav .mat-drawer-inner-container {
+  overflow: hidden;
+}
+
+.sidenav-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.brand-bar {
+  height: var(--vr-toolbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.sidenav-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 12px 4px;
+  padding: 0 10px;
+  min-height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
+}
+
+.sidenav-search mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.sidenav-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+}
+
+.sidenav-search input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  font-size: 13px;
+}
+
+.nav-status.muted {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.nav-status mat-spinner {
+  --mdc-circular-progress-active-indicator-color: #fff;
+}
+
+.nav-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.nav-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+.nav-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.nav-section {
+  margin-bottom: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 12px 4px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  color: var(--vr-sidenav-text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+button.nav-item {
+  width: calc(100% - 24px);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.nav-section-toggle span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-section-toggle.open .nav-chevron {
+  transform: rotate(90deg);
+}
+
+.nav-dropdown {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.nav-dropdown.open {
+  grid-template-rows: 1fr;
+}
+
+.nav-dropdown-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.nav-child {
+  padding-inline-start: 52px;
+}
+
+.nav-item mat-icon {
+  color: inherit;
+  flex-shrink: 0;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-item .nav-chevron {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  opacity: 0.7;
+  transition: transform 300ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.nav-item:hover {
+  background: rgba(var(--vr-primary-rgb), 0.1);
+  color: var(--vr-sidenav-text-active);
+}
+
+.nav-item.active {
+  background: rgba(var(--vr-primary-rgb), 0.2);
+  color: #fff;
+}
+
+.nav-item.active mat-icon:not(.nav-chevron) {
+  color: var(--vr-primary);
+}
+
+.layout-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: var(--vr-toolbar-height);
+  background: #fff !important;
+  color: rgba(0, 0, 0, 0.87);
+  border-bottom: 1px solid var(--vr-divider);
+  box-shadow: none;
+}
+
+.layout-toolbar mat-icon,
+.layout-toolbar button {
+  color: var(--vr-primary);
+}
+
+.toolbar-title {
+  margin-left: 4px;
+  font-weight: 500;
+  color: #18181b;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.layout-content {
+  padding: var(--vr-gutter);
+  min-height: calc(100vh - var(--vr-toolbar-height));
+  background: var(--vr-page-bg);
+}

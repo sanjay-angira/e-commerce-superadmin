@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@use 'sass:meta';
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--vr-page-bg, #f5f5f8);
+  color: rgba(0, 0, 0, 0.87);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+
+@include meta.load-css('quill/dist/quill.snow.css');
+@include meta.load-css('./styles/vr-admin-theme');
+@include meta.load-css('./styles/profile-dialogs');
+@include meta.load-css('./app/pages/auth/shared/auth-pages');

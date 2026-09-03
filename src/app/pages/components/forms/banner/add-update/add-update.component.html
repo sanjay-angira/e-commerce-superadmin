@@ -1,0 +1,52 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Banner' : 'Add Banner'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Subtitle</mat-label>
+      <input matInput formControlName="subtitle" />
+    </mat-form-field>
+    <app-image-upload
+      label="Desktop Image"
+      [path]="uploadPath"
+      imageType="banner"
+      [required]="true"
+      formControlName="image"
+    />
+    <app-image-upload
+      label="Mobile Image"
+      [path]="uploadPath"
+      imageType="banner_mobile"
+      [required]="true"
+      formControlName="mobileImage"
+    />
+    <mat-form-field appearance="outline">
+      <mat-label>Banner Link</mat-label>
+      <input matInput formControlName="bannerLink" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Position</mat-label>
+      <input matInput type="number" formControlName="position" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Section ID</mat-label>
+      <input matInput type="number" formControlName="sectionId" />
+    </mat-form-field>
+    <mat-slide-toggle formControlName="status">Active</mat-slide-toggle>
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Banner' : 'Create Banner' }}
+      </button>
+      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

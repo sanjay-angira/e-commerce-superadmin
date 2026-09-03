@@ -1,0 +1,78 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.quill-editor-wrapper {
+  position: relative;
+  display: block;
+  border: 1px solid #a3a3a3;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.quill-editor-wrapper.focused {
+  border: 2px solid #633fe7;
+}
+
+.quill-editor-label {
+  position: absolute;
+  top: 52px;
+  left: 12px;
+  font-size: 16px;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+  background: #fff;
+  padding: 0 5px;
+  z-index: 1;
+}
+
+.quill-editor-wrapper.focused .quill-editor-label,
+.quill-editor-wrapper.has-content .quill-editor-label {
+  top: -10px;
+  font-size: 12px;
+  color: #633fe7;
+}
+
+.req {
+  color: #f44336;
+  margin-left: 2px;
+}
+
+.editor {
+  min-height: 150px;
+}
+
+:host ::ng-deep .ql-toolbar.ql-snow {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #ccc;
+  border-radius: 4px 4px 0 0;
+  background: #fff;
+}
+
+:host ::ng-deep .quill-editor-wrapper.focused .ql-toolbar.ql-snow {
+  border-bottom-color: #633fe7;
+}
+
+:host ::ng-deep .ql-container.ql-snow {
+  border: none;
+  font-size: 14px;
+  min-height: 150px;
+}
+
+:host ::ng-deep .ql-editor {
+  min-height: 150px;
+}
+
+:host ::ng-deep .ql-editor:focus,
+:host ::ng-deep .ql-editor:focus-visible {
+  outline: none;
+}
+
+:host ::ng-deep .ql-editor.ql-blank::before {
+  color: transparent;
+  font-style: normal;
+}

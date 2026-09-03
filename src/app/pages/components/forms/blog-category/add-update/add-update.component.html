@@ -1,0 +1,30 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Blog Category' : 'Add Blog Category'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Slug</mat-label>
+      <input matInput formControlName="slug" (input)="markSlugDirty()" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="4" formControlName="description"></textarea>
+    </mat-form-field>
+    <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Category' : 'Create Category' }}
+      </button>
+      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

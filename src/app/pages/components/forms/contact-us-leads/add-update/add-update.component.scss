@@ -1,0 +1,21 @@
+
+.lead-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  margin: 0 0 20px;
+}
+.lead-meta dt {
+  color: #757575;
+  font-size: 12px;
+}
+.lead-meta dd {
+  margin: 2px 0 0;
+  font-weight: 500;
+}
+.full {
+  grid-column: 1 / -1;
+}
+.message {
+  white-space: pre-wrap;
+}

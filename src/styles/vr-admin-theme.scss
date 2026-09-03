@@ -1,0 +1,342 @@
+/* Vrindavan Superadmin — Poseidon-like tokens (from vr-admin) */
+:root {
+  --vr-primary: #6366f1;
+  --vr-primary-rgb: 99, 102, 241;
+  --vr-accent: #ff4081;
+  --vr-page-bg: #f5f5f8;
+  --vr-card: #ffffff;
+  --vr-app-bar: #ebebee;
+  --vr-sidenav-bg: #0a1929;
+  --vr-sidenav-text: rgba(255, 255, 255, 0.8);
+  --vr-sidenav-text-active: #ffffff;
+  --vr-divider: rgba(82, 63, 105, 0.06);
+  --vr-toolbar-height: 64px;
+  --vr-sidenav-width: 280px;
+  --vr-radius: 0.5rem;
+  --vr-gutter: 1.25rem;
+  --vr-status-green: #4caf50;
+  --vr-status-red: #f44336;
+  --vr-status-cyan: #00bcd4;
+  --vr-status-orange: #ff9800;
+}
+
+/* Force Material primary toward indigo; keep drawers square like vr-admin */
+html {
+  --mat-sys-primary: #6366f1;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: rgba(99, 102, 241, 0.12);
+  --mat-sys-secondary: #6366f1;
+  --mat-sidenav-container-shape: 0px;
+  /* Match vr-admin (Material M2) table row dividers */
+  --mat-table-row-item-outline-color: rgba(0, 0, 0, 0.12);
+  --mat-table-row-item-outline-width: 1px;
+  --mat-table-background-color: #ffffff;
+  --mat-table-header-headline-color: rgba(0, 0, 0, 0.87);
+  --mat-table-row-item-label-text-color: rgba(0, 0, 0, 0.87);
+}
+
+/* —— Shared page layout (list / form / dashboard) —— */
+.vr-page {
+  margin: calc(-1 * var(--vr-gutter));
+  min-height: calc(100vh - var(--vr-toolbar-height));
+}
+
+.vr-page-header-band {
+  /* Same padding on top / left / right (lavender gutter around title card) */
+  background-color: rgba(99, 102, 241, 0.1);
+  padding: var(--vr-gutter);
+}
+
+/* List pages: filter bar sits flush at band bottom so table does not slide under it */
+.vr-page-header-band:has(.vr-filter-bar) {
+  padding-bottom: 0;
+}
+
+.vr-title-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--vr-card);
+  padding: 1.25rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(82, 63, 104, 0.06);
+}
+
+.vr-title-card h1 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 500;
+  color: #18181b;
+  padding-right: 14px;
+  border-right: 1px solid #616161;
+}
+
+.vr-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9e9e9e;
+  font-size: 13px;
+}
+
+.vr-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.vr-breadcrumbs a:hover {
+  color: var(--vr-primary);
+}
+
+.vr-breadcrumbs .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #bdbdbd;
+}
+
+.vr-title-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vr-filter-bar {
+  margin-top: 1.25rem;
+  min-height: 64px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 1.25rem;
+  background: #ebebee;
+  border-radius: 2px 2px 0 0;
+}
+
+.vr-search-pill {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  max-width: 300px;
+  width: 100%;
+  padding: 0 1rem;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+}
+
+.vr-search-pill input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  min-width: 0;
+  padding: 0.5rem 1rem;
+}
+
+.vr-search-pill mat-icon {
+  color: #9e9e9e;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.vr-page-content {
+  padding:0 var(--vr-gutter) var(--vr-gutter);
+  margin-top: 0;
+}
+
+/* Joined table card sits directly under filter bar (no overlap into header) */
+.vr-page-content:has(.vr-card.joined) {
+  margin-top: 0;
+}
+
+.vr-card {
+  background: var(--vr-card);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 rgba(82, 63, 104, 0.08);
+  overflow: auto;
+}
+
+.vr-card.joined {
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 1px 3px 0 rgba(82, 63, 104, 0.08);
+}
+
+.vr-status {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.vr-status.active {
+  color: var(--vr-status-green);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.vr-status.inactive {
+  color: #f53e3c;
+  background: rgba(245, 62, 60, 0.1);
+}
+
+.vr-empty {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: #757575;
+  text-align: center;
+}
+
+.vr-table {
+  width: 100%;
+  background: #fff;
+  --mat-table-row-item-outline-color: rgba(0, 0, 0, 0.12);
+  --mat-table-row-item-outline-width: 1px;
+}
+
+.vr-table .mat-mdc-header-cell,
+.vr-table .mat-mdc-cell,
+.vr-table .mdc-data-table__header-cell,
+.vr-table .mdc-data-table__cell {
+  white-space: nowrap;
+  box-sizing: content-box;
+  font-size: 14px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.vr-table .mat-mdc-header-cell {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+  letter-spacing: 0.0071428571em;
+  background-color: #ffffff !important;
+}
+
+.vr-table .mat-mdc-cell {
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.vr-table .mat-mdc-header-row {
+  height: 56px;
+}
+
+.vr-table .mat-mdc-row {
+  height: 52px;
+}
+
+/* Same as Material: no border under the last body row */
+.vr-table .mdc-data-table__row:last-child .mat-mdc-cell,
+.vr-table .mat-mdc-row:last-child .mat-mdc-cell {
+  border-bottom: none !important;
+}
+
+.vr-table + .mat-mdc-paginator,
+.vr-card > .mat-mdc-paginator {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+}
+
+.vr-form-body {
+  padding: 1.5rem;
+}
+
+.vr-form-content {
+  padding: var(--vr-gutter) !important;
+  margin-top: 0 !important;
+  background: var(--vr-page-bg);
+}
+
+.vr-form-content > .vr-card.vr-form-body {
+  background: #ffffff;
+  /* single white surface — no nested gray panels */
+  --mat-stepper-container-color: transparent;
+  --mat-sys-surface-container: #ffffff;
+  --mat-sys-surface-container-low: #ffffff;
+  --mat-sys-surface-container-lowest: #ffffff;
+}
+
+/* —— Forms (match vr-admin add/update cards) —— */
+.vr-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+  width: 100%;
+}
+
+.vr-form mat-form-field,
+.vr-form .mat-mdc-form-field {
+  width: 100%;
+}
+
+.vr-form .full,
+.vr-form .actions,
+.vr-form app-quill-editor,
+.vr-form app-multi-image-upload {
+  grid-column: 1 / -1;
+}
+
+.vr-form .actions {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+  padding-top: 0.5rem;
+}
+
+.vr-form mat-slide-toggle,
+.vr-form mat-checkbox {
+  align-self: center;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Hide default Material subscript spacer like vr-admin */
+.vr-form .mat-mdc-form-field-subscript-wrapper,
+.vr-form-body .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.vr-form .tab,
+.vr-form.tab {
+  padding-top: 1.25rem;
+}
+
+.vr-form h3 {
+  margin: 0 0 1rem;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Column visibility menu (CDK overlay — must be global) */
+.column-filter-menu {
+  min-width: 200px;
+}
+
+.column-filter-menu .column-filter-item {
+  display: block;
+  height: auto;
+  line-height: normal;
+  padding: 4px 16px;
+}
+
+.column-filter-menu .column-filter-checkbox .mdc-checkbox {
+  padding: 0;
+  margin-right: 6px;
+}

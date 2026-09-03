@@ -1,0 +1,54 @@
+
+<app-admin-form-shell
+  title="Update lead status"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  @if (!recordId()) {
+    <p>Leads are submitted from the website contact form. Open a lead from the list to update its status.</p>
+    <a mat-stroked-button [routerLink]="['/admin', module()]">Back to list</a>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+      <dl class="lead-meta">
+        <div>
+          <dt>Name</dt>
+          <dd>{{ name() }}</dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd>{{ lead()?.email || '—' }}</dd>
+        </div>
+        <div>
+          <dt>Phone</dt>
+          <dd>{{ lead()?.phoneNumber || '—' }}</dd>
+        </div>
+        <div>
+          <dt>Email verified</dt>
+          <dd>{{ lead()?.emailVerified ? 'Yes' : 'No' }}</dd>
+        </div>
+        <div class="full">
+          <dt>Message</dt>
+          <dd class="message">{{ lead()?.message || '—' }}</dd>
+        </div>
+      </dl>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (opt of statuses; track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="actions">
+        <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+          Update status
+        </button>
+      </div>
+    </form>
+  }
+</app-admin-form-shell>

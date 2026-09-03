@@ -1,0 +1,90 @@
+/* Shared dialog chrome (profile + module-order) */
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 5px;
+}
+
+.mat-mdc-dialog-surface {
+  border-radius: 5px !important;
+  overflow: hidden;
+}
+
+.vr-dialog .mat-mdc-dialog-container,
+.vr-profile-dialog .mat-mdc-dialog-container {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.vr-dialog .mat-mdc-dialog-surface,
+.vr-profile-dialog .mat-mdc-dialog-surface {
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28) !important;
+}
+
+.vr-dialog .mat-mdc-dialog-title,
+.vr-profile-dialog .mat-mdc-dialog-title,
+.mat-mdc-dialog-title {
+  margin: 0 !important;
+  padding: 12px 20px !important;
+  text-align: left !important;
+}
+
+.mat-mdc-dialog-title.dlg-head,
+.dlg-head.mat-mdc-dialog-title,
+.dlg-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-align: left !important;
+  padding: 12px 20px !important;
+}
+
+.mat-mdc-dialog-title.dlg-head::before,
+.dlg-head.mat-mdc-dialog-title::before {
+  content: none !important;
+  display: none !important;
+}
+
+.dlg-head .dlg-title,
+.dlg-head > h2 {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: auto;
+  text-align: left;
+}
+
+.dlg-head .close-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.vr-dialog .mat-mdc-dialog-content,
+.vr-profile-dialog .mat-mdc-dialog-content {
+  max-height: min(70vh, 560px);
+  overflow-x: hidden;
+}
+
+.tag-select-panel .add-tag-option {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  border-top: 1px solid #e5e7eb;
+  background: #fff !important;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.tag-select-panel .add-tag-option .mat-pseudo-checkbox,
+.tag-select-panel .add-tag-option .mdc-list-item__start {
+  display: none;
+}
+
+.tag-select-panel .add-tag-option .mdc-list-item__primary-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag-select-panel .add-tag-option mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}

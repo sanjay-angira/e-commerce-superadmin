@@ -1,0 +1,117 @@
+.category-form {
+  display: block;
+  background: transparent;
+}
+
+:host ::ng-deep .mat-stepper-horizontal,
+:host ::ng-deep .mat-horizontal-stepper-wrapper,
+:host ::ng-deep .mat-horizontal-content-container,
+:host ::ng-deep .mat-stepper-horizontal .mat-horizontal-stepper-content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep {
+  --mat-stepper-container-color: transparent;
+  --mat-stepper-header-focus-state-layer-color: transparent;
+}
+
+:host ::ng-deep .mat-stepper-horizontal-line {
+  border-top-width: 1px !important;
+  border-color: #81818149 !important;
+}
+
+:host ::ng-deep .mat-step-header.mat-horizontal-stepper-header {
+  border-radius: 50px !important;
+  background-color: #ffffff !important;
+  color: #626a79;
+  font-weight: 500;
+  padding: 6px 12px !important;
+  height: 30px !important;
+}
+
+:host ::ng-deep .mat-step-header.mat-horizontal-stepper-header:hover,
+:host ::ng-deep .mat-step-header[aria-selected='true'],
+:host ::ng-deep .mat-step-header.mat-step-header-selected {
+  background-color: #f3f3f3 !important;
+}
+
+:host ::ng-deep .mat-step-label,
+:host ::ng-deep .mat-step-text-label {
+  color: #626a79;
+  font-weight: 500;
+}
+
+:host ::ng-deep .mat-horizontal-content-container {
+  padding: 2rem 0 0 !important;
+}
+
+.step-grid,
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.toggle-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem;
+  padding: 0 8px;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.status-chip.on {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.field-error {
+  margin-top: 4px;
+  color: #f44336;
+  font-size: 12px;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .step-grid,
+  .media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full {
+    grid-column: span 1;
+  }
+}

@@ -1,0 +1,23 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Attribute' : 'Add Attribute'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+    <mat-slide-toggle formControlName="isFilterable">Filterable</mat-slide-toggle>
+    <mat-slide-toggle formControlName="isRequired">Required</mat-slide-toggle>
+    <mat-slide-toggle formControlName="supportsImage">Allow image / swatch on product</mat-slide-toggle>
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Attribute' : 'Create Attribute' }}
+      </button>
+      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

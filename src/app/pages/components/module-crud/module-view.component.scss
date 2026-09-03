@@ -1,0 +1,43 @@
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.kv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.kv {
+  padding: 12px;
+  border: 1px solid var(--vr-divider);
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.kv small {
+  display: block;
+  margin-bottom: 6px;
+  color: #757575;
+  text-transform: capitalize;
+}
+
+.kv pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+}
+
+.center {
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+
+@media (max-width: 720px) {
+  .kv-grid {
+    grid-template-columns: 1fr;
+  }
+}

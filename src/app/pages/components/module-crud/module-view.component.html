@@ -1,0 +1,41 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>{{ label }} detail</h1>
+        <div class="vr-breadcrumbs">
+          <a [routerLink]="['/admin', moduleKey]"><mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon></a>
+          <span class="dot"></span>
+          <a [routerLink]="['/admin', moduleKey]">{{ label }}</a>
+          <span class="dot"></span>
+          <span>#{{ recordId }}</span>
+        </div>
+      </div>
+      <div class="actions">
+        @if (supportsEdit) {
+          <a mat-flat-button color="primary" [routerLink]="['/admin', moduleKey, 'edit', recordId]">Modify</a>
+        }
+        <a mat-button [routerLink]="['/admin', moduleKey]">Back</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content" style="margin-top: 0; padding-top: 1rem">
+    <div class="vr-card" style="padding: 1.25rem">
+      @if (loading()) {
+        <div class="center"><mat-spinner diameter="36"></mat-spinner></div>
+      } @else if (record()) {
+        <div class="kv-grid">
+          @for (entry of record()! | keyvalue; track entry.key) {
+            <div class="kv">
+              <small>{{ entry.key }}</small>
+              <pre>{{ displayValue(entry.value) }}</pre>
+            </div>
+          }
+        </div>
+      } @else {
+        <p>Record not found</p>
+      }
+    </div>
+  </div>
+</div>

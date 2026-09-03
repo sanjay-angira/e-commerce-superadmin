@@ -1,0 +1,107 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Dashboard</h1>
+        <div class="vr-breadcrumbs">
+          <mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon>
+          <span class="dot"></span>
+          <span>Dashboard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content" style="margin-top: 0; padding-top: 1rem">
+    @if (loading()) {
+      <div class="center"><mat-spinner diameter="40"></mat-spinner></div>
+    } @else if (error()) {
+      <div class="vr-card" style="padding: 1.25rem">{{ error() }}</div>
+    } @else {
+      <div class="stats">
+        <div class="stat-card vr-card">
+          <mat-icon>payments</mat-icon>
+          <div>
+            <small>Revenue</small>
+            <strong>{{ summary()?.revenue ?? summary()?.totalRevenue ?? '—' }}</strong>
+          </div>
+        </div>
+        <div class="stat-card vr-card">
+          <mat-icon>receipt_long</mat-icon>
+          <div>
+            <small>Orders</small>
+            <strong>{{ summary()?.orders ?? summary()?.totalOrders ?? '—' }}</strong>
+          </div>
+        </div>
+        <div class="stat-card vr-card">
+          <mat-icon>group</mat-icon>
+          <div>
+            <small>Customers</small>
+            <strong>{{ summary()?.customers ?? summary()?.totalCustomers ?? '—' }}</strong>
+          </div>
+        </div>
+        <div class="stat-card vr-card">
+          <mat-icon>inventory_2</mat-icon>
+          <div>
+            <small>Products</small>
+            <strong>{{ summary()?.products ?? summary()?.totalProducts ?? '—' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="panels">
+        <div class="vr-card panel">
+          <div class="panel-head">
+            <h3>Recent orders</h3>
+            <a mat-button routerLink="/admin/orders">View all</a>
+          </div>
+          @if ((summary()?.recentOrders || []).length) {
+            <table mat-table [dataSource]="summary()?.recentOrders || []" class="vr-table">
+              <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef>Order #</th>
+                <td mat-cell *matCellDef="let row">{{ row.orderNumber }}</td>
+              </ng-container>
+              <ng-container matColumnDef="customerName">
+                <th mat-header-cell *matHeaderCellDef>Customer</th>
+                <td mat-cell *matCellDef="let row">{{ row.customerName || row.userName || '—' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef>Total</th>
+                <td mat-cell *matCellDef="let row">{{ row.total }}</td>
+              </ng-container>
+              <ng-container matColumnDef="orderStatus">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="vr-status active">{{ row.orderStatus }}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Created</th>
+                <td mat-cell *matCellDef="let row">{{ row.createdAt | date: 'mediumDate' }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="orderColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: orderColumns"></tr>
+            </table>
+          } @else {
+            <p class="muted">No recent orders</p>
+          }
+        </div>
+
+        <div class="vr-card panel">
+          <div class="panel-head">
+            <h3>Low stock</h3>
+            <a mat-button routerLink="/admin/products">Products</a>
+          </div>
+          @for (item of summary()?.lowStockProducts || []; track item.id) {
+            <div class="low-stock-row">
+              <span>{{ item.productName || item.name }}</span>
+              <strong>{{ item.stock ?? item.quantity ?? 0 }}</strong>
+            </div>
+          } @empty {
+            <p class="muted">No low-stock items</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,53 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Coupon' : 'Add Coupon'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Coupon Code</mat-label>
+      <input matInput formControlName="couponCode" />
+    </mat-form-field>
+    <app-image-upload label="Image" [path]="uploadPath" formControlName="image" />
+    <mat-form-field appearance="outline">
+      <mat-label>Discount Type</mat-label>
+      <mat-select formControlName="discountType">
+        <mat-option value="percentage">Percentage</mat-option>
+        <mat-option value="fixed">Fixed</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Discount Value</mat-label>
+      <input matInput type="number" formControlName="discountValue" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Start Date</mat-label>
+      <input matInput type="date" formControlName="startDate" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>End Date</mat-label>
+      <input matInput type="date" formControlName="endDate" />
+    </mat-form-field>
+    <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
+    <mat-checkbox formControlName="isUserSpecific">User Specific</mat-checkbox>
+    @if (form.controls.isUserSpecific.value) {
+      <mat-form-field appearance="outline">
+        <mat-label>Users</mat-label>
+        <mat-select formControlName="userIds" multiple>
+          @for (opt of users(); track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Coupon' : 'Create Coupon' }}
+      </button>
+      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

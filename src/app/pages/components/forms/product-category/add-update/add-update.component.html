@@ -1,0 +1,190 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Product Category' : 'Add Product Category'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" class="category-form">
+    <mat-stepper linear #stepper>
+      <mat-step [completed]="isStepValid(1)">
+        <ng-template matStepLabel>General Information</ng-template>
+        <div class="step-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Category Name</mat-label>
+            <input matInput formControlName="categoryName" />
+            @if (form.controls.categoryName.touched && form.controls.categoryName.hasError('required')) {
+              <mat-error>Category name is required</mat-error>
+            }
+            @if (form.controls.categoryName.hasError('minlength')) {
+              <mat-error>Category name must be at least 3 characters</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Category Slug</mat-label>
+            <input matInput formControlName="categorySlug" (input)="markSlugDirty()" />
+            @if (form.controls.categorySlug.touched && form.controls.categorySlug.hasError('required')) {
+              <mat-error>Category slug is required</mat-error>
+            }
+            @if (form.controls.categorySlug.hasError('minlength')) {
+              <mat-error>Category slug must be at least 3 characters</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Short Description</mat-label>
+            <input matInput formControlName="shortDescription" [maxlength]="shortDescMax" />
+            <mat-hint align="end">{{ shortDescLength() }}/{{ shortDescMax }}</mat-hint>
+            @if (form.controls.shortDescription.touched && form.controls.shortDescription.hasError('required')) {
+              <mat-error>Short description is required</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="full">
+            <app-quill-editor
+              label="Description"
+              [required]="true"
+              minHeight="200px"
+              formControlName="description"
+            />
+            @if (form.controls.description.touched && form.controls.description.invalid) {
+              <div class="field-error">Description is required</div>
+            }
+          </div>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Select Offers</mat-label>
+            <mat-select formControlName="offerIds" multiple>
+              @for (opt of offers(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Select Parent Category</mat-label>
+            <mat-select formControlName="parentId">
+              <mat-option [value]="null">Select a Parent Category</mat-option>
+              @for (opt of categories(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Publish Status</mat-label>
+            <mat-select formControlName="publishStatus">
+              <mat-option value="draft">Draft</mat-option>
+              <mat-option value="published">Published</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="toggle-row full">
+            <div class="toggle-item">
+              <span>Active Status</span>
+              <mat-slide-toggle formControlName="isActive" color="primary"></mat-slide-toggle>
+              <span class="status-chip" [class.on]="form.controls.isActive.value">
+                {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
+              </span>
+            </div>
+            <div class="toggle-item">
+              <span>Show On Home Page</span>
+              <mat-slide-toggle formControlName="showOnHomePage" color="primary"></mat-slide-toggle>
+              <span class="status-chip" [class.on]="form.controls.showOnHomePage.value">
+                {{ form.controls.showOnHomePage.value ? 'Active' : 'Not Active' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            [disabled]="!isStepValid(1)"
+            (click)="stepper.next()"
+          >
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="true">
+        <ng-template matStepLabel>Media Assets</ng-template>
+        <div class="media-grid">
+          <app-image-upload
+            label="Upload Main Image"
+            [path]="paths.image"
+            imageType="category"
+            formControlName="image"
+          />
+          <app-image-upload
+            label="Upload Icon (.svg)"
+            [path]="paths.icon"
+            accept="image/svg+xml,.svg,image/*"
+            formControlName="icon"
+          />
+          <app-image-upload
+            label="Upload Video"
+            [path]="paths.video"
+            accept="video/*"
+            formControlName="video"
+          />
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Image Alt Text</mat-label>
+            <input matInput formControlName="imageAltText" />
+          </mat-form-field>
+        </div>
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+          </button>
+          <button mat-flat-button color="primary" type="button" (click)="stepper.next()">
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="isStepValid(3)">
+        <ng-template matStepLabel>SEO Settings</ng-template>
+        <div class="step-grid" formGroupName="seo">
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Title</mat-label>
+            <input matInput formControlName="metaTitle" [maxlength]="metaTitleMax" />
+            <mat-hint align="end">{{ metaTitleLength() }}/{{ metaTitleMax }}</mat-hint>
+            @if (form.controls.seo.controls.metaTitle.touched && form.controls.seo.controls.metaTitle.hasError('required')) {
+              <mat-error>Meta Title is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Description</mat-label>
+            <textarea matInput rows="3" formControlName="metaDescription" [maxlength]="metaDescMax"></textarea>
+            <mat-hint align="end">{{ metaDescLength() }}/{{ metaDescMax }}</mat-hint>
+            @if (form.controls.seo.controls.metaDescription.touched && form.controls.seo.controls.metaDescription.hasError('required')) {
+              <mat-error>Meta Description is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Keywords</mat-label>
+            <input matInput formControlName="metaKeywords" />
+            <mat-hint>Separate keywords with commas</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+          </button>
+          <button mat-flat-button color="primary" type="button" [disabled]="saving() || !form.valid" (click)="submit()">
+            <mat-icon>publish</mat-icon>
+            {{ isEdit() ? 'Update Product Category' : 'Create Product Category' }}
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </form>
+</app-admin-form-shell>

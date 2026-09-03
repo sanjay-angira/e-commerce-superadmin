@@ -1,0 +1,81 @@
+.dlg {
+  --dlg-primary: #6366f1;
+  background: #fff;
+}
+
+.dlg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 8px 12px 20px;
+  min-height: 72px;
+  background: var(--dlg-primary);
+  color: #fff;
+}
+
+.dlg-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.dlg-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dlg-icon mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #facc15;
+}
+
+.dlg-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dlg-head p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.close-btn {
+  color: #fff !important;
+}
+
+mat-dialog-content {
+  display: grid;
+  gap: 14px;
+  padding: 24px 24px 8px !important;
+  margin: 0 !important;
+}
+
+.full {
+  width: 100%;
+}
+
+.dlg-error {
+  margin: 0;
+  color: #f44336;
+  font-size: 13px;
+}
+
+mat-dialog-actions {
+  margin: 0 !important;
+  padding: 8px 24px 24px !important;
+  gap: 8px;
+}

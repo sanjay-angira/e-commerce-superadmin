@@ -1,0 +1,121 @@
+.dlg {
+  --dlg-primary: #6366f1;
+  background: #fff;
+}
+
+.dlg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 8px 12px 20px;
+  min-height: 72px;
+  background: var(--dlg-primary);
+  color: #fff;
+}
+
+.dlg-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.dlg-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dlg-icon mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #facc15;
+}
+
+.dlg-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dlg-head p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.close-btn {
+  color: #fff !important;
+}
+
+mat-dialog-content {
+  display: grid;
+  gap: 14px;
+  padding: 24px 24px 8px !important;
+  margin: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.full {
+  width: 100%;
+}
+
+.icon-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-trigger mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.icon-search {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.icon-search input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  outline: none;
+  font: inherit;
+}
+
+.icon-search .hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+mat-dialog-actions {
+  margin: 0 !important;
+  padding: 8px 24px 24px !important;
+  gap: 8px;
+}
+
+.submit-btn {
+  min-width: 110px;
+  height: 40px;
+  border-radius: 999px !important;
+  font-weight: 600;
+}

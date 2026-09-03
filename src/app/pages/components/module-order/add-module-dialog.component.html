@@ -1,0 +1,116 @@
+<div class="dlg">
+  <div class="dlg-head" mat-dialog-title>
+    <div class="dlg-title">
+      <span class="dlg-icon">
+        <mat-icon [fontIcon]="editMode ? 'edit' : 'add_circle'"></mat-icon>
+      </span>
+      <div>
+        <h2>{{ editMode ? 'Edit Module' : 'Add New Module' }}</h2>
+        <p>{{ editMode ? 'Update module information' : 'Create a new module for the sidebar' }}</p>
+      </div>
+    </div>
+    <button mat-icon-button type="button" class="close-btn" (click)="cancel()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <mat-dialog-content>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Module Name</mat-label>
+        <input matInput formControlName="name" />
+        @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+          <mat-error>Module name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Icon</mat-label>
+        <mat-select formControlName="icon">
+          <mat-select-trigger>
+            @if (form.controls.icon.value) {
+              <span class="icon-trigger">
+                <mat-icon [fontIcon]="form.controls.icon.value"></mat-icon>
+                {{ form.controls.icon.value }}
+              </span>
+            } @else {
+              -- Select Icon --
+            }
+          </mat-select-trigger>
+          <div class="icon-search" (click)="$event.stopPropagation()">
+            <input
+              type="text"
+              placeholder="Search icons..."
+              (input)="filterIcons($any($event.target).value)"
+            />
+            @if (iconSearchTerm) {
+              <div class="hint">Showing {{ filteredIcons.length }} of {{ availableIcons.length }} icons</div>
+            }
+          </div>
+          <mat-option value="">-- Select Icon --</mat-option>
+          @for (icon of filteredIcons; track icon) {
+            <mat-option [value]="icon">
+              <span class="icon-trigger">
+                <mat-icon [fontIcon]="icon"></mat-icon>
+                {{ icon }}
+              </span>
+            </mat-option>
+          }
+        </mat-select>
+        <mat-hint>Select an icon ({{ availableIcons.length }} available)</mat-hint>
+        @if (form.controls.icon.hasError('required') && form.controls.icon.touched) {
+          <mat-error>Icon is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Router Link</mat-label>
+        <input matInput formControlName="router_link" />
+        <mat-hint>e.g. /admin/dashboard or /admin/users</mat-hint>
+        @if (form.controls.router_link.hasError('required') && form.controls.router_link.touched) {
+          <mat-error>Router link is required</mat-error>
+        }
+      </mat-form-field>
+
+      @if (!showNewCategoryInput) {
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="category">
+            <mat-option value="">-- Select Category --</mat-option>
+            @for (cat of existingCategories; track cat) {
+              <mat-option [value]="cat">{{ cat }}</mat-option>
+            }
+            <mat-option value="__NEW__"><em>+ Create New Category</em></mat-option>
+          </mat-select>
+          @if (form.controls.category.hasError('required') && form.controls.category.touched) {
+            <mat-error>Category is required</mat-error>
+          }
+        </mat-form-field>
+      } @else {
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>New Category Name</mat-label>
+          <input matInput formControlName="newCategory" />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="toggleNewCategory()"
+            matTooltip="Use existing category"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          @if (form.controls.newCategory.hasError('required') && form.controls.newCategory.touched) {
+            <mat-error>New category name is required</mat-error>
+          }
+        </mat-form-field>
+      }
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-flat-button color="primary" type="submit" class="submit-btn">
+        {{ editMode ? 'Update' : 'Add' }} Module
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

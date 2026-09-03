@@ -1,0 +1,24 @@
+.upload { display: grid; gap: 8px; }
+.label { font-size: 13px; font-weight: 500; color: rgba(0,0,0,.7); }
+.req { color: #f44336; }
+.grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.item { position: relative; }
+img { width: 96px; height: 96px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(0,0,0,.12); }
+.item button { position: absolute; top: 0; right: 0; background: rgba(255,255,255,.9); }
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 56px;
+  padding: 1rem 1.25rem;
+  border: 1px dashed #6366f1;
+  border-radius: 4px;
+  background: #6767f514;
+  color: #6366f1;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.dropzone:disabled { opacity: 0.65; cursor: default; }

@@ -1,0 +1,66 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Brand' : 'Add Brand'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Brand Name</mat-label>
+      <input matInput formControlName="brandName" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Brand Slug</mat-label>
+      <input matInput formControlName="brandSlug" (input)="markSlugDirty()" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Short Description</mat-label>
+      <textarea matInput rows="2" formControlName="shortDescription"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="4" formControlName="description"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Website</mat-label>
+      <input matInput formControlName="website" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Categories</mat-label>
+      <mat-select formControlName="categoryIds" multiple>
+        @for (opt of categories(); track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Offers</mat-label>
+      <mat-select formControlName="offerIds" multiple>
+        @for (opt of offers(); track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Meta Title</mat-label>
+      <input matInput formControlName="metaTitle" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Meta Description</mat-label>
+      <textarea matInput rows="2" formControlName="metaDescription"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Meta Keywords</mat-label>
+      <input matInput formControlName="metaKeywords" />
+    </mat-form-field>
+    <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Brand' : 'Create Brand' }}
+      </button>
+      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

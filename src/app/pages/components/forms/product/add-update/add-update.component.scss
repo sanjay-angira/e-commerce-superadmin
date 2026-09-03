@@ -1,0 +1,190 @@
+.product-form {
+  display: block;
+  background: transparent;
+}
+
+/* Kill Material stepper nested surface so only the outer white card shows */
+:host ::ng-deep .mat-stepper-horizontal,
+:host ::ng-deep .mat-horizontal-stepper-wrapper,
+:host ::ng-deep .mat-horizontal-content-container,
+:host ::ng-deep .mat-stepper-horizontal .mat-horizontal-stepper-content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep {
+  --mat-stepper-container-color: transparent;
+  --mat-stepper-header-focus-state-layer-color: transparent;
+  --mat-expansion-container-background-color: #ffffff;
+}
+
+:host ::ng-deep .mat-stepper-horizontal-line {
+  border-top-width: 1px !important;
+  border-color: #81818149 !important;
+}
+
+:host ::ng-deep .mat-step-header.mat-horizontal-stepper-header {
+  border-radius: 50px !important;
+  background-color: #ffffff !important;
+  color: #626a79;
+  font-weight: 500;
+  padding: 6px 12px !important;
+  height: 30px !important;
+}
+
+:host ::ng-deep .mat-step-header.mat-horizontal-stepper-header:hover,
+:host ::ng-deep .mat-step-header[aria-selected='true'],
+:host ::ng-deep .mat-step-header.mat-step-header-selected {
+  background-color: #f3f3f3 !important;
+}
+
+:host ::ng-deep .mat-step-label,
+:host ::ng-deep .mat-step-text-label {
+  color: #626a79;
+  font-weight: 500;
+}
+
+:host ::ng-deep .mat-horizontal-content-container {
+  padding: 2rem 0 0 !important;
+}
+
+.step-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+  background: transparent;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.step-actions.only-next {
+  justify-content: flex-end;
+}
+
+.variations-head h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+
+.field-error {
+  margin-top: 4px;
+  color: #f44336;
+  font-size: 12px;
+}
+
+.attr-box {
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.attr-box h4 {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.attr-help {
+  margin: 0 0 1rem;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.variant-remove {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-variant {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 0.5rem;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.status-chip.on {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.variants {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.attr-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.attr-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.display-modes {
+  display: grid;
+  gap: 8px;
+}
+
+:host ::ng-deep .mat-expansion-panel {
+  background: #ffffff !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px !important;
+}
+
+:host ::ng-deep .mat-expansion-panel-header,
+:host ::ng-deep .mat-expansion-panel-body {
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .step-grid,
+  .attr-row {
+    grid-template-columns: 1fr;
+  }
+}

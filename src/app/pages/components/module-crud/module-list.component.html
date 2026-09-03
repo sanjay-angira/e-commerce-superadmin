@@ -1,0 +1,171 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>{{ label }}</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard"><mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon></a>
+          <span class="dot"></span>
+          <span>{{ label }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vr-filter-bar">
+      <div class="vr-search-pill">
+        <mat-icon>search</mat-icon>
+        <input
+          type="search"
+          [formControl]="searchControl"
+          [placeholder]="'Search...'"
+        />
+        @if (searchControl.value) {
+          <mat-icon style="cursor:pointer" (click)="searchControl.setValue('')">close</mat-icon>
+        }
+      </div>
+      <div class="filter-actions">
+        <button
+          mat-icon-button
+          type="button"
+          [matMenuTriggerFor]="columnFilterMenu"
+          matTooltip="Filter Columns"
+        >
+          <mat-icon>filter_list</mat-icon>
+        </button>
+        <mat-menu
+          #columnFilterMenu="matMenu"
+          xPosition="before"
+          yPosition="below"
+          panelClass="column-filter-menu"
+        >
+          @for (column of columnOptions; track column.property) {
+            <button class="mat-mdc-menu-item column-filter-item" type="button">
+              <mat-checkbox
+                class="column-filter-checkbox"
+                color="primary"
+                (click)="$event.stopPropagation()"
+                [(ngModel)]="column.visible"
+                (ngModelChange)="syncDisplayedColumns()"
+              >
+                {{ column.label }}
+              </mat-checkbox>
+            </button>
+          }
+        </mat-menu>
+        @if (supportsAdd) {
+          <a
+            mat-mini-fab
+            color="primary"
+            [routerLink]="['/admin', moduleKey, 'add']"
+            [matTooltip]="addLabel"
+          >
+            <mat-icon>add</mat-icon>
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    @if (error()) {
+      <div class="error-banner">
+        <span>{{ error() }}</span>
+        <button mat-button type="button" (click)="load()">Retry</button>
+      </div>
+    }
+
+    <div class="vr-card joined">
+      @if (loading()) {
+        <div class="center"><mat-spinner diameter="36"></mat-spinner></div>
+      } @else if (!rows().length) {
+        <div class="vr-empty">
+          <mat-icon style="font-size:48px;width:48px;height:48px;opacity:.35">inbox</mat-icon>
+          <p>No {{ label }} found</p>
+          @if (supportsAdd) {
+            <a mat-flat-button color="primary" [routerLink]="['/admin', moduleKey, 'add']">
+              {{ addLabel }}
+            </a>
+          }
+        </div>
+      } @else {
+        <table mat-table [dataSource]="rows()" class="vr-table">
+          @for (col of dataColumns; track col.property) {
+            <ng-container [matColumnDef]="col.property">
+              <th mat-header-cell *matHeaderCellDef>{{ col.label }}</th>
+              <td mat-cell *matCellDef="let row">
+                @if (col.datatype === 'date' || col.datatype === 'time') {
+                  <span class="vr-status active">
+                    {{ row[col.property] ? (row[col.property] | date: 'mediumDate') : '—' }}
+                  </span>
+                } @else if (col.datatype === 'status' || col.datatype === 'on-off') {
+                  <span
+                    class="vr-status"
+                    [class.active]="cellValue(row, col.property, col.datatype) === 'Active'"
+                    [class.inactive]="cellValue(row, col.property, col.datatype) !== 'Active'"
+                  >
+                    {{ cellValue(row, col.property, col.datatype) }}
+                  </span>
+                } @else if (col.datatype === 'id') {
+                  #{{ row[col.property] }}
+                } @else if (col.datatype === 'role') {
+                  <span class="vr-role-chips">
+                    @for (role of roleNames(row); track role) {
+                      <span [class]="'vr-status ' + roleChipClass(role)">{{ role }}</span>
+                    }
+                  </span>
+                } @else {
+                  {{ cellValue(row, col.property, col.datatype) }}
+                }
+              </td>
+            </ng-container>
+          }
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let row">
+              <button
+                mat-icon-button
+                type="button"
+                [matMenuTriggerFor]="actionsMenu"
+                (click)="$event.stopPropagation()"
+              >
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #actionsMenu="matMenu">
+                @if (supportsView) {
+                  <a mat-menu-item [routerLink]="['/admin', moduleKey, 'view', row.id]">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View</span>
+                  </a>
+                }
+                @if (supportsEdit) {
+                  <a mat-menu-item [routerLink]="['/admin', moduleKey, 'edit', row.id]">
+                    <mat-icon>edit</mat-icon>
+                    <span>Modify</span>
+                  </a>
+                }
+                @if (supportsDelete) {
+                  <button mat-menu-item type="button" (click)="deleteRow(row)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                }
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          [length]="count()"
+          [pageIndex]="pageNumber() - 1"
+          [pageSize]="pageSize()"
+          [pageSizeOptions]="[5, 10, 20, 50]"
+          (page)="onPage($event)"
+        />
+      }
+    </div>
+  </div>
+</div>

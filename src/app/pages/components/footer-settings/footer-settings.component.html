@@ -1,0 +1,132 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Footer Settings</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard"><mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon></a>
+          <span class="dot"></span>
+          <span>Footer Settings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content vr-form-content">
+    @if (loading()) {
+      <div class="center"><mat-spinner diameter="36"></mat-spinner></div>
+    } @else {
+      <div class="vr-card">
+        <div class="card-head">
+          <h3>Sections</h3>
+          <button mat-flat-button color="primary" type="button" (click)="openSection()">Add section</button>
+        </div>
+        @for (section of sections(); track section.id; let i = $index) {
+          <div class="list-row">
+            <div>
+              <p class="title">{{ section.title }}</p>
+              <span class="chip">Position {{ section.position }}</span>
+            </div>
+            <div class="row-btns">
+              <button mat-icon-button type="button" [disabled]="i === 0" (click)="moveSection(i, -1)">
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+              <button mat-icon-button type="button" [disabled]="i === sections().length - 1" (click)="moveSection(i, 1)">
+                <mat-icon>arrow_downward</mat-icon>
+              </button>
+              <mat-slide-toggle
+                [ngModel]="section.status"
+                (ngModelChange)="toggleSection(section, $event)"
+              >Visible</mat-slide-toggle>
+              <button mat-icon-button type="button" (click)="openSection(section)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button type="button" (click)="deleteSection(section)"><mat-icon>delete</mat-icon></button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="vr-card">
+        <div class="card-head">
+          <h3>Footer items</h3>
+          <button mat-flat-button color="primary" type="button" [disabled]="!menuSection()" (click)="openItem()">
+            Add item
+          </button>
+        </div>
+        @for (row of items(); track row.id) {
+          <div class="list-row">
+            <div>
+              <p class="title">{{ row.label }}</p>
+              <p class="muted">{{ row.url }}</p>
+            </div>
+            <div class="row-btns">
+              <mat-slide-toggle [ngModel]="row.status" (ngModelChange)="toggleItem(row, $event)"></mat-slide-toggle>
+              <button mat-icon-button type="button" (click)="openItem(row)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button type="button" (click)="deleteItem(row)"><mat-icon>delete</mat-icon></button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (dialogKind()) {
+  <div class="overlay" (click)="closeDialog()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <div class="dlg-head">
+        <div class="dlg-title">
+          <span class="dlg-icon">
+            <mat-icon>{{ dialogKind() === 'section' ? 'view_agenda' : 'link' }}</mat-icon>
+          </span>
+          <div>
+            <h2>{{ dialogTitle() }}</h2>
+            <p>{{ dialogSubtitle() }}</p>
+          </div>
+        </div>
+        <button mat-icon-button type="button" class="close-btn" (click)="closeDialog()" aria-label="Close">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="dlg-body">
+      @if (dialogKind() === 'section') {
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="sectionForm.title" />
+        </mat-form-field>
+        <mat-slide-toggle [(ngModel)]="sectionForm.status">Visible on storefront</mat-slide-toggle>
+        <div class="actions">
+          <button mat-stroked-button type="button" (click)="closeDialog()">Cancel</button>
+          <button mat-flat-button color="primary" type="button" [disabled]="dialogSaving()" (click)="saveSection()">Save</button>
+        </div>
+      } @else {
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Section</mat-label>
+          <mat-select [(ngModel)]="linkForm.sectionId">
+            @for (section of sections(); track section.id) {
+              <mat-option [value]="section.id">{{ section.title }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Label</mat-label>
+          <input matInput [(ngModel)]="linkForm.label" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>URL</mat-label>
+          <input matInput [(ngModel)]="linkForm.url" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Position</mat-label>
+          <input matInput type="number" [(ngModel)]="linkForm.position" />
+        </mat-form-field>
+        <mat-slide-toggle [(ngModel)]="linkForm.status">Active</mat-slide-toggle>
+        <div class="actions">
+          <button mat-stroked-button type="button" (click)="closeDialog()">Cancel</button>
+          <button mat-flat-button color="primary" type="button" [disabled]="dialogSaving()" (click)="saveItem()">Save</button>
+        </div>
+      }
+      </div>
+    </div>
+  </div>
+}

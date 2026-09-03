@@ -1,0 +1,174 @@
+.center {
+  display: grid;
+  place-items: center;
+  padding: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid.two {
+  margin-top: 16px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.vr-card h3 {
+  margin: 0;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.card-head h3 {
+  padding: 0;
+}
+
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.muted {
+  margin: 4px 0 0;
+  color: #757575;
+  font-size: 13px;
+}
+
+.chip {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f4f4f5;
+  font-size: 12px;
+}
+
+.row-btns {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon {
+  height: 28px;
+  object-fit: contain;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+  padding: 16px;
+}
+
+.dialog {
+  width: min(520px, 100%);
+  max-height: 90vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28);
+}
+
+.dlg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  min-height: 72px;
+  background: #6366f1;
+  color: #fff;
+}
+
+.dlg-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  text-align: left;
+}
+
+.dlg-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dlg-icon mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #facc15;
+}
+
+.dlg-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.dlg-head p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.9;
+  text-align: left;
+}
+
+.close-btn {
+  color: #fff !important;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.dlg-body {
+  display: grid;
+  gap: 8px;
+  padding: 24px;
+  overflow: auto;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.full {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .grid,
+  .grid.two {
+    grid-template-columns: 1fr;
+  }
+}

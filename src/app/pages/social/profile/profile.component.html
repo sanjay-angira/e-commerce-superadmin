@@ -1,0 +1,81 @@
+<div class="profile-page">
+  <div class="profile-hero-card">
+    <div class="cover">
+      <div class="cover-overlay"></div>
+      <button
+        type="button"
+        class="avatar-btn avatar-mobile"
+        (click)="updateProfileImage()"
+        aria-label="Update profile image"
+      >
+        <img class="avatar" [src]="avatarUrl()" [alt]="displayName()" />
+        <span class="avatar-hint"><mat-icon>photo_camera</mat-icon></span>
+      </button>
+    </div>
+
+    <div class="hero-body">
+      <button
+        type="button"
+        class="avatar-btn avatar-desktop"
+        (click)="updateProfileImage()"
+        aria-label="Update profile image"
+      >
+        <img class="avatar" [src]="avatarUrl()" [alt]="displayName()" />
+        <span class="avatar-hint"><mat-icon>photo_camera</mat-icon></span>
+      </button>
+
+      <div class="hero-main">
+        <div class="name-row">
+          <h1>{{ displayName() }}</h1>
+        </div>
+
+        <div class="actions-row">
+          <button mat-flat-button color="primary" type="button" (click)="editProfile()">
+            <mat-icon>edit</mat-icon>
+            Edit Profile
+          </button>
+          <button mat-flat-button color="primary" type="button" (click)="changePassword()">
+            <mat-icon>lock</mat-icon>
+            Change Password
+          </button>
+        </div>
+
+        <mat-tab-group class="about-tabs">
+          <mat-tab label="ABOUT"></mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-card">
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="icon-bubble">
+          <mat-icon>person_outline</mat-icon>
+        </div>
+        <div>
+          <p class="info-value">{{ displayName() || 'Loading...' }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="icon-bubble">
+          <mat-icon>call</mat-icon>
+        </div>
+        <div>
+          <p class="info-value">{{ user()?.phoneNumber || '—' }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="icon-bubble">
+          <mat-icon>mail</mat-icon>
+        </div>
+        <div>
+          <p class="info-value">{{ user()?.email || '—' }}</p>
+          <p class="info-hint">Business inquiries only</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

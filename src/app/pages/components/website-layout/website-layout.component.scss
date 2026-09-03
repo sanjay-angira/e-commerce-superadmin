@@ -1,0 +1,54 @@
+.center {
+  display: grid;
+  place-items: center;
+  padding: 48px;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-actions a[mat-mini-fab] {
+  border-radius: 8px !important;
+}
+
+.drag-col {
+  width: 44px;
+  padding-right: 0;
+}
+
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.38);
+  cursor: grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.cdk-drag-preview {
+  display: table;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.35;
+}
+
+.cdk-drop-list-dragging .mat-mdc-row:not(.cdk-drag-placeholder) {
+  transition: transform 180ms ease;
+}

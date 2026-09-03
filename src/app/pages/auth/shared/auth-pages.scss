@@ -1,0 +1,159 @@
+/* Shared auth UI — mirrors vr-admin bg-pattern + card layout */
+
+.auth-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background:
+    linear-gradient(
+      135deg,
+      #fafafa 22px,
+      #f4f4f5 22px,
+      #f4f4f5 24px,
+      transparent 24px,
+      transparent 67px,
+      #f4f4f5 67px,
+      #f4f4f5 69px,
+      transparent 69px
+    ),
+    linear-gradient(
+      225deg,
+      #fafafa 22px,
+      #f4f4f5 22px,
+      #f4f4f5 24px,
+      transparent 24px,
+      transparent 67px,
+      #f4f4f5 67px,
+      #f4f4f5 69px,
+      transparent 69px
+    )
+    0 64px;
+  background-color: #fafafa;
+  background-size: 64px 128px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.auth-card__logo {
+  padding: 24px 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card__titles {
+  text-align: center;
+  margin-top: 16px;
+  padding: 0 24px;
+}
+
+.auth-card__titles h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #18181b;
+}
+
+.auth-card__titles h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #18181b;
+}
+
+.auth-card__titles h4.muted {
+  color: #71717a;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.auth-card__body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-field {
+  width: 100%;
+}
+
+.auth-error {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auth-link {
+  color: var(--mat-sys-primary, #1a73e8);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-submit {
+  width: 100%;
+  min-height: 44px;
+}
+
+.auth-submit-sm {
+  width: 150px;
+  min-height: 44px;
+  margin: 8px auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-return {
+  margin-top: 8px;
+  text-align: left;
+}
+
+.password-strength-meter {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 4px 0 8px;
+}
+
+.password-strength-meter.very-weak {
+  color: #dc2626;
+}
+.password-strength-meter.weak {
+  color: #ea580c;
+}
+.password-strength-meter.medium {
+  color: #ca8a04;
+}
+.password-strength-meter.strong {
+  color: #16a34a;
+}

@@ -1,0 +1,75 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Blog' : 'Add Blog'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Slug</mat-label>
+      <input matInput formControlName="slug" (input)="markSlugDirty()" />
+    </mat-form-field>
+    <app-quill-editor label="Content" [required]="true" formControlName="content" />
+    <mat-form-field appearance="outline">
+      <mat-label>Excerpt</mat-label>
+      <textarea matInput rows="3" formControlName="excerpt"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="categoryId">
+        @for (opt of categories(); track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <app-image-upload
+      label="Blog Image"
+      [path]="uploadPath"
+      imageType="blog"
+      [required]="true"
+      formControlName="blogImage"
+    />
+    <mat-form-field appearance="outline">
+      <mat-label>Image Alt Text</mat-label>
+      <input matInput formControlName="blogImageAlt" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Tags</mat-label>
+      <mat-select formControlName="tagIds" multiple>
+        @for (opt of tags(); track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="draft">Draft</mat-option>
+        <mat-option value="published">Published</mat-option>
+        <mat-option value="scheduled">Scheduled</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
+    <mat-checkbox formControlName="isFeatured">Featured</mat-checkbox>
+    <mat-form-field appearance="outline">
+      <mat-label>Meta Title</mat-label>
+      <input matInput formControlName="metaTitle" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Meta Description</mat-label>
+      <textarea matInput rows="2" formControlName="metaDescription"></textarea>
+    </mat-form-field>
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Blog' : 'Create Blog' }}
+      </button>
+      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

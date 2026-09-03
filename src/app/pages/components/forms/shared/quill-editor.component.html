@@ -1,0 +1,11 @@
+<div
+  class="quill-editor-wrapper"
+  [class.focused]="focused()"
+  [class.has-content]="hasContent()"
+  (click)="focusEditor()"
+>
+  <span class="quill-editor-label">
+    {{ label() }}@if (required()) {<span class="req">*</span>}
+  </span>
+  <div #editor class="editor"></div>
+</div>

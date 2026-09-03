@@ -1,0 +1,388 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Product' : 'Add Product'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" class="product-form">
+    <mat-stepper linear #stepper>
+      <mat-step [completed]="isStepValid(1)">
+        <ng-template matStepLabel>Product Information</ng-template>
+        <div class="step-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Product Name</mat-label>
+            <input matInput formControlName="productName" />
+            @if (form.controls.productName.touched && form.controls.productName.hasError('required')) {
+              <mat-error>Product name is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Product Slug</mat-label>
+            <input matInput formControlName="productSlug" (input)="markSlugDirty()" />
+            @if (form.controls.productSlug.touched && form.controls.productSlug.hasError('required')) {
+              <mat-error>Product slug is required</mat-error>
+            }
+            @if (form.controls.productSlug.hasError('pattern')) {
+              <mat-error>Product slug must be URL-friendly</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Brand</mat-label>
+            <mat-select formControlName="brandId" placeholder="Select a brand">
+              @for (opt of brands(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+            @if (form.controls.brandId.touched && form.controls.brandId.hasError('required')) {
+              <mat-error>Brand is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category" placeholder="Select a category">
+              @for (opt of rootCategories(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+            @if (form.controls.category.touched && form.controls.category.hasError('required')) {
+              <mat-error>Category is required</mat-error>
+            }
+          </mat-form-field>
+
+          @for (level of childCategoryLevels(); track $index; let i = $index) {
+            @if (level.length) {
+              <mat-form-field appearance="outline">
+                <mat-label>Select Child Category Level {{ i + 1 }}</mat-label>
+                <mat-select
+                  [value]="form.value.childCategories?.[i] || ''"
+                  (selectionChange)="onChildCategory(i, $event.value)"
+                  placeholder="Select a child category"
+                >
+                  @for (opt of level; track opt.value) {
+                    <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+          }
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Short Description</mat-label>
+            <input matInput formControlName="shortDescription" />
+            @if (form.controls.shortDescription.touched && form.controls.shortDescription.hasError('required')) {
+              <mat-error>Short description is required</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="full">
+            <app-quill-editor label="Description" formControlName="description" [required]="true" />
+            @if (form.controls.description.touched && form.controls.description.invalid) {
+              <div class="field-error">Description is required</div>
+            }
+          </div>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Product Tags</mat-label>
+            <mat-select
+              formControlName="productTags"
+              multiple
+              panelClass="tag-select-panel"
+              placeholder="Select tags"
+              (selectionChange)="onTagsSelectionChange($event)"
+            >
+              @for (opt of productTags(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+              <mat-option [value]="addTagValue" class="add-tag-option">
+                <mat-icon>add</mat-icon>
+                Add tag
+              </mat-option>
+            </mat-select>
+            <mat-hint>Select existing tags, or choose Add tag to create a new one</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Product Attributes</mat-label>
+            <mat-select formControlName="attributeIds" multiple placeholder="Select attributes for this product">
+              @for (opt of attributes(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <div class="display-modes full" formGroupName="attributeCustomerDisplay">
+            @for (id of form.value.attributeIds || []; track id) {
+              @if (attrSupportsImage(id)) {
+                <mat-form-field appearance="outline">
+                  <mat-label>Display on customer side ({{ attributes().find(a => a.value === id)?.label }})</mat-label>
+                  <mat-select [formControlName]="'' + id">
+                    <mat-option value="value">Name only</mat-option>
+                    <mat-option value="code">Color code (swatch)</mat-option>
+                    <mat-option value="image">Image</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              }
+            }
+          </div>
+
+          <div class="full">
+            <app-multi-image-upload
+              label="Product Images"
+              [path]="uploadPaths.products"
+              formControlName="images"
+              [required]="true"
+            />
+          </div>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Apply Offers</mat-label>
+            <mat-select formControlName="productOffers" multiple>
+              @for (opt of offers(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Frequently Bought Together</mat-label>
+            <mat-select formControlName="frequentlyBoughtTogether" multiple>
+              @for (opt of products(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="step-actions only-next">
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            [disabled]="!isStepValid(1)"
+            (click)="stepper.next()"
+          >
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="isStepValid(2)">
+        <ng-template matStepLabel>Product Variations</ng-template>
+        <div class="variations-head">
+          <h3>Variations</h3>
+        </div>
+        <div formArrayName="variants" class="variants">
+          @for (variant of variants.controls; track $index; let i = $index) {
+            <mat-expansion-panel [expanded]="i === 0" [formGroupName]="i">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Variant #{{ i + 1 }}: {{ variant.value.name || 'Untitled' }}
+                </mat-panel-title>
+                <mat-panel-description>
+                  Price: ₹{{ variant.value.price || 0 }} | Stock: {{ variant.value.stock || 0 }}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div class="step-grid">
+                <mat-form-field appearance="outline">
+                  <mat-label>Variant Name</mat-label>
+                  <input matInput formControlName="name" (input)="onVariantName(i)" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Variant Slug</mat-label>
+                  <input matInput formControlName="slug" (input)="markVariantSlugDirty(i)" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>SKU</mat-label>
+                  <input matInput formControlName="sku" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Price</mat-label>
+                  <input matInput type="number" formControlName="price" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Stock</mat-label>
+                  <input matInput type="number" formControlName="stock" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Variant Offers</mat-label>
+                  <mat-select formControlName="productVariantOffers" multiple>
+                    @for (opt of offers(); track opt.value) {
+                      <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <div class="full">
+                  <app-quill-editor label="Variant Description" formControlName="description" />
+                </div>
+                <div class="full">
+                  <app-multi-image-upload
+                    label="Variant Images"
+                    [path]="uploadPaths.variantImages"
+                    formControlName="images"
+                  />
+                </div>
+                <div class="full attr-box" formArrayName="variantAttributes">
+                  <h4>Attribute Values</h4>
+                  <p class="attr-help">
+                    Enter a value for each attribute. Image-capable attributes may also need a color
+                    code or image based on the display setting chosen above.
+                  </p>
+                  @for (attr of variantAttributes(i).controls; track attr.value.attributeId; let ai = $index) {
+                    <div class="attr-row" [formGroupName]="ai">
+                      <mat-form-field appearance="outline">
+                        <mat-label>
+                          {{ attributes().find(a => a.value === attr.value.attributeId)?.label || 'Attribute' }}
+                          @if (attrSupportsImage(attr.value.attributeId)) {
+                            value
+                          }
+                        </mat-label>
+                        <input
+                          matInput
+                          formControlName="value"
+                          [placeholder]="'Enter ' + (attributes().find(a => a.value === attr.value.attributeId)?.label || 'value')"
+                        />
+                      </mat-form-field>
+                      @if (attrSupportsImage(attr.value.attributeId) && displayMode(attr.value.attributeId) === 'code') {
+                        <mat-form-field appearance="outline">
+                          <mat-label>
+                            {{ attributes().find(a => a.value === attr.value.attributeId)?.label }} color code
+                          </mat-label>
+                          <input matInput type="color" formControlName="code" />
+                        </mat-form-field>
+                      }
+                      @if (attrSupportsImage(attr.value.attributeId) && displayMode(attr.value.attributeId) === 'image') {
+                        <app-image-upload
+                          [label]="(attributes().find(a => a.value === attr.value.attributeId)?.label || 'Attribute') + ' image'"
+                          [path]="uploadPaths.attributeColors"
+                          formControlName="image"
+                        />
+                      }
+                    </div>
+                  }
+                </div>
+                <div class="full variant-remove">
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="removeVariant(i)"
+                    [disabled]="variants.length <= 1"
+                  >
+                    Remove Variant
+                  </button>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          }
+        </div>
+        <div class="add-variant">
+          <button mat-flat-button color="primary" type="button" (click)="addVariant()">
+            <mat-icon>add</mat-icon>
+            Add Variant
+          </button>
+        </div>
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Previous
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            [disabled]="!isStepValid(2)"
+            (click)="stepper.next()"
+          >
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="isStepValid(3)">
+        <ng-template matStepLabel>Product SEO Settings</ng-template>
+        <div formGroupName="seo" class="step-grid">
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Title</mat-label>
+            <input matInput formControlName="metaTitle" />
+            @if (form.controls.seo.controls.metaTitle.touched && form.controls.seo.controls.metaTitle.hasError('required')) {
+              <mat-error>Meta Title is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Description</mat-label>
+            <textarea matInput rows="3" formControlName="metaDescription"></textarea>
+            @if (form.controls.seo.controls.metaDescription.touched && form.controls.seo.controls.metaDescription.hasError('required')) {
+              <mat-error>Meta Description is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Meta Keywords</mat-label>
+            <input matInput formControlName="metaKeywords" />
+            <mat-hint>Separate keywords with commas</mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Canonical URL</mat-label>
+            <input matInput type="url" formControlName="canonicalUrl" />
+          </mat-form-field>
+          <div class="full">
+            <app-image-upload label="OG Image" [path]="uploadPaths.products" formControlName="ogImage" />
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Previous
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            [disabled]="!isStepValid(3)"
+            (click)="stepper.next()"
+          >
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="isStepValid(4)">
+        <ng-template matStepLabel>Product Settings</ng-template>
+        <div class="step-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Publish Status</mat-label>
+            <mat-select formControlName="publishStatus">
+              <mat-option value="draft">Draft</mat-option>
+              <mat-option value="published">Published</mat-option>
+              <mat-option value="scheduled">Scheduled</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="toggle-item">
+            <span>Active Status</span>
+            <mat-slide-toggle formControlName="isActive" color="primary"></mat-slide-toggle>
+            <span class="status-chip" [class.on]="form.controls.isActive.value">
+              {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
+            </span>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Previous
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            [disabled]="saving() || !isStepValid(4)"
+            (click)="submit()"
+          >
+            <mat-icon>publish</mat-icon>
+            {{ isEdit() ? 'Update Product' : 'Create Product' }}
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </form>
+</app-admin-form-shell>
