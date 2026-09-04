@@ -25,7 +25,17 @@ export class LoginService {
 
   constructor() {
     const token = this.jwt.getToken();
+    const refresh = this.jwt.getRefreshToken();
     if (token && this.decodeJwtToken()) {
+      this.isAuthenticatedSubject.next(true);
+      this.permissions.loadFromStorage();
+      try {
+        const stored = localStorage.getItem('admin_user');
+        if (stored) this.currentUserSubject.next(JSON.parse(stored));
+      } catch {
+        /* ignore */
+      }
+    } else if (refresh) {
       this.isAuthenticatedSubject.next(true);
       this.permissions.loadFromStorage();
       try {
@@ -45,7 +55,6 @@ export class LoginService {
     try {
       const decoded: any = jwtDecode(token);
       if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
-        this.logout(false);
         return null;
       }
       return decoded;
@@ -62,8 +71,12 @@ export class LoginService {
     localStorage.setItem('admin_user', JSON.stringify(user || {}));
     this.permissions.setPermissions(user?.permissions || []);
     this.isAuthenticatedSubject.next(true);
-    const expiry = this.decodeJwtToken();
-    if (expiry?.exp) localStorage.setItem('expiryTime', String(expiry.exp));
+    try {
+      const decoded: any = jwtDecode(this.jwt.getToken() || '');
+      if (decoded?.exp) localStorage.setItem('expiryTime', String(decoded.exp));
+    } catch {
+      /* ignore */
+    }
     localStorage.setItem(
       'user_name',
       `${user?.firstName || ''} ${user?.lastName || ''}`.trim()

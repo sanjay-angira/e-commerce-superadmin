@@ -11,7 +11,11 @@ export const authGuardUser: CanActivateFn = (_route, state) => {
   const permissions = inject(PermissionService);
   const router = inject(Router);
 
-  if (!jwt.getToken() || !login.decodeJwtToken()) {
+  if (!jwt.getToken() && !jwt.getRefreshToken()) {
+    return router.createUrlTree(['/login']);
+  }
+
+  if (!login.decodeJwtToken() && !jwt.getRefreshToken()) {
     return router.createUrlTree(['/login']);
   }
 
@@ -25,8 +29,9 @@ export const authGuardUser: CanActivateFn = (_route, state) => {
 /** Guest-only auth pages — redirect if already logged in */
 export const guestGuard: CanActivateFn = () => {
   const login = inject(LoginService);
+  const jwt = inject(JwtService);
   const router = inject(Router);
-  if (login.decodeJwtToken()) {
+  if (login.decodeJwtToken() || jwt.getRefreshToken()) {
     return router.createUrlTree(['/admin/dashboard']);
   }
   return true;
