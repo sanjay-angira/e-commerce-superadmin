@@ -1,19 +1,41 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .upload {
   display: grid;
   gap: 8px;
 }
-.label {
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.7);
+
+.dropzone-wrap {
+  position: relative;
 }
+
+.label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  z-index: 1;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: rgba(0, 0, 0, 0.6);
+  background: #fff;
+  padding: 0 4px;
+  pointer-events: none;
+}
+
 .req {
   color: #f44336;
+  margin-left: 2px;
 }
+
 .preview {
   position: relative;
   width: fit-content;
 }
+
 img,
 video {
   max-width: 100%;
@@ -22,12 +44,14 @@ video {
   border: 1px solid rgba(0, 0, 0, 0.12);
   object-fit: cover;
 }
+
 .preview button {
   position: absolute;
   top: 4px;
   right: 4px;
   background: rgba(255, 255, 255, 0.92);
 }
+
 .dropzone {
   display: flex;
   align-items: center;
@@ -44,10 +68,12 @@ video {
   font-weight: 500;
   cursor: pointer;
 }
+
 .dropzone:disabled {
   opacity: 0.65;
   cursor: default;
 }
+
 .dropzone mat-icon {
   color: #6366f1;
 }

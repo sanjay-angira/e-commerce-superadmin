@@ -1,5 +1,4 @@
 <div class="upload">
-  <div class="label">{{ label() }} @if (required()) { <span class="req">*</span> }</div>
   @if (value) {
     <div class="preview">
       @if (isVideo()) {
@@ -12,19 +11,22 @@
       </button>
     </div>
   }
-  <button
-    class="dropzone"
-    type="button"
-    (click)="fileInput.click()"
-    [disabled]="uploading() || disabled"
-  >
-    @if (uploading()) {
-      <mat-spinner diameter="22"></mat-spinner>
-    } @else {
-      <mat-icon>cloud_upload</mat-icon>
-      <span>{{ value ? 'Replace file' : 'Click to upload' }}</span>
-    }
-  </button>
+  <div class="dropzone-wrap">
+    <span class="label">{{ label() }}@if (required()) {<span class="req">*</span>}</span>
+    <button
+      class="dropzone"
+      type="button"
+      (click)="fileInput.click()"
+      [disabled]="uploading() || disabled"
+    >
+      @if (uploading()) {
+        <mat-spinner diameter="22"></mat-spinner>
+      } @else {
+        <mat-icon>cloud_upload</mat-icon>
+        <span>{{ value ? 'Replace file' : 'Click to upload' }}</span>
+      }
+    </button>
+  </div>
   <input
     #fileInput
     type="file"
