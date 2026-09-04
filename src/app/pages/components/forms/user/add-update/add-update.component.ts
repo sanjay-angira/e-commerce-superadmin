@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,6 +45,20 @@ export class UserFormComponent implements OnInit {
   readonly roles = signal<SelectOption[]>([]);
 
   readonly uploadPath = UPLOAD_PATHS.users;
+  readonly directoryRole = computed(() => {
+    const module = this.module();
+    if (module === 'admins') return 'admin';
+    if (module === 'customers') return 'customer';
+    if (module === 'sellers') return 'seller';
+    return null;
+  });
+  readonly personLabel = computed(() => {
+    const module = this.module();
+    if (module === 'admins') return 'Admin';
+    if (module === 'customers') return 'Customer';
+    if (module === 'sellers') return 'Seller';
+    return 'User';
+  });
 
   readonly form = this.fb.nonNullable.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -57,7 +71,17 @@ export class UserFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.options.roles().subscribe((rows) => this.roles.set(rows));
+    this.options.roles().subscribe((rows) => {
+      this.roles.set(rows);
+      const directoryRole = this.directoryRole();
+      if (!directoryRole || this.isEdit()) return;
+      const match = rows.find(
+        (row) => String(row.label).trim().toLowerCase() === directoryRole,
+      );
+      if (match) {
+        this.form.patchValue({ roleIds: [Number(match.value)] });
+      }
+    });
 
     const id = this.recordId();
     this.isEdit.set(!!id);
@@ -88,6 +112,15 @@ export class UserFormComponent implements OnInit {
       return;
     }
     const v = this.form.getRawValue();
+    const directoryRole = this.directoryRole();
+    if (directoryRole) {
+      const match = this.roles().find(
+        (row) => String(row.label).trim().toLowerCase() === directoryRole,
+      );
+      if (match) {
+        v.roleIds = [Number(match.value)];
+      }
+    }
     this.saving.set(true);
     this.submitError.set('');
     this.crud.save(this.module(), this.recordId(), v).subscribe((res) => {

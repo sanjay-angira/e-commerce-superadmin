@@ -24,31 +24,40 @@ export class ApiService {
       });
     }
     return this.http
-      .get(`${environment.api_url}${path.startsWith('/') ? path : `/${path}`}`, { params: httpParams })
+      .get(this.resolveUrl(path), { params: httpParams })
       .pipe(catchError(this.formatErrors));
   }
 
   post(path: string, body: object = {}): Observable<any> {
     return this.http
-      .post(`${environment.api_url}${path.startsWith('/') ? path : `/${path}`}`, body)
+      .post(this.resolveUrl(path), body)
       .pipe(catchError(this.formatErrors));
   }
 
   put(path: string, body: object = {}): Observable<any> {
     return this.http
-      .put(`${environment.api_url}${path.startsWith('/') ? path : `/${path}`}`, body)
+      .put(this.resolveUrl(path), body)
       .pipe(catchError(this.formatErrors));
   }
 
   patch(path: string, body: object = {}): Observable<any> {
     return this.http
-      .patch(`${environment.api_url}${path.startsWith('/') ? path : `/${path}`}`, body)
+      .patch(this.resolveUrl(path), body)
       .pipe(catchError(this.formatErrors));
   }
 
   delete(path: string): Observable<any> {
     return this.http
-      .delete(`${environment.api_url}${path.startsWith('/') ? path : `/${path}`}`)
+      .delete(this.resolveUrl(path))
       .pipe(catchError(this.formatErrors));
+  }
+
+  private resolveUrl(path: string): string {
+    const normalized = path.startsWith('/') ? path : `/${path}`;
+    const withAdmin =
+      normalized === '/admin' || normalized.startsWith('/admin/')
+        ? normalized
+        : `/admin${normalized}`;
+    return `${environment.api_url}${withAdmin}`;
   }
 }

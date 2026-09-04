@@ -1,6 +1,6 @@
 
 <app-admin-form-shell
-  [title]="isEdit() ? 'Edit User' : 'Add User'"
+  [title]="isEdit() ? 'Edit ' + personLabel() : 'Add ' + personLabel()"
   [module]="module()"
   [loading]="loading()"
   [loadError]="loadError()"
@@ -23,19 +23,21 @@
       <mat-label>Phone Number</mat-label>
       <input matInput formControlName="phoneNumber" />
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Roles</mat-label>
-      <mat-select formControlName="roleIds" multiple>
-        @for (opt of roles(); track opt.value) {
-          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    @if (!directoryRole()) {
+      <mat-form-field appearance="outline">
+        <mat-label>Roles</mat-label>
+        <mat-select formControlName="roleIds" multiple>
+          @for (opt of roles(); track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
     <app-image-upload label="Profile Image" [path]="uploadPath" formControlName="profileImage" />
     <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
     <div class="actions">
       <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
-        {{ isEdit() ? 'Update User' : 'Create User' }}
+        {{ isEdit() ? 'Update ' + personLabel() : 'Create ' + personLabel() }}
       </button>
       <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
     </div>

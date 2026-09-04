@@ -16,6 +16,7 @@ import {
   ReviewsComponentColumns,
   RolesComponentColumns,
   UserComponentColumns,
+  SellerUserColumns,
   WebsiteLayoutColumns,
   type AdminTableColumnDefinition,
 } from './static-common-table-columns';
@@ -37,7 +38,9 @@ export type AdminModuleKey =
   | 'reviews'
   | 'website-layout'
   | 'users'
+  | 'admins'
   | 'customers'
+  | 'sellers'
   | 'delete-requests'
   | 'product-reviews'
   | 'product-faq'
@@ -272,7 +275,7 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
   },
   users: {
     label: 'Users',
-    description: 'View admin user accounts',
+    description: 'View all user accounts',
     columns: UserComponentColumns,
     actions: ['add', 'view', 'edit', 'delete'],
     addLabel: 'Add user',
@@ -285,19 +288,45 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
   },
-  customers: {
-    label: 'Users',
-    description: 'View admin user accounts',
-    apiPath: 'users',
+  admins: {
+    label: 'Admins',
+    description: 'Users with the admin role',
     columns: UserComponentColumns,
     actions: ['add', 'view', 'edit', 'delete'],
-    addLabel: 'Add user',
+    addLabel: 'Add admin',
     formFields: [
       { key: 'firstName', label: 'First Name', type: 'text', required: true },
       { key: 'lastName', label: 'Last Name', type: 'text' },
       { key: 'email', label: 'Email', type: 'email', required: true },
       { key: 'phoneNumber', label: 'Phone', type: 'text' },
-      { key: 'password', label: 'Password', type: 'password' },
+      { key: 'isActive', label: 'Active', type: 'toggle' },
+    ],
+  },
+  customers: {
+    label: 'Customers',
+    description: 'Users with the customer role',
+    columns: UserComponentColumns,
+    actions: ['add', 'view', 'edit', 'delete'],
+    addLabel: 'Add customer',
+    formFields: [
+      { key: 'firstName', label: 'First Name', type: 'text', required: true },
+      { key: 'lastName', label: 'Last Name', type: 'text' },
+      { key: 'email', label: 'Email', type: 'email', required: true },
+      { key: 'phoneNumber', label: 'Phone', type: 'text' },
+      { key: 'isActive', label: 'Active', type: 'toggle' },
+    ],
+  },
+  sellers: {
+    label: 'Sellers',
+    description: 'Users with the seller role',
+    columns: SellerUserColumns,
+    actions: ['add', 'view', 'edit', 'delete'],
+    addLabel: 'Add seller',
+    formFields: [
+      { key: 'firstName', label: 'First Name', type: 'text', required: true },
+      { key: 'lastName', label: 'Last Name', type: 'text' },
+      { key: 'email', label: 'Email', type: 'email', required: true },
+      { key: 'phoneNumber', label: 'Phone', type: 'text' },
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
   },

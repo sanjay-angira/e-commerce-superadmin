@@ -32,7 +32,9 @@ export const ADMIN_FORM_REGISTRY: Record<string, Type<unknown>> = {
   reviews: ReviewFormComponent,
   'product-reviews': ReviewFormComponent,
   users: UserFormComponent,
+  admins: UserFormComponent,
   customers: UserFormComponent,
+  sellers: UserFormComponent,
   'contact-us-leads': ContactLeadFormComponent,
 };
 

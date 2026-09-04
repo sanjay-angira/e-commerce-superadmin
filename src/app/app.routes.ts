@@ -4,6 +4,13 @@ import { authGuardUser, guestGuard } from './guards/auth.guard';
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'admin/dashboard' },
   {
+    path: 'set-password',
+    loadComponent: () =>
+      import('./pages/auth/set-password/set-password.component').then(
+        (m) => m.SetPasswordComponent
+      ),
+  },
+  {
     path: 'login',
     canActivate: [guestGuard],
     loadComponent: () =>

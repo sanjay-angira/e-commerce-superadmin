@@ -107,6 +107,14 @@ export class LoginService {
     return this.api.post('/auth/reset-password', payload);
   }
 
+  setPassword(payload: {
+    token: string;
+    password: string;
+    confirmPassword: string;
+  }): Observable<any> {
+    return this.api.post('/auth/reset-password', payload);
+  }
+
   changePassword(payload: {
     oldPassword: string;
     newPassword: string;

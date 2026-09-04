@@ -20,6 +20,19 @@ export const UserComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
+export const SellerUserColumns: AdminTableColumnDefinition[] = [
+  { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
+  { label: 'Name', property: 'name', type: 'text', datatype: 'name', visible: true },
+  { label: 'Email', property: 'email', type: 'text', datatype: 'email', visible: true },
+  { label: 'Phone Number', property: 'phoneNumber', type: 'text', datatype: 'phoneNumber', visible: true },
+  { label: 'Shop Name', property: 'shopName', type: 'text', datatype: 'shopName', visible: true },
+  { label: 'Seller Status', property: 'sellerStatus', type: 'text', datatype: 'sellerStatus', visible: true },
+  { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
+  { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
+];
+
 export const ProductComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
   { label: 'Product Name', property: 'productName', type: 'text', datatype: 'productName', visible: true },
