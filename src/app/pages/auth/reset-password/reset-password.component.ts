@@ -17,6 +17,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoginService } from '../../../core/services/login.service';
 import { AuthBrandLogoComponent } from '../shared/auth-brand-logo.component';
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
 
 function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
   const password = group.get('password')?.value;
@@ -59,6 +60,7 @@ function passwordFormatValidator(control: AbstractControl): ValidationErrors | n
     MatSnackBarModule,
     MatTooltipModule,
     AuthBrandLogoComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',

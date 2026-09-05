@@ -1,6 +1,6 @@
 .dlg {
-  --dlg-primary: #6366f1;
-  background: #fff;
+  --dlg-primary: var(--vr-primary);
+  background: var(--vr-card);
 }
 
 .dlg-head {
@@ -70,7 +70,7 @@ mat-dialog-content {
 
 .dlg-error {
   margin: 0;
-  color: #f44336;
+  color: var(--vr-danger);
   font-size: 13px;
 }
 

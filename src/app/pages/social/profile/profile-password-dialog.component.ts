@@ -147,8 +147,8 @@ function matchPasswords(group: AbstractControl): ValidationErrors | null {
   styles: [
     `
       .dlg {
-        --dlg-primary: #6366f1;
-        background: #fff;
+        --dlg-primary: var(--vr-primary);
+        background: var(--vr-card);
       }
       .dlg-head {
         display: flex;
@@ -199,15 +199,15 @@ function matchPasswords(group: AbstractControl): ValidationErrors | null {
       .banner.error {
         padding: 10px 12px;
         border-radius: 8px;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        color: #b91c1c;
+        background: var(--vr-danger-soft);
+        border: 1px solid var(--vr-danger-border);
+        color: var(--vr-danger-text);
         font-size: 13px;
       }
       .hint {
         margin: 0;
         font-size: 12px;
-        color: #a1a1aa;
+        color: var(--vr-text-muted);
       }
       mat-dialog-actions {
         margin: 0 !important;

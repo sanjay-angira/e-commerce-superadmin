@@ -18,13 +18,13 @@
 
 :host ::ng-deep .mat-stepper-horizontal-line {
   border-top-width: 1px !important;
-  border-color: #81818149 !important;
+  border-color: var(--vr-step-line) !important;
 }
 
 :host ::ng-deep .mat-step-header.mat-horizontal-stepper-header {
   border-radius: 50px !important;
-  background-color: #ffffff !important;
-  color: #626a79;
+  background-color: var(--vr-card) !important;
+  color: var(--vr-step-text);
   font-weight: 500;
   padding: 6px 12px !important;
   height: 30px !important;
@@ -33,12 +33,12 @@
 :host ::ng-deep .mat-step-header.mat-horizontal-stepper-header:hover,
 :host ::ng-deep .mat-step-header[aria-selected='true'],
 :host ::ng-deep .mat-step-header.mat-step-header-selected {
-  background-color: #f3f3f3 !important;
+  background-color: var(--vr-surface-subtle) !important;
 }
 
 :host ::ng-deep .mat-step-label,
 :host ::ng-deep .mat-step-text-label {
-  color: #626a79;
+  color: var(--vr-step-text);
   font-weight: 500;
 }
 
@@ -80,18 +80,18 @@
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
-  color: #f44336;
-  background: rgba(244, 67, 54, 0.1);
+  color: var(--vr-danger);
+  background: var(--vr-danger-soft);
 }
 
 .status-chip.on {
-  color: #4caf50;
+  color: var(--vr-status-green);
   background: rgba(76, 175, 80, 0.1);
 }
 
 .field-error {
   margin-top: 4px;
-  color: #f44336;
+  color: var(--vr-danger);
   font-size: 12px;
 }
 
@@ -102,7 +102,7 @@
   gap: 12px;
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--vr-border-strong);
 }
 
 @media (max-width: 768px) {

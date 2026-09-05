@@ -13,13 +13,13 @@
   padding: 12px;
   border: 1px solid var(--vr-divider);
   border-radius: 8px;
-  background: #fafafa;
+  background: var(--vr-surface-soft);
 }
 
 .kv small {
   display: block;
   margin-bottom: 6px;
-  color: #757575;
+  color: var(--vr-text-secondary);
   text-transform: capitalize;
 }
 

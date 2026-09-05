@@ -17,6 +17,7 @@ import { LoginService } from '../core/services/login.service';
 import { NavigationService } from '../core/services/navigation.service';
 import { AdminMenuSection } from '../../static-data/admin-menu';
 import { AuthBrandLogoComponent } from '../pages/auth/shared/auth-brand-logo.component';
+import { ThemeToggleComponent } from '../pages/components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-custom-layout',
@@ -35,6 +36,7 @@ import { AuthBrandLogoComponent } from '../pages/auth/shared/auth-brand-logo.com
     MatProgressSpinnerModule,
     MatRippleModule,
     AuthBrandLogoComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './custom-layout.component.html',
   styleUrl: './custom-layout.component.scss',

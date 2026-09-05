@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoginService } from '../../../core/services/login.service';
 import { AuthBrandLogoComponent } from '../shared/auth-brand-logo.component';
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -19,6 +20,7 @@ import { AuthBrandLogoComponent } from '../shared/auth-brand-logo.component';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     AuthBrandLogoComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',

@@ -66,9 +66,9 @@
   position: sticky;
   bottom: 0;
   z-index: 1;
-  border-top: 1px solid #e5e7eb;
-  background: #fff !important;
-  color: #4f46e5;
+  border-top: 1px solid var(--vr-border-strong);
+  background: var(--vr-card) !important;
+  color: var(--vr-chip-primary-text);
   font-weight: 600;
 }
 

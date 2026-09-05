@@ -24,7 +24,7 @@
 
 .stat-card small {
   display: block;
-  color: #757575;
+  color: var(--vr-text-secondary);
   font-size: 12px;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .muted {
-  color: #757575;
+  color: var(--vr-text-secondary);
   padding: 0 1.25rem 1rem;
 }
 

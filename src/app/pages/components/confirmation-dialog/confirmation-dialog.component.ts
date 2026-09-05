@@ -44,8 +44,8 @@ export type ConfirmationDialogData = {
   styles: [
     `
       .dlg {
-        --dlg-primary: #6366f1;
-        background: #fff;
+        --dlg-primary: var(--vr-primary);
+        background: var(--vr-card);
       }
       .dlg-head {
         display: flex;
@@ -104,7 +104,7 @@ export type ConfirmationDialogData = {
         margin: 0;
         font-size: 14px;
         line-height: 1.5;
-        color: rgba(0, 0, 0, 0.75);
+        color: var(--vr-text);
       }
       mat-dialog-actions {
         margin: 0 !important;

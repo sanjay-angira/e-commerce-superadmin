@@ -6,13 +6,13 @@
 .quill-editor-wrapper {
   position: relative;
   display: block;
-  border: 1px solid #a3a3a3;
+  border: 1px solid var(--vr-border-strong);
   border-radius: 4px;
-  background: #fff;
+  background: var(--vr-card);
 }
 
 .quill-editor-wrapper.focused {
-  border: 2px solid #633fe7;
+  border: 2px solid var(--vr-primary);
 }
 
 .quill-editor-label {
@@ -20,10 +20,10 @@
   top: 52px;
   left: 12px;
   font-size: 16px;
-  color: #9ca3af;
+  color: var(--vr-text-muted);
   pointer-events: none;
   transition: all 0.2s ease-out;
-  background: #fff;
+  background: var(--vr-card);
   padding: 0 5px;
   z-index: 1;
 }
@@ -32,11 +32,11 @@
 .quill-editor-wrapper.has-content .quill-editor-label {
   top: -10px;
   font-size: 12px;
-  color: #633fe7;
+  color: var(--vr-primary);
 }
 
 .req {
-  color: #f44336;
+  color: var(--vr-danger);
   margin-left: 2px;
 }
 
@@ -48,13 +48,13 @@
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--vr-border);
   border-radius: 4px 4px 0 0;
-  background: #fff;
+  background: var(--vr-card);
 }
 
 :host ::ng-deep .quill-editor-wrapper.focused .ql-toolbar.ql-snow {
-  border-bottom-color: #633fe7;
+  border-bottom-color: var(--vr-primary);
 }
 
 :host ::ng-deep .ql-container.ql-snow {
@@ -65,6 +65,19 @@
 
 :host ::ng-deep .ql-editor {
   min-height: 150px;
+  color: var(--vr-text);
+}
+
+:host ::ng-deep .ql-snow .ql-stroke {
+  stroke: var(--vr-text-secondary);
+}
+
+:host ::ng-deep .ql-snow .ql-fill {
+  fill: var(--vr-text-secondary);
+}
+
+:host ::ng-deep .ql-snow .ql-picker {
+  color: var(--vr-text);
 }
 
 :host ::ng-deep .ql-editor:focus,

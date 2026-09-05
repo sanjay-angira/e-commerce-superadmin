@@ -1,6 +1,6 @@
 .dlg {
-  --dlg-primary: #6366f1;
-  background: #fff;
+  --dlg-primary: var(--vr-primary);
+  background: var(--vr-card);
 }
 
 .dlg-head {
@@ -87,24 +87,26 @@ mat-dialog-content {
   top: 0;
   z-index: 1;
   padding: 8px;
-  background: #fff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--vr-card);
+  border-bottom: 1px solid var(--vr-border);
 }
 
 .icon-search input {
   box-sizing: border-box;
   width: 100%;
   padding: 8px 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--vr-border-strong);
   border-radius: 4px;
   outline: none;
   font: inherit;
+  background: var(--vr-input-bg);
+  color: var(--vr-text);
 }
 
 .icon-search .hint {
   margin-top: 4px;
   font-size: 11px;
-  color: #6b7280;
+  color: var(--vr-text-muted);
 }
 
 mat-dialog-actions {

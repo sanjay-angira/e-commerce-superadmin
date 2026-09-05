@@ -6,13 +6,7 @@ import { Component, input } from '@angular/core';
   template: `
     <div
       class="brand-logo"
-      [style.--logo-color]="variant() === 'sidebar' ? '#f5f1ea' : '#18181b'"
-      [style.--logo-label-color]="
-        variant() === 'sidebar' ? 'rgba(245, 241, 234, 0.92)' : 'rgba(24, 24, 27, 0.82)'
-      "
-      [style.--logo-line-middle]="
-        variant() === 'sidebar' ? 'rgba(245, 241, 234, 0.85)' : 'rgba(24, 24, 27, 0.55)'
-      "
+      [class.brand-logo--sidebar]="variant() === 'sidebar'"
       aria-label="Vrindavan Rasa logo"
     >
       <div class="brand-logo__wordmark">Vrindavan</div>
@@ -36,7 +30,15 @@ import { Component, input } from '@angular/core';
         justify-content: center;
         min-width: 168px;
         padding: 2px 0;
+        --logo-color: var(--vr-text, #18181b);
+        --logo-label-color: var(--vr-text-secondary, rgba(24, 24, 27, 0.82));
+        --logo-line-middle: var(--vr-text-muted, rgba(24, 24, 27, 0.55));
         color: var(--logo-color);
+      }
+      .brand-logo--sidebar {
+        --logo-color: #f5f1ea;
+        --logo-label-color: rgba(245, 241, 234, 0.92);
+        --logo-line-middle: rgba(245, 241, 234, 0.85);
       }
       .brand-logo__wordmark {
         font-family: 'Times New Roman', Georgia, serif;

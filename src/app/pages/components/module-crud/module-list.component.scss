@@ -7,7 +7,7 @@
   padding: 12px 16px;
   border-radius: 4px;
   background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
+  color: var(--vr-danger);
 }
 
 .center {
@@ -32,7 +32,7 @@
 
 :host ::ng-deep .vr-table .mat-mdc-cell,
 :host ::ng-deep .vr-table .mat-mdc-header-cell {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-bottom: 1px solid var(--vr-border) !important;
 }
 
 :host ::ng-deep .vr-table .mat-mdc-row:last-child .mat-mdc-cell {
@@ -56,6 +56,6 @@
 }
 
 .vr-status.default {
-  color: #5f6368;
+  color: var(--vr-text-secondary);
   background: rgba(95, 99, 104, 0.1);
 }

@@ -73,8 +73,8 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
   styles: [
     `
       .dlg {
-        --dlg-primary: #6366f1;
-        background: #fff;
+        --dlg-primary: var(--vr-primary);
+        background: var(--vr-card);
         min-width: min(520px, 90vw);
       }
       .dlg-head {
@@ -104,9 +104,9 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
       .banner.error {
         padding: 10px 12px;
         border-radius: 8px;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        color: #b91c1c;
+        background: var(--vr-danger-soft);
+        border: 1px solid var(--vr-danger-border);
+        color: var(--vr-danger-text);
         font-size: 13px;
       }
       .attach-btn {

@@ -6,7 +6,7 @@
 
 .profile-hero-card,
 .about-card {
-  background: #fff;
+  background: var(--vr-card);
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(82, 63, 104, 0.08);
   overflow: hidden;
@@ -44,8 +44,8 @@
   height: 96px;
   border-radius: 50%;
   object-fit: cover;
-  background: #e5e7eb;
-  border: 2px solid #fff;
+  background: var(--vr-surface-muted);
+  border: 2px solid var(--vr-card);
   display: block;
 }
 
@@ -168,8 +168,8 @@
   display: grid;
   place-items: center;
   flex: none;
-  background: rgba(99, 102, 241, 0.1);
-  color: #6366f1;
+  background: var(--vr-primary-soft);
+  color: var(--vr-primary);
 }
 
 .icon-bubble mat-icon {
@@ -181,13 +181,13 @@
 .info-value {
   margin: 0;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--vr-text);
 }
 
 .info-hint {
   margin: 2px 0 0;
   font-size: 12px;
-  color: #9e9e9e;
+  color: var(--vr-text-muted);
 }
 
 @media (max-width: 640px) {
@@ -210,7 +210,7 @@
   }
 
   .name-row h1 {
-    color: #18181b;
+    color: var(--vr-text);
     text-shadow: none;
   }
 

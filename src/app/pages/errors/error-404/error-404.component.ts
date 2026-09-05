@@ -56,7 +56,7 @@ import { MatIconModule } from '@angular/material/icon';
       }
       p {
         margin: 0 0 12px;
-        color: #757575;
+        color: var(--vr-text-secondary);
       }
     `,
   ],

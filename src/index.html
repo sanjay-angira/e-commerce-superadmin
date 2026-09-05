@@ -13,6 +13,16 @@
       rel="stylesheet"
     />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('vr-superadmin-theme');
+          if (theme !== 'light' && theme !== 'dark') theme = 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <app-root></app-root>

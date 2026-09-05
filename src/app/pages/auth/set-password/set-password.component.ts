@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { jwtDecode } from 'jwt-decode';
 import { LoginService } from '../../../core/services/login.service';
 import { AuthBrandLogoComponent } from '../shared/auth-brand-logo.component';
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
 
 type InviteToken = {
   exp?: number;
@@ -77,6 +78,7 @@ function noWhitespaceValidator(control: AbstractControl): ValidationErrors | nul
     MatSnackBarModule,
     MatTooltipModule,
     AuthBrandLogoComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './set-password.component.html',
   styleUrl: './set-password.component.scss',

@@ -15,18 +15,18 @@
 :host ::ng-deep {
   --mat-stepper-container-color: transparent;
   --mat-stepper-header-focus-state-layer-color: transparent;
-  --mat-expansion-container-background-color: #ffffff;
+  --mat-expansion-container-background-color: var(--vr-card);
 }
 
 :host ::ng-deep .mat-stepper-horizontal-line {
   border-top-width: 1px !important;
-  border-color: #81818149 !important;
+  border-color: var(--vr-step-line) !important;
 }
 
 :host ::ng-deep .mat-step-header.mat-horizontal-stepper-header {
   border-radius: 50px !important;
-  background-color: #ffffff !important;
-  color: #626a79;
+  background-color: var(--vr-card) !important;
+  color: var(--vr-step-text);
   font-weight: 500;
   padding: 6px 12px !important;
   height: 30px !important;
@@ -35,12 +35,12 @@
 :host ::ng-deep .mat-step-header.mat-horizontal-stepper-header:hover,
 :host ::ng-deep .mat-step-header[aria-selected='true'],
 :host ::ng-deep .mat-step-header.mat-step-header-selected {
-  background-color: #f3f3f3 !important;
+  background-color: var(--vr-surface-subtle) !important;
 }
 
 :host ::ng-deep .mat-step-label,
 :host ::ng-deep .mat-step-text-label {
-  color: #626a79;
+  color: var(--vr-step-text);
   font-weight: 500;
 }
 
@@ -68,7 +68,7 @@
   gap: 0.75rem;
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--vr-border-strong);
 }
 
 .step-actions.only-next {
@@ -84,15 +84,15 @@
 
 .field-error {
   margin-top: 4px;
-  color: #f44336;
+  color: var(--vr-danger);
   font-size: 12px;
 }
 
 .attr-box {
   padding: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--vr-border);
   border-radius: 4px;
-  background: #fff;
+  background: var(--vr-card);
 }
 
 .attr-box h4 {
@@ -103,7 +103,7 @@
 .attr-help {
   margin: 0 0 1rem;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--vr-text-muted);
 }
 
 .variant-remove {
@@ -131,12 +131,12 @@
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
-  color: #f44336;
-  background: rgba(244, 67, 54, 0.1);
+  color: var(--vr-danger);
+  background: var(--vr-danger-soft);
 }
 
 .status-chip.on {
-  color: #4caf50;
+  color: var(--vr-status-green);
   background: rgba(76, 175, 80, 0.1);
 }
 
@@ -156,9 +156,9 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
   padding: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--vr-border);
   border-radius: 4px;
-  background: #ffffff;
+  background: var(--vr-card);
 }
 
 .display-modes {
@@ -167,15 +167,15 @@
 }
 
 :host ::ng-deep .mat-expansion-panel {
-  background: #ffffff !important;
+  background: var(--vr-card) !important;
   box-shadow: none !important;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--vr-border);
   border-radius: 4px !important;
 }
 
 :host ::ng-deep .mat-expansion-panel-header,
 :host ::ng-deep .mat-expansion-panel-body {
-  background: #ffffff !important;
+  background: var(--vr-card) !important;
 }
 
 :host ::ng-deep .mat-mdc-form-field {

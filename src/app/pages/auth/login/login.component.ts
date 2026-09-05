@@ -10,6 +10,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoginService } from '../../../core/services/login.service';
 import { AuthBrandLogoComponent } from '../shared/auth-brand-logo.component';
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ import { AuthBrandLogoComponent } from '../shared/auth-brand-logo.component';
     MatSnackBarModule,
     MatTooltipModule,
     AuthBrandLogoComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',

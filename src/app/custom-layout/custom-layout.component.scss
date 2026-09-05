@@ -213,8 +213,8 @@ button.nav-item {
   top: 0;
   z-index: 3;
   height: var(--vr-toolbar-height);
-  background: #fff !important;
-  color: rgba(0, 0, 0, 0.87);
+  background: var(--vr-toolbar-bg) !important;
+  color: var(--vr-text);
   border-bottom: 1px solid var(--vr-divider);
   box-shadow: none;
 }
@@ -227,7 +227,7 @@ button.nav-item {
 .toolbar-title {
   margin-left: 4px;
   font-weight: 500;
-  color: #18181b;
+  color: var(--vr-text);
 }
 
 .spacer {
