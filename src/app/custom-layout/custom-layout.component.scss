@@ -9,18 +9,47 @@
   border: none !important;
   border-radius: 0 !important;
   color: var(--vr-sidenav-text);
+  overflow: hidden !important;
   /* Material 3 drawers use corner-large by default — keep square like vr-admin */
   --mat-sidenav-container-shape: 0px;
 }
 
 .layout-sidenav .mat-drawer-inner-container {
-  overflow: hidden;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
+  max-width: 100%;
 }
 
 .sidenav-inner {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sidenav-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 72%;
+  height: auto;
+  aspect-ratio: 1;
+  max-width: 200px;
+  max-height: 200px;
+  transform: translate(-50%, -50%);
+  background: url('/brand/bazarbaazi-mark.svg') no-repeat center / contain;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sidenav-inner > :not(.sidenav-watermark) {
+  position: relative;
+  z-index: 1;
 }
 
 .brand-bar {
@@ -31,6 +60,8 @@
   padding: 0 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .sidenav-search {

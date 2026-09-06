@@ -1,20 +1,18 @@
 import { Component, input } from '@angular/core';
 
-/** Brand mark mirrored from vr-admin website-logo (auth variant). */
+/** BazarBaazi lockup — auth cards and the dark sidebar. */
 @Component({
   selector: 'app-auth-brand-logo',
   template: `
     <div
       class="brand-logo"
       [class.brand-logo--sidebar]="variant() === 'sidebar'"
-      aria-label="Vrindavan Rasa logo"
     >
-      <div class="brand-logo__wordmark">Vrindavan</div>
-      <div class="brand-logo__subline">
-        <span class="brand-logo__line"></span>
-        <span class="brand-logo__label">रस</span>
-        <span class="brand-logo__line"></span>
-      </div>
+      <img
+        class="brand-logo__mark"
+        src="/brand/bazarbaazi-lockup.svg"
+        alt="BazarBaazi — Har Zaroorat, Ek Bazar"
+      />
     </div>
   `,
   styles: [
@@ -22,56 +20,34 @@ import { Component, input } from '@angular/core';
       :host {
         display: inline-flex;
         align-items: center;
+        max-width: 100%;
       }
       .brand-logo {
         display: inline-flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-width: 168px;
-        padding: 2px 0;
-        --logo-color: var(--vr-text, #18181b);
-        --logo-label-color: var(--vr-text-secondary, rgba(24, 24, 27, 0.82));
-        --logo-line-middle: var(--vr-text-muted, rgba(24, 24, 27, 0.55));
-        color: var(--logo-color);
+        line-height: 0;
+        max-width: 100%;
       }
-      .brand-logo--sidebar {
-        --logo-color: #f5f1ea;
-        --logo-label-color: rgba(245, 241, 234, 0.92);
-        --logo-line-middle: rgba(245, 241, 234, 0.85);
+      .brand-logo__mark {
+        display: block;
+        height: 56px;
+        width: auto;
+        max-width: min(260px, 100%);
+        min-width: 0;
+        object-fit: contain;
       }
-      .brand-logo__wordmark {
-        font-family: 'Times New Roman', Georgia, serif;
-        font-size: 1.75rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        line-height: 1;
-        transform: scaleY(1.08);
+      /* Artwork is white; invert on light auth surfaces. */
+      .brand-logo:not(.brand-logo--sidebar) .brand-logo__mark {
+        filter: invert(1);
       }
-      .brand-logo__subline {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        margin-top: 0.18rem;
-        width: 100%;
+      :host-context(html[data-theme='dark']) .brand-logo:not(.brand-logo--sidebar) .brand-logo__mark {
+        filter: none;
       }
-      .brand-logo__label {
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-        font-size: 0.6rem;
-        font-weight: 300;
-        letter-spacing: 0.72em;
-        padding-left: 0.72em;
-        color: var(--logo-label-color);
-      }
-      .brand-logo__line {
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(
-          90deg,
-          transparent 0%,
-          var(--logo-line-middle) 50%,
-          transparent 100%
-        );
+      .brand-logo--sidebar .brand-logo__mark {
+        height: 40px;
+        max-width: min(232px, 100%);
+        filter: none;
       }
     `,
   ],
