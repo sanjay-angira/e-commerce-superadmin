@@ -9,7 +9,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
@@ -26,6 +25,7 @@ import {
 } from '../../../../static-data/admin-module-table.config';
 import type { AdminTableColumnDefinition } from '../../../../static-data/static-common-table-columns';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { TableSkeletonComponent } from '../table-skeleton/table-skeleton.component';
 
 @Component({
   selector: 'app-module-list',
@@ -40,8 +40,8 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
+    TableSkeletonComponent,
     MatDialogModule,
     MatChipsModule,
     MatTooltipModule,
@@ -136,6 +136,13 @@ export class ModuleListComponent {
     }
 
     this.displayedColumns = columns;
+  }
+
+  skeletonHeaders(): string[] {
+    return this.displayedColumns.map((key) => {
+      if (key === 'actions') return 'Actions';
+      return this.columnOptions.find((column) => column.property === key)?.label ?? key;
+    });
   }
 
   load(): void {

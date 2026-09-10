@@ -76,7 +76,11 @@
 
     <div class="vr-card joined">
       @if (loading()) {
-        <div class="center"><mat-spinner diameter="36"></mat-spinner></div>
+        <app-table-skeleton
+          [headers]="skeletonHeaders()"
+          [rows]="pageSize()"
+          [showPaginator]="true"
+        />
       } @else if (!rows().length) {
         <div class="vr-empty">
           <mat-icon style="font-size:48px;width:48px;height:48px;opacity:.35">inbox</mat-icon>

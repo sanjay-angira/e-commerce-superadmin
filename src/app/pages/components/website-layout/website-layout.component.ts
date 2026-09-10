@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -21,6 +20,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ApiService } from '../../../core/services/api.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { TableSkeletonComponent } from '../table-skeleton/table-skeleton.component';
 import {
   WebsiteLayoutColumns,
   type AdminTableColumnDefinition,
@@ -36,7 +36,6 @@ import {
     MatIconModule,
     MatTableModule,
     MatSlideToggleModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
     MatMenuModule,
@@ -45,6 +44,7 @@ import {
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
+    TableSkeletonComponent,
   ],
   templateUrl: './website-layout.component.html',
   styleUrl: './website-layout.component.scss',
@@ -74,6 +74,14 @@ export class WebsiteLayoutComponent {
         .filter((c) => c.visible)
         .map((c) => (c.datatype === 'button' ? 'actions' : c.property)),
     ];
+  }
+
+  skeletonHeaders(): string[] {
+    return this.displayedColumns.map((key) => {
+      if (key === 'drag') return '';
+      if (key === 'actions') return 'Actions';
+      return this.columnOptions.find((column) => column.property === key)?.label ?? key;
+    });
   }
 
   load(): void {

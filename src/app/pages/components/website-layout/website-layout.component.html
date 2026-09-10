@@ -56,7 +56,9 @@
 
   <div class="vr-page-content">
     @if (loading()) {
-      <div class="vr-card joined center"><mat-spinner diameter="36"></mat-spinner></div>
+      <div class="vr-card joined">
+        <app-table-skeleton [headers]="skeletonHeaders()" [rows]="8" [showPaginator]="false" />
+      </div>
     } @else {
       <div class="vr-card joined">
         <table

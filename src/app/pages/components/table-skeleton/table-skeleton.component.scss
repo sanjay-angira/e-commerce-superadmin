@@ -1,0 +1,85 @@
+.vr-table-skel {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.vr-table-skel-head,
+.vr-table-skel-row {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 5), minmax(72px, 1fr));
+  gap: 16px;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 16px;
+}
+
+.vr-table-skel-head {
+  min-height: 56px;
+  border-bottom: 1px solid var(--vr-border);
+}
+
+.vr-table-skel-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vr-text);
+  letter-spacing: 0.0071428571em;
+  white-space: nowrap;
+}
+
+.vr-table-skel-row {
+  border-bottom: 1px solid var(--vr-border);
+}
+
+.vr-table-skel:not(:has(.vr-table-skel-pager)) .vr-table-skel-row:last-child {
+  border-bottom: none;
+}
+
+.vr-table-skel-row .vr-skeleton {
+  height: 12px;
+  width: 78%;
+}
+
+.vr-table-skel-row:nth-child(odd) .vr-skeleton:nth-child(1) {
+  width: 56%;
+}
+
+.vr-table-skel-row:nth-child(even) .vr-skeleton:nth-child(2) {
+  width: 62%;
+}
+
+.vr-table-skel-row .vr-skeleton:last-child {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.vr-table-skel-head .vr-skeleton {
+  height: 10px;
+  width: 64%;
+}
+
+.vr-table-skel-pager {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--vr-border);
+}
+
+.vr-table-skel-pager .pager-range {
+  width: 88px;
+  height: 12px;
+}
+
+.vr-table-skel-pager .pager-size {
+  width: 48px;
+  height: 12px;
+}
+
+.vr-table-skel-pager .pager-nav {
+  width: 96px;
+  height: 28px;
+  border-radius: 6px;
+}
