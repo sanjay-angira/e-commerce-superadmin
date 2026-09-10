@@ -49,7 +49,7 @@ export class CustomLayoutComponent implements OnInit {
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly sections = this.navigation.sections;
   readonly menuLoading = this.navigation.loading;
-  readonly navSkeletonRows = [1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+  readonly navSkeletonRows = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
   readonly displayName = signal(this.login.displayName);
   readonly openTitles = signal<Set<string>>(new Set());
   readonly isHandset = toSignal(

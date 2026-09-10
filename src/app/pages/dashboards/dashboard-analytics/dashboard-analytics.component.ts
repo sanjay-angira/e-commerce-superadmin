@@ -6,6 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { DashboardService } from '../../../core/services/dashboard.service';
+import { IndiaMapComponent } from '../india-map/india-map.component';
 
 @Component({
   selector: 'app-dashboard-analytics',
@@ -16,6 +17,7 @@ import { DashboardService } from '../../../core/services/dashboard.service';
     MatTableModule,
     MatButtonModule,
     RouterLink,
+    IndiaMapComponent,
   ],
   templateUrl: './dashboard-analytics.component.html',
   styleUrl: './dashboard-analytics.component.scss',

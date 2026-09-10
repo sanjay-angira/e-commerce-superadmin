@@ -84,6 +84,22 @@
   font-weight: 600;
 }
 
+.map-panel {
+  margin-bottom: 16px;
+  padding: 0.5rem 0 1rem;
+}
+
+.skel-map {
+  height: 520px;
+  margin: 0 1.25rem 1rem;
+  border-radius: 4px;
+}
+
+app-india-map {
+  display: block;
+  margin-bottom: 16px;
+}
+
 .panels {
   display: grid;
   grid-template-columns: 1.4fr 1fr;

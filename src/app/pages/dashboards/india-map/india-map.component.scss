@@ -1,0 +1,62 @@
+.india-map-card {
+  padding: 0.5rem 0 1rem;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+}
+
+.panel-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.map-wrap {
+  position: relative;
+  min-height: 520px;
+}
+
+.map-host {
+  width: 100%;
+  height: 520px;
+}
+
+.map-host.is-hidden {
+  display: none;
+}
+
+.map-overlay {
+  position: absolute;
+  inset: 0 1.25rem 1rem;
+  z-index: 1;
+}
+
+.map-skel {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.map-error {
+  margin: 0;
+  padding: 1rem 1.25rem 1.25rem;
+  color: var(--vr-text-secondary);
+}
+
+:host ::ng-deep .india-map-tip {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+:host ::ng-deep .india-map-tip .tip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+:host ::ng-deep .india-map-tip .tip-muted {
+  font-size: 12px;
+  color: var(--vr-text-secondary);
+}
