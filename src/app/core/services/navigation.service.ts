@@ -7,7 +7,7 @@ export class NavigationService {
   private readonly modules = inject(ModuleService);
 
   readonly sections = signal<AdminMenuSection[]>([]);
-  readonly loading = signal(false);
+  readonly loading = signal(true);
   readonly searchActive = signal(false);
 
   load(search?: string): void {
@@ -34,6 +34,7 @@ export class NavigationService {
   clear(): void {
     this.sections.set([]);
     this.searchActive.set(false);
+    this.loading.set(true);
   }
 
   /**

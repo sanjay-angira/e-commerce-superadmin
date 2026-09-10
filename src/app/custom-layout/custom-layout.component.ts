@@ -9,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRippleModule } from '@angular/material/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
@@ -33,7 +32,6 @@ import { ThemeToggleComponent } from '../pages/components/theme-toggle/theme-tog
     MatButtonModule,
     MatMenuModule,
     MatDividerModule,
-    MatProgressSpinnerModule,
     MatRippleModule,
     AuthBrandLogoComponent,
     ThemeToggleComponent,
@@ -51,6 +49,7 @@ export class CustomLayoutComponent implements OnInit {
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly sections = this.navigation.sections;
   readonly menuLoading = this.navigation.loading;
+  readonly navSkeletonRows = [1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16,17,18,19,20];
   readonly displayName = signal(this.login.displayName);
   readonly openTitles = signal<Set<string>>(new Set());
   readonly isHandset = toSignal(

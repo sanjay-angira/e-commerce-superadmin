@@ -48,6 +48,8 @@
   --vr-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   --vr-auth-a: #fafafa;
   --vr-auth-b: #f4f4f5;
+  --vr-skeleton: #e4e4ea;
+  --vr-skeleton-shine: rgba(255, 255, 255, 0.72);
 }
 
 /* Comfortable dark: cool charcoal, not pure black */
@@ -90,6 +92,8 @@ html[data-theme='dark'] {
   --vr-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
   --vr-auth-a: #151a22;
   --vr-auth-b: #1b212c;
+  --vr-skeleton: #2a3342;
+  --vr-skeleton-shine: rgba(255, 255, 255, 0.1);
 }
 
 /* Force Material primary toward indigo; keep drawers square like vr-admin */
@@ -433,5 +437,94 @@ html[data-theme='dark'] {
     background: var(--vr-input-bg);
     color: var(--vr-text);
     border-color: var(--vr-border-strong);
+  }
+}
+
+.vr-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.vr-skeleton {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: var(--vr-skeleton);
+  border-radius: 4px;
+}
+
+.vr-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--vr-skeleton-shine), transparent);
+  animation: vr-skeleton-shimmer 1.35s ease-in-out infinite;
+}
+
+.vr-skeleton--icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.vr-skeleton--chevron {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.vr-skeleton--line {
+  height: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.vr-skeleton--stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.vr-skeleton--label {
+  width: 56px;
+  height: 10px;
+}
+
+.vr-skeleton--value {
+  width: 72px;
+  height: 18px;
+  margin-top: 8px;
+}
+
+.vr-skeleton--heading {
+  width: 140px;
+  height: 16px;
+}
+
+.vr-skeleton--btn {
+  width: 64px;
+  height: 14px;
+}
+
+@keyframes vr-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vr-skeleton::after {
+    animation: none;
   }
 }

@@ -1,7 +1,58 @@
-.center {
+.skel-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.skel-table-head,
+.skel-table-row {
   display: grid;
-  place-items: center;
-  padding: 48px;
+  grid-template-columns: 1.1fr 1.2fr 0.7fr 0.8fr 0.9fr;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 1.25rem;
+}
+
+.skel-table-head {
+  padding-top: 4px;
+  padding-bottom: 10px;
+}
+
+.skel-table-head .vr-skeleton {
+  height: 10px;
+  width: 72%;
+}
+
+.skel-table-row {
+  border-top: 1px solid var(--vr-divider);
+}
+
+.skel-table-row .vr-skeleton {
+  height: 12px;
+  width: 88%;
+}
+
+.skel-table-row:nth-child(odd) .vr-skeleton:nth-child(2),
+.skel-table-row:nth-child(even) .vr-skeleton:nth-child(1) {
+  width: 64%;
+}
+
+.skel-stock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 1.25rem;
+  border-top: 1px solid var(--vr-divider);
+}
+
+.skel-stock-name {
+  width: 58%;
+  height: 12px;
+}
+
+.skel-stock-qty {
+  width: 28px;
+  height: 12px;
 }
 
 .stats {

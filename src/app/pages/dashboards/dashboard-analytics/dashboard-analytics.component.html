@@ -14,7 +14,54 @@
 
   <div class="vr-page-content" style="margin-top: 0; padding-top: 1rem">
     @if (loading()) {
-      <div class="center"><mat-spinner diameter="40"></mat-spinner></div>
+      <div class="dash-skeleton" aria-busy="true" aria-live="polite">
+        <span class="vr-sr-only">Loading dashboard</span>
+        <div class="stats" aria-hidden="true">
+          @for (_ of skeletonStats; track $index) {
+            <div class="stat-card vr-card">
+              <span class="vr-skeleton vr-skeleton--stat-icon"></span>
+              <div class="skel-copy">
+                <span class="vr-skeleton vr-skeleton--label"></span>
+                <span class="vr-skeleton vr-skeleton--value"></span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="panels" aria-hidden="true">
+          <div class="vr-card panel">
+            <div class="panel-head">
+              <span class="vr-skeleton vr-skeleton--heading"></span>
+              <span class="vr-skeleton vr-skeleton--btn"></span>
+            </div>
+            <div class="skel-table-head">
+              @for (col of orderColumns; track col) {
+                <span class="vr-skeleton"></span>
+              }
+            </div>
+            @for (row of skeletonOrderRows; track row) {
+              <div class="skel-table-row">
+                @for (col of orderColumns; track col) {
+                  <span class="vr-skeleton"></span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="vr-card panel">
+            <div class="panel-head">
+              <span class="vr-skeleton vr-skeleton--heading"></span>
+              <span class="vr-skeleton vr-skeleton--btn"></span>
+            </div>
+            @for (_ of skeletonStockRows; track $index) {
+              <div class="skel-stock-row">
+                <span class="vr-skeleton skel-stock-name"></span>
+                <span class="vr-skeleton skel-stock-qty"></span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
     } @else if (error()) {
       <div class="vr-card" style="padding: 1.25rem">{{ error() }}</div>
     } @else {

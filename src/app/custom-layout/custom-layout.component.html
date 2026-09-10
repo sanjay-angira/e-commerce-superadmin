@@ -28,8 +28,13 @@
 
       <div class="nav-scroll">
         @if (menuLoading()) {
-          <div class="nav-status">
-            <mat-spinner diameter="28"></mat-spinner>
+          <div class="nav-skeleton" aria-busy="true" aria-live="polite">
+            <span class="vr-sr-only">Loading menu</span>
+            @for (i of navSkeletonRows; track i) {
+              <div class="nav-item" aria-hidden="true">
+                <span class="nav-skel-label vr-skeleton"></span>
+              </div>
+            }
           </div>
         } @else if (!sections().length) {
           <div class="nav-status muted">No modules found</div>

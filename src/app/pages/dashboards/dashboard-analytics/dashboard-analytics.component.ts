@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +13,6 @@ import { DashboardService } from '../../../core/services/dashboard.service';
     DatePipe,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatTableModule,
     MatButtonModule,
     RouterLink,
@@ -30,6 +28,9 @@ export class DashboardAnalyticsComponent {
   readonly summary = signal<any>(null);
 
   readonly orderColumns = ['orderNumber', 'customerName', 'total', 'orderStatus', 'createdAt'];
+  readonly skeletonStats = [1, 2, 3, 4];
+  readonly skeletonOrderRows = [1, 2, 3, 4, 5];
+  readonly skeletonStockRows = [1, 2, 3, 4];
 
   constructor() {
     this.dashboard.getSummary().subscribe({
