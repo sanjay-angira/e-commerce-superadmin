@@ -1,25 +1,27 @@
 <div class="vr-table-skel" role="status" aria-busy="true" aria-live="polite">
   <span class="vr-sr-only">Loading table</span>
 
-  <div class="vr-table-skel-head" [style.--cols]="colCount()">
-    @if (headers().length) {
-      @for (label of headers(); track $index) {
-        <span class="vr-table-skel-label">{{ label }}</span>
-      }
-    } @else {
-      @for (col of colIndexes(); track col) {
-        <span class="vr-skeleton vr-skeleton--heading"></span>
-      }
-    }
-  </div>
-
-  @for (row of rowIndexes(); track row) {
-    <div class="vr-table-skel-row" [style.--cols]="colCount()">
-      @for (col of colIndexes(); track col) {
-        <span class="vr-skeleton"></span>
+  <div class="vr-table-scroll">
+    <div class="vr-table-skel-head" [style.--cols]="colCount()">
+      @if (headers().length) {
+        @for (label of headers(); track $index) {
+          <span class="vr-table-skel-label">{{ label }}</span>
+        }
+      } @else {
+        @for (col of colIndexes(); track col) {
+          <span class="vr-skeleton vr-skeleton--heading"></span>
+        }
       }
     </div>
-  }
+
+    @for (row of rowIndexes(); track row) {
+      <div class="vr-table-skel-row" [style.--cols]="colCount()">
+        @for (col of colIndexes(); track col) {
+          <span class="vr-skeleton"></span>
+        }
+      </div>
+    }
+  </div>
 
   @if (showPaginator()) {
     <div class="vr-table-skel-pager">

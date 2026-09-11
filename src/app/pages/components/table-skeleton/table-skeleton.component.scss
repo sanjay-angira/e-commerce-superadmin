@@ -1,6 +1,5 @@
 .vr-table-skel {
   width: 100%;
-  overflow-x: auto;
 }
 
 .vr-table-skel-head,
@@ -16,6 +15,7 @@
 .vr-table-skel-head {
   min-height: 56px;
   border-bottom: 1px solid var(--vr-border);
+  background: var(--vr-card);
 }
 
 .vr-table-skel-label {

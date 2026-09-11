@@ -92,7 +92,8 @@
           }
         </div>
       } @else {
-        <table mat-table [dataSource]="rows()" class="vr-table">
+        <div class="vr-table-scroll">
+          <table mat-table [dataSource]="rows()" class="vr-table">
           @for (col of dataColumns; track col.property) {
             <ng-container [matColumnDef]="col.property">
               <th mat-header-cell *matHeaderCellDef>{{ col.label }}</th>
@@ -161,6 +162,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
+        </div>
 
         <mat-paginator
           [length]="count()"

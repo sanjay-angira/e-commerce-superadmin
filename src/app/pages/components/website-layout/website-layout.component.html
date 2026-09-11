@@ -61,6 +61,7 @@
       </div>
     } @else {
       <div class="vr-card joined">
+        <div class="vr-table-scroll">
         <table
           mat-table
           [dataSource]="rows()"
@@ -139,6 +140,7 @@
             [cdkDragDisabled]="reordering()"
           ></tr>
         </table>
+        </div>
 
         @if (!rows().length) {
           <div class="vr-empty">

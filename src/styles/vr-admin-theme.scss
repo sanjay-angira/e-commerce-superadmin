@@ -126,6 +126,8 @@ html {
 /* List pages: filter bar sits flush at band bottom so table does not slide under it */
 .vr-page-header-band:has(.vr-filter-bar) {
   padding-bottom: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .vr-title-card {
@@ -182,24 +184,36 @@ html {
 }
 
 .vr-filter-bar {
+  position: relative;
+  z-index: 2;
   margin-top: 1.25rem;
   min-height: 64px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 0 1.25rem;
   background: var(--vr-surface-muted);
   border-radius: 2px 2px 0 0;
+  overflow: hidden;
+}
+
+.vr-filter-bar .filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .vr-search-pill {
   display: flex;
   align-items: center;
   gap: 0;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
   max-width: 300px;
-  width: 100%;
   padding: 0 1rem;
   background: var(--vr-input-bg);
   border: 1px solid var(--vr-border-strong);
@@ -244,8 +258,16 @@ html {
 }
 
 .vr-card.joined {
+  position: relative;
+  z-index: 1;
   border-radius: 0 0 4px 4px;
   box-shadow: var(--vr-shadow);
+  overflow: hidden;
+}
+
+.vr-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .vr-status {
@@ -288,26 +310,31 @@ html {
 .vr-table .mdc-data-table__header-cell,
 .vr-table .mdc-data-table__cell {
   white-space: nowrap;
-  box-sizing: content-box;
+  box-sizing: border-box;
   font-size: 14px;
   padding: 0 16px;
   border-bottom: 1px solid var(--vr-border) !important;
+  vertical-align: middle;
 }
 
-.vr-table .mat-mdc-header-cell {
+.vr-table .mat-mdc-header-row,
+.vr-table .mdc-data-table__header-row {
+  height: 56px;
+  background: var(--vr-card);
+}
+
+.vr-table .mat-mdc-header-cell,
+.vr-table .mdc-data-table__header-cell {
   font-weight: 500;
   color: var(--vr-text);
   letter-spacing: 0.0071428571em;
   background-color: var(--vr-card) !important;
 }
 
-.vr-table .mat-mdc-cell {
+.vr-table .mat-mdc-cell,
+.vr-table .mdc-data-table__cell {
   font-weight: 400;
   color: var(--vr-text);
-}
-
-.vr-table .mat-mdc-header-row {
-  height: 56px;
 }
 
 .vr-table .mat-mdc-row {
@@ -321,9 +348,18 @@ html {
 }
 
 .vr-table + .mat-mdc-paginator,
+.vr-table-scroll + .mat-mdc-paginator,
 .vr-card > .mat-mdc-paginator {
   border-top: 1px solid var(--vr-border);
   background: var(--vr-card);
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .mat-mdc-paginator .mat-mdc-paginator-container {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
 }
 
 .vr-form-body {
@@ -355,8 +391,12 @@ html {
 }
 
 .vr-form mat-form-field,
-.vr-form .mat-mdc-form-field {
+.vr-form .mat-mdc-form-field,
+.vr-form app-image-upload,
+.vr-form app-multi-image-upload,
+.vr-form app-quill-editor {
   width: 100%;
+  min-width: 0;
 }
 
 .vr-form .full,
@@ -382,6 +422,31 @@ html {
   min-height: 56px;
   display: inline-flex;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .vr-form {
+    grid-template-columns: 1fr;
+  }
+
+  .vr-form .full,
+  .vr-form .actions,
+  .vr-form app-quill-editor,
+  .vr-form app-multi-image-upload,
+  .vr-form app-image-upload,
+  .vr-form mat-slide-toggle,
+  .vr-form mat-checkbox {
+    grid-column: 1 / -1;
+  }
+
+  .vr-form .actions {
+    flex-wrap: wrap;
+  }
+
+  .vr-form .actions a,
+  .vr-form .actions button {
+    flex: 1 1 auto;
+  }
 }
 
 /* Hide default Material subscript spacer like vr-admin */
