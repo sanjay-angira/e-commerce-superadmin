@@ -10,7 +10,7 @@ import { Component, input } from '@angular/core';
     >
       <img
         class="brand-logo__mark"
-        src="/brand/bazarbaazi-lockup.svg"
+        src="/brand/bazarbaazi-lockup-clear.png"
         alt="BazarBaazi — Har Zaroorat, Ek Bazar"
       />
     </div>
@@ -33,11 +33,11 @@ import { Component, input } from '@angular/core';
         display: block;
         height: 56px;
         width: auto;
-        max-width: min(260px, 100%);
+        max-width: min(280px, 100%);
         min-width: 0;
         object-fit: contain;
       }
-      /* Artwork is white; invert on light auth surfaces. */
+      /* White artwork on transparent; invert on light auth cards. */
       .brand-logo:not(.brand-logo--sidebar) .brand-logo__mark {
         filter: invert(1);
       }
@@ -45,8 +45,8 @@ import { Component, input } from '@angular/core';
         filter: none;
       }
       .brand-logo--sidebar .brand-logo__mark {
-        height: 40px;
-        max-width: min(232px, 100%);
+        height: 42px;
+        max-width: min(240px, 100%);
         filter: none;
       }
     `,
