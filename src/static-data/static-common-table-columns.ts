@@ -15,6 +15,7 @@ export const UserComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Phone Number', property: 'phoneNumber', type: 'text', datatype: 'phoneNumber', visible: true },
   { label: 'Roles', property: 'role', type: 'text', datatype: 'role', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
+  { label: 'Is Deleted', property: 'isDeleted', type: 'text', datatype: 'deleted', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },

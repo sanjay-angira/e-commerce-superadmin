@@ -203,6 +203,11 @@ export class ModuleListComponent {
   }
 
   roleNames(row: Record<string, unknown>): string[] {
+    const profiles = this.roleProfileRows(row);
+    if (profiles.length) {
+      return profiles.map((profile) => profile.roleName);
+    }
+
     const userRoles = row['userRoles'];
     if (Array.isArray(userRoles) && userRoles.length > 0) {
       const fromRelations = userRoles
@@ -234,10 +239,82 @@ export class ModuleListComponent {
     return ['Customer'];
   }
 
+  showRoleBreakdown(row: Record<string, unknown>): boolean {
+    return this.moduleKey === 'users' && this.roleProfileRows(row).length > 0;
+  }
+
+  isRowDeleted(row: Record<string, unknown>): boolean {
+    const profiles = this.roleProfileRows(row);
+    if (profiles.length) {
+      return profiles.some((profile) => profile.isDeleted);
+    }
+    return Boolean(row['isDeleted'] ?? row['isDeleteRequested'] ?? false);
+  }
+
+  roleProfileRows(row: Record<string, unknown>): Array<{
+    roleId: string | number;
+    roleName: string;
+    displayName: string;
+    email: string;
+    isActive: boolean;
+    isDeleted: boolean;
+  }> {
+    const profiles = row['roleProfiles'];
+    if (!Array.isArray(profiles) || !profiles.length) {
+      const roleEmails = row['roleEmails'];
+      if (!Array.isArray(roleEmails) || !roleEmails.length) return [];
+      return roleEmails.map((item, index) => {
+        const record = (item && typeof item === 'object' ? item : {}) as Record<
+          string,
+          unknown
+        >;
+        const roleName = String(record['roleName'] ?? 'Role').trim() || 'Role';
+        return {
+          roleId: (record['roleId'] as string | number) ?? index,
+          roleName,
+          displayName: this.displayName(row) || '—',
+          email: String(record['email'] ?? '').trim(),
+          isActive:
+            record['isActive'] === undefined
+              ? row['isActive'] !== false
+              : Boolean(record['isActive']),
+          isDeleted: Boolean(
+            record['isDeleted'] ?? record['isDeleteRequested'] ?? false,
+          ),
+        };
+      });
+    }
+
+    return profiles.map((item, index) => {
+      const record = (item && typeof item === 'object' ? item : {}) as Record<
+        string,
+        unknown
+      >;
+      const roleName = String(record['roleName'] ?? 'Role').trim() || 'Role';
+      const firstName = String(record['firstName'] ?? '').trim();
+      const lastName = String(record['lastName'] ?? '').trim();
+      const displayName = `${firstName} ${lastName}`.trim() || '—';
+      return {
+        roleId: (record['roleId'] as string | number) ?? index,
+        roleName,
+        displayName,
+        email: String(record['email'] ?? '').trim(),
+        isActive:
+          record['isActive'] === undefined
+            ? row['isActive'] !== false
+            : Boolean(record['isActive']),
+        isDeleted: Boolean(
+          record['isDeleted'] ?? record['isDeleteRequested'] ?? false,
+        ),
+      };
+    });
+  }
+
   roleChipClass(roleName: string): string {
     const normalized = roleName.trim().toLowerCase();
     if (normalized === 'admin') return 'admin';
     if (normalized === 'user' || normalized === 'customer') return 'user';
+    if (normalized === 'seller') return 'seller';
     return 'default';
   }
 

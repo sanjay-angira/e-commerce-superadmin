@@ -102,6 +102,44 @@
                   <span class="vr-status active">
                     {{ row[col.property] ? (row[col.property] | date: 'mediumDate') : '—' }}
                   </span>
+                } @else if ((col.datatype === 'status' || col.datatype === 'on-off') && showRoleBreakdown(row)) {
+                  <div class="vr-role-breakdown">
+                    @for (profile of roleProfileRows(row); track profile.roleId) {
+                      <div class="vr-role-breakdown-row">
+                        <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                        <span
+                          class="vr-status"
+                          [class.active]="profile.isActive"
+                          [class.inactive]="!profile.isActive"
+                        >
+                          {{ profile.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                      </div>
+                    }
+                  </div>
+                } @else if (col.datatype === 'deleted' && showRoleBreakdown(row)) {
+                  <div class="vr-role-breakdown">
+                    @for (profile of roleProfileRows(row); track profile.roleId) {
+                      <div class="vr-role-breakdown-row">
+                        <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                        <span
+                          class="vr-status"
+                          [class.inactive]="profile.isDeleted"
+                          [class.active]="!profile.isDeleted"
+                        >
+                          {{ profile.isDeleted ? 'Yes' : 'No' }}
+                        </span>
+                      </div>
+                    }
+                  </div>
+                } @else if (col.datatype === 'deleted') {
+                  <span
+                    class="vr-status"
+                    [class.inactive]="isRowDeleted(row)"
+                    [class.active]="!isRowDeleted(row)"
+                  >
+                    {{ isRowDeleted(row) ? 'Yes' : 'No' }}
+                  </span>
                 } @else if (col.datatype === 'status' || col.datatype === 'on-off') {
                   <span
                     class="vr-status"
@@ -118,6 +156,24 @@
                       <span [class]="'vr-status ' + roleChipClass(role)">{{ role }}</span>
                     }
                   </span>
+                } @else if (col.datatype === 'name' && showRoleBreakdown(row)) {
+                  <div class="vr-role-breakdown">
+                    @for (profile of roleProfileRows(row); track profile.roleId) {
+                      <div class="vr-role-breakdown-row">
+                        <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                        <span>{{ profile.displayName }}</span>
+                      </div>
+                    }
+                  </div>
+                } @else if (col.datatype === 'email' && showRoleBreakdown(row)) {
+                  <div class="vr-role-breakdown">
+                    @for (profile of roleProfileRows(row); track profile.roleId) {
+                      <div class="vr-role-breakdown-row">
+                        <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                        <span>{{ profile.email || '—' }}</span>
+                      </div>
+                    }
+                  </div>
                 } @else {
                   {{ cellValue(row, col.property, col.datatype) }}
                 }

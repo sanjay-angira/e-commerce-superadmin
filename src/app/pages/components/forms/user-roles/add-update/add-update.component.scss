@@ -1,0 +1,12 @@
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  grid-column: 1 / -1;
+}
+
+:host ::ng-deep app-permission-matrix {
+  display: block;
+  width: 100%;
+  grid-column: 1 / -1;
+}

@@ -3,31 +3,142 @@
   gap: 8px;
 }
 
+.view-card {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summary-section h2,
+.profiles-section h2 {
+  margin: 0 0 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .kv-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 
 .kv {
-  padding: 12px;
-  border: 1px solid var(--vr-divider);
+  padding: 12px 14px;
+  border: 1px solid var(--vr-border, rgba(15, 23, 42, 0.12));
   border-radius: 8px;
-  background: var(--vr-surface-soft);
+  background: var(--vr-surface-soft, rgba(248, 250, 252, 0.9));
+}
+
+.kv.compact {
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
 .kv small {
   display: block;
   margin-bottom: 6px;
-  color: var(--vr-text-secondary);
-  text-transform: capitalize;
+  color: var(--vr-text-secondary, #64748b);
+  font-size: 12px;
 }
 
-.kv pre {
-  margin: 0;
-  white-space: pre-wrap;
+.kv div {
   word-break: break-word;
-  font-family: inherit;
+  line-height: 1.4;
+}
+
+.role-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.profile-card {
+  border: 1px solid var(--vr-border, rgba(15, 23, 42, 0.12));
+  border-radius: 10px;
+  padding: 14px;
+  background: var(--vr-card, #fff);
+}
+
+.profile-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.profile-status-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.profile-card-body {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.profile-avatar.placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--vr-text-secondary, #64748b);
+}
+
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.vr-status.admin {
+  color: var(--vr-status-green, #2e7d32);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.vr-status.user {
+  color: var(--vr-status-cyan, #00838f);
+  background: rgba(0, 188, 212, 0.1);
+}
+
+.vr-status.seller {
+  color: #e65100;
+  background: rgba(230, 81, 0, 0.1);
+}
+
+.vr-status.default {
+  color: #64748b;
+  background: rgba(100, 116, 139, 0.12);
+}
+
+.vr-status.active {
+  color: var(--vr-status-green, #2e7d32);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.vr-status.inactive {
+  color: #c62828;
+  background: rgba(198, 40, 40, 0.1);
 }
 
 .center {

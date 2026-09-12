@@ -1,0 +1,81 @@
+<section class="permission-matrix">
+  <div class="matrix-header">
+    <h3>{{ title() }}</h3>
+    @if (!readonly()) {
+      <div class="bulk-actions">
+        <button mat-stroked-button type="button" (click)="toggleAll('canView', true)">All View</button>
+        <button mat-stroked-button type="button" (click)="toggleAll('canAdd', true)">All Add</button>
+        <button mat-stroked-button type="button" (click)="toggleAll('canEdit', true)">All Edit</button>
+        <button mat-stroked-button type="button" (click)="toggleAll('canDelete', true)">All Delete</button>
+        <button mat-button type="button" (click)="clearAll()">Clear</button>
+      </div>
+    }
+  </div>
+
+  @if (!rows().length) {
+    <p class="empty">No modules available</p>
+  } @else {
+    <div class="matrix-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>View</th>
+            <th>Add</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            @if (!readonly()) {
+              <th>All</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (group of groupedRows(); track group.category) {
+            <tr class="category-row">
+              <td [attr.colspan]="readonly() ? 5 : 6">{{ group.category }}</td>
+            </tr>
+            @for (row of group.rows; track row.moduleId) {
+              <tr>
+                <td>{{ row.moduleName }}</td>
+                <td>
+                  <mat-checkbox
+                    [checked]="row.canView"
+                    [disabled]="readonly()"
+                    (change)="onFlagChange(row, 'canView', $event)"
+                  />
+                </td>
+                <td>
+                  <mat-checkbox
+                    [checked]="row.canAdd"
+                    [disabled]="readonly()"
+                    (change)="onFlagChange(row, 'canAdd', $event)"
+                  />
+                </td>
+                <td>
+                  <mat-checkbox
+                    [checked]="row.canEdit"
+                    [disabled]="readonly()"
+                    (change)="onFlagChange(row, 'canEdit', $event)"
+                  />
+                </td>
+                <td>
+                  <mat-checkbox
+                    [checked]="row.canDelete"
+                    [disabled]="readonly()"
+                    (change)="onFlagChange(row, 'canDelete', $event)"
+                  />
+                </td>
+                @if (!readonly()) {
+                  <td>
+                    <button mat-button type="button" (click)="setRowAll(row, true)">On</button>
+                    <button mat-button type="button" (click)="setRowAll(row, false)">Off</button>
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

@@ -1,1 +1,106 @@
-/* form styles */
+:host ::ng-deep .vr-form .mat-mdc-form-field-subscript-wrapper {
+  display: block;
+}
+
+.role-accordion {
+  display: block;
+  width: 100%;
+  margin: 4px 0 12px;
+}
+
+.role-panel-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+  align-items: start;
+  padding-top: 4px;
+  width: 100%;
+}
+
+.role-panel-body mat-form-field,
+.role-panel-body .mat-mdc-form-field,
+.role-panel-body app-image-upload {
+  width: 100%;
+  min-width: 0;
+}
+
+.role-toggles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  min-height: 40px;
+  padding: 4px 0;
+}
+
+.role-panel-body mat-slide-toggle,
+.role-toggles mat-slide-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+
+.role-panel-full {
+  grid-column: 1 / -1;
+}
+
+.role-panel-body app-permission-matrix {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  grid-column: 1 / -1;
+}
+
+:host ::ng-deep .role-accordion app-permission-matrix,
+app-permission-matrix.full {
+  grid-column: 1 / -1;
+}
+
+:host ::ng-deep .role-accordion .mat-expansion-panel {
+  margin-bottom: 10px;
+  border: 1px solid var(--vr-border, rgba(15, 23, 42, 0.12));
+  border-radius: 5px !important;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+:host ::ng-deep .role-accordion .mat-expansion-panel-header {
+  padding: 0 16px;
+  height: 52px;
+}
+
+:host ::ng-deep .role-accordion .mat-expansion-panel-body {
+  padding: 4px 16px 16px;
+}
+
+:host ::ng-deep .role-accordion .mat-expansion-panel-header-title {
+  font-weight: 600;
+}
+
+:host ::ng-deep .role-accordion .mat-expansion-panel-header-description {
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 12px;
+  color: var(--vr-text-secondary, #64748b);
+}
+
+@media (max-width: 768px) {
+  .role-panel-body {
+    grid-template-columns: 1fr;
+  }
+
+  .role-toggles {
+    min-height: 0;
+    padding: 4px 0 8px;
+  }
+
+  .role-panel-full {
+    grid-column: 1 / -1;
+  }
+}

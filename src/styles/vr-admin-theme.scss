@@ -394,7 +394,8 @@ html {
 .vr-form .mat-mdc-form-field,
 .vr-form app-image-upload,
 .vr-form app-multi-image-upload,
-.vr-form app-quill-editor {
+.vr-form app-quill-editor,
+.vr-form app-permission-matrix {
   width: 100%;
   min-width: 0;
 }
@@ -402,7 +403,8 @@ html {
 .vr-form .full,
 .vr-form .actions,
 .vr-form app-quill-editor,
-.vr-form app-multi-image-upload {
+.vr-form app-multi-image-upload,
+.vr-form app-permission-matrix {
   grid-column: 1 / -1;
 }
 
@@ -434,6 +436,7 @@ html {
   .vr-form app-quill-editor,
   .vr-form app-multi-image-upload,
   .vr-form app-image-upload,
+  .vr-form app-permission-matrix,
   .vr-form mat-slide-toggle,
   .vr-form mat-checkbox {
     grid-column: 1 / -1;

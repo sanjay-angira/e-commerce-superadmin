@@ -86,7 +86,11 @@ export class FormOptionsService {
   }
 
   roles() {
-    return this.list('roles', 'roleName');
+    return this.list('roles', 'roleName').pipe(
+      map((rows) =>
+        rows.filter((row) => String(row.label).trim().toLowerCase() !== 'manager'),
+      ),
+    );
   }
 
   blogCategories() {

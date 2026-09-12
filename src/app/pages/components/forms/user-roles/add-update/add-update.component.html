@@ -1,0 +1,35 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Role' : 'Add Role'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Role Name</mat-label>
+      <input matInput formControlName="roleName" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Role Id</mat-label>
+      <input matInput type="number" formControlName="roleId" />
+    </mat-form-field>
+
+    @if (showPermissions()) {
+      <app-permission-matrix
+        class="full"
+        title="Default role permissions"
+        [rows]="permissions()"
+        (rowsChange)="permissions.set($event)"
+      />
+    }
+
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Role' : 'Create Role' }}
+      </button>
+      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

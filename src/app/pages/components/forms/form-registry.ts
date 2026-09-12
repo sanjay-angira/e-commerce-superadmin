@@ -14,6 +14,7 @@ import { ProductFormComponent } from './product/add-update/add-update.component'
 import { ReviewFormComponent } from './reviews/add-update/add-update.component';
 import { ContactLeadFormComponent } from './contact-us-leads/add-update/add-update.component';
 import { UserFormComponent } from './user/add-update/add-update.component';
+import { RoleFormComponent } from './user-roles/add-update/add-update.component';
 
 /** Maps admin module keys → dedicated form components (parity with vr-frontend adminFormRegistry). */
 export const ADMIN_FORM_REGISTRY: Record<string, Type<unknown>> = {
@@ -36,6 +37,7 @@ export const ADMIN_FORM_REGISTRY: Record<string, Type<unknown>> = {
   customers: UserFormComponent,
   sellers: UserFormComponent,
   'contact-us-leads': ContactLeadFormComponent,
+  'user-roles': RoleFormComponent,
 };
 
 export function getAdminFormComponent(module: string): Type<any> | null {
