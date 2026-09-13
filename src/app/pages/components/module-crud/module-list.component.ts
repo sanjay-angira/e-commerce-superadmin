@@ -333,19 +333,30 @@ export class ModuleListComponent {
       nested && typeof nested === 'object' ? (nested as Record<string, unknown>) : null;
     return String(
       record['roleName'] ??
-        nestedRecord?.['roleName'] ??
-        record['name'] ??
-        nestedRecord?.['name'] ??
-        '',
+      nestedRecord?.['roleName'] ??
+      record['name'] ??
+      nestedRecord?.['name'] ??
+      '',
     ).trim();
   }
 
   private normalizeRow(row: Record<string, unknown>): Record<string, unknown> {
     const roles = this.roleNames(row);
+    const parent = row['parent'];
+    const parentRecord =
+      parent && typeof parent === 'object'
+        ? (parent as Record<string, unknown>)
+        : null;
+    const parentCategory =
+      row['parentCategory'] ??
+      parentRecord?.['categoryName'] ??
+      parentRecord?.['name'] ??
+      null;
     return {
       ...row,
       name: this.displayName(row) || row['name'],
       role: roles.join(', '),
+      parentCategory,
     };
   }
 
@@ -355,17 +366,17 @@ export class ModuleListComponent {
     const fullName = `${firstName} ${lastName}`.trim();
     const label = String(
       fullName ||
-        row['productName'] ||
-        row['name'] ||
-        row['title'] ||
-        row['categoryName'] ||
-        row['brandName'] ||
-        row['offerName'] ||
-        row['couponCode'] ||
-        row['question'] ||
-        row['orderNumber'] ||
-        row['id'] ||
-        '',
+      row['productName'] ||
+      row['name'] ||
+      row['title'] ||
+      row['categoryName'] ||
+      row['brandName'] ||
+      row['offerName'] ||
+      row['couponCode'] ||
+      row['question'] ||
+      row['orderNumber'] ||
+      row['id'] ||
+      '',
     );
     const ref = this.dialog.open(ConfirmationDialogComponent, {
       data: {
