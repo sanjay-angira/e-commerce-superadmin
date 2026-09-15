@@ -252,7 +252,7 @@
                       }
                       @if (attrSupportsImage(attr.value.attributeId) && displayMode(attr.value.attributeId) === 'image') {
                         <app-image-upload
-                          [label]="(attributes().find(a => a.value === attr.value.attributeId)?.label || 'Attribute') + ' image'"
+                          [label]="(attributes().find(a => a.value === attr.value.attributeId)?.label || 'Attribute') + ' Image'"
                           [path]="uploadPaths.attributeColors"
                           formControlName="image"
                         />

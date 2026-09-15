@@ -34,20 +34,30 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
           <div class="banner error">{{ error() }}</div>
         }
 
-        @if (!previewUrl()) {
-          <button type="button" class="attach-btn" (click)="fileInput.click()" [disabled]="saving()">
-            <mat-icon>cloud_upload</mat-icon>
-            <span>Add Attachment</span>
-          </button>
-        } @else {
+        @if (previewUrl()) {
           <div class="preview">
             <img [src]="previewUrl()" alt="Selected profile image" />
           </div>
-          <button type="button" class="change-btn" (click)="fileInput.click()" [disabled]="saving()">
-            <mat-icon>photo_camera</mat-icon>
-            Change image
-          </button>
         }
+
+        <div class="vr-upload">
+          <div class="vr-upload-dropzone-wrap">
+            <span class="vr-upload-label">Profile Image</span>
+            <button
+              type="button"
+              class="vr-upload-dropzone"
+              (click)="fileInput.click()"
+              [disabled]="saving()"
+            >
+              @if (saving()) {
+                <mat-spinner diameter="22"></mat-spinner>
+              } @else {
+                <mat-icon>cloud_upload</mat-icon>
+                <span>{{ previewUrl() ? 'Replace file' : 'Click to upload' }}</span>
+              }
+            </button>
+          </div>
+        </div>
 
         <input #fileInput type="file" hidden accept="image/*" (change)="onFile($event)" />
       </mat-dialog-content>
@@ -109,27 +119,6 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
         color: var(--vr-danger-text);
         font-size: 13px;
       }
-      .attach-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        min-height: 48px;
-        border: 0;
-        border-radius: 4px;
-        background: rgba(99, 102, 241, 0.12);
-        color: var(--dlg-primary);
-        font: inherit;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-      }
-      .attach-btn:disabled,
-      .change-btn:disabled {
-        opacity: 0.65;
-        cursor: default;
-      }
       .preview {
         display: flex;
         justify-content: center;
@@ -145,20 +134,6 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
         height: auto;
         object-fit: contain;
         border-radius: 8px;
-      }
-      .change-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        margin: 0 auto;
-        border: 0;
-        background: transparent;
-        color: var(--dlg-primary);
-        font: inherit;
-        font-size: 13px;
-        font-weight: 500;
-        cursor: pointer;
       }
       mat-dialog-actions {
         margin: 0 !important;

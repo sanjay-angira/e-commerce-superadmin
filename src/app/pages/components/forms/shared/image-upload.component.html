@@ -1,4 +1,4 @@
-<div class="upload">
+<div class="vr-upload">
   @if (value) {
     <div class="preview">
       @if (isVideo()) {
@@ -11,10 +11,10 @@
       </button>
     </div>
   }
-  <div class="dropzone-wrap">
-    <span class="label">{{ label() }}@if (required()) {<span class="req">*</span>}</span>
+  <div class="vr-upload-dropzone-wrap">
+    <span class="vr-upload-label">{{ label() }}@if (required()) {<span class="req">*</span>}</span>
     <button
-      class="dropzone"
+      class="vr-upload-dropzone"
       type="button"
       (click)="fileInput.click()"
       [disabled]="uploading() || disabled"

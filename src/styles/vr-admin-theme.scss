@@ -458,6 +458,73 @@ html {
   display: none;
 }
 
+/* Shared image/file upload dropzone (floating label on dashed box) */
+.vr-upload {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.vr-upload-dropzone-wrap {
+  position: relative;
+  padding-top: 8px;
+}
+
+.vr-upload-label {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  z-index: 1;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: var(--vr-text-secondary);
+  background: var(--vr-input-bg, var(--vr-card));
+  padding: 0 4px;
+  pointer-events: none;
+}
+
+.vr-upload-label .req {
+  color: var(--vr-danger);
+  margin-left: 2px;
+}
+
+.vr-upload-dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 56px;
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--vr-primary);
+  border-radius: 4px;
+  background: var(--vr-primary-soft);
+  color: var(--vr-primary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.vr-upload-dropzone:hover:not(:disabled),
+.vr-upload-dropzone:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--vr-primary);
+}
+
+.vr-upload-dropzone:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.vr-upload-dropzone mat-icon {
+  color: var(--vr-primary);
+  width: 22px;
+  height: 22px;
+  font-size: 22px;
+}
+
 .vr-form .tab,
 .vr-form.tab {
   padding-top: 1.25rem;

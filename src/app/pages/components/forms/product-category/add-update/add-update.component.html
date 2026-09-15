@@ -115,19 +115,19 @@
         <ng-template matStepLabel>Media Assets</ng-template>
         <div class="media-grid">
           <app-image-upload
-            label="Upload Main Image"
+            label="Main Image"
             [path]="paths.image"
             imageType="category"
             formControlName="image"
           />
           <app-image-upload
-            label="Upload Icon (.svg)"
+            label="Category Icon"
             [path]="paths.icon"
             accept="image/svg+xml,.svg,image/*"
             formControlName="icon"
           />
           <app-image-upload
-            label="Upload Video"
+            label="Category Video"
             [path]="paths.video"
             accept="video/*"
             formControlName="video"

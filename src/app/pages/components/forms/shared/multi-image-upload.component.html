@@ -1,20 +1,26 @@
-<div class="upload">
-  <div class="label">{{ label() }} @if (required()) { <span class="req">*</span> }</div>
-  <div class="grid">
-    @for (url of urls; track url; let i = $index) {
-      <div class="item">
-        <img [src]="url" alt="" />
-        <button mat-icon-button type="button" (click)="remove(i)"><mat-icon>close</mat-icon></button>
-      </div>
-    }
+<div class="vr-upload">
+  @if (urls.length) {
+    <div class="grid">
+      @for (url of urls; track url; let i = $index) {
+        <div class="item">
+          <img [src]="url" alt="" />
+          <button mat-icon-button type="button" (click)="remove(i)" aria-label="Remove image">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+  }
+  <div class="vr-upload-dropzone-wrap">
+    <span class="vr-upload-label">{{ label() }}@if (required()) {<span class="req">*</span>}</span>
+    <button class="vr-upload-dropzone" type="button" (click)="fileInput.click()" [disabled]="uploading()">
+      @if (uploading()) {
+        <mat-spinner diameter="22"></mat-spinner>
+      } @else {
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Click to upload</span>
+      }
+    </button>
   </div>
-  <button class="dropzone" type="button" (click)="fileInput.click()" [disabled]="uploading()">
-    @if (uploading()) {
-      <mat-spinner diameter="22"></mat-spinner>
-    } @else {
-      <mat-icon>add_photo_alternate</mat-icon>
-      <span>Add images</span>
-    }
-  </button>
   <input #fileInput type="file" hidden accept="image/*" multiple (change)="onFiles($event)" />
 </div>
