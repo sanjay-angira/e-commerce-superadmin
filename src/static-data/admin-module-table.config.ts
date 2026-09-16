@@ -92,7 +92,6 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
     addLabel: 'Add category',
     formFields: [
       { key: 'categoryName', label: 'Category Name', type: 'text', required: true },
-      { key: 'slug', label: 'Slug', type: 'text', required: true },
       { key: 'description', label: 'Description', type: 'textarea' },
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],

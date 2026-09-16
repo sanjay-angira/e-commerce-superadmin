@@ -18,7 +18,7 @@ import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
 import { ImageUploadComponent } from '../../shared/image-upload.component';
 import { QuillEditorComponent } from '../../shared/quill-editor.component';
-import { generateSlug, normalizeIds, stripHtml } from '../../shared/form-utils';
+import { normalizeIds, stripHtml } from '../../shared/form-utils';
 import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
 
 @Component({
@@ -43,7 +43,6 @@ export class CategoryFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly crud = inject(AdminCrudFormService);
   private readonly options = inject(FormOptionsService);
-  private slugManuallyDirty = false;
 
   readonly module = input.required<string>();
   readonly recordId = input<string | undefined>();
@@ -63,7 +62,6 @@ export class CategoryFormComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     categoryName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-    categorySlug: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
     shortDescription: ['', [Validators.required, Validators.maxLength(this.shortDescMax)]],
     description: ['', [this.quillRequired]],
     parentId: [null as number | null],
@@ -84,12 +82,6 @@ export class CategoryFormComponent implements OnInit {
     this.options.categories().subscribe((rows) => this.categories.set(rows));
     this.options.offers().subscribe((rows) => this.offers.set(rows));
 
-    this.form.controls.categoryName.valueChanges.subscribe((name) => {
-      if (!this.isEdit() && !this.slugManuallyDirty) {
-        this.form.controls.categorySlug.setValue(generateSlug(name), { emitEvent: false });
-      }
-    });
-
     const id = this.recordId();
     this.isEdit.set(!!id);
     if (!id) return;
@@ -98,12 +90,10 @@ export class CategoryFormComponent implements OnInit {
       this.loading.set(false);
       this.loadError.set(error);
       if (!data) return;
-      this.slugManuallyDirty = true;
       const seo = data.seo ?? {};
       const parentIdRaw = data.parentId ?? data.parent?.id;
       this.form.patchValue({
         categoryName: String(data.categoryName ?? ''),
-        categorySlug: String(data.categorySlug ?? ''),
         shortDescription: String(data.shortDescription ?? ''),
         description: String(data.description ?? ''),
         parentId: parentIdRaw != null && parentIdRaw !== '' ? Number(parentIdRaw) : null,
@@ -122,10 +112,6 @@ export class CategoryFormComponent implements OnInit {
     });
   }
 
-  markSlugDirty(): void {
-    this.slugManuallyDirty = true;
-  }
-
   shortDescLength(): number {
     return this.form.controls.shortDescription.value.length;
   }
@@ -142,7 +128,6 @@ export class CategoryFormComponent implements OnInit {
     if (step === 1) {
       return (
         this.form.controls.categoryName.valid &&
-        this.form.controls.categorySlug.valid &&
         this.form.controls.shortDescription.valid &&
         this.form.controls.description.valid
       );
@@ -164,7 +149,6 @@ export class CategoryFormComponent implements OnInit {
     this.crud
       .save(this.module(), this.recordId(), {
         categoryName: v.categoryName,
-        categorySlug: v.categorySlug,
         shortDescription: v.shortDescription,
         description: v.description,
         parentId: v.parentId ? Number(v.parentId) : null,

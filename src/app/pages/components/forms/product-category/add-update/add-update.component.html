@@ -22,14 +22,13 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Category Slug</mat-label>
-            <input matInput formControlName="categorySlug" (input)="markSlugDirty()" />
-            @if (form.controls.categorySlug.touched && form.controls.categorySlug.hasError('required')) {
-              <mat-error>Category slug is required</mat-error>
-            }
-            @if (form.controls.categorySlug.hasError('minlength')) {
-              <mat-error>Category slug must be at least 3 characters</mat-error>
-            }
+            <mat-label>Select Parent Category</mat-label>
+            <mat-select formControlName="parentId">
+              <mat-option [value]="null">Select a Parent Category</mat-option>
+              @for (opt of categories(); track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full">
@@ -57,16 +56,6 @@
             <mat-label>Select Offers</mat-label>
             <mat-select formControlName="offerIds" multiple>
               @for (opt of offers(); track opt.value) {
-                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Select Parent Category</mat-label>
-            <mat-select formControlName="parentId">
-              <mat-option [value]="null">Select a Parent Category</mat-option>
-              @for (opt of categories(); track opt.value) {
                 <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
               }
             </mat-select>

@@ -59,7 +59,12 @@ const BRAND_REMOVED_KEYS = new Set([
 
 const ATTRIBUTE_REMOVED_KEYS = new Set(['isFilterable']);
 
-const CATEGORY_REMOVED_KEYS = new Set(['showOnHomePage', 'publishStatus']);
+const CATEGORY_REMOVED_KEYS = new Set([
+  'showOnHomePage',
+  'publishStatus',
+  'categorySlug',
+  'slug',
+]);
 
 @Component({
   selector: 'app-module-view',
