@@ -1,12 +1,14 @@
-import { Component, OnInit, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule, type MatSelectChange } from '@angular/material/select';
@@ -57,6 +59,8 @@ export class ProductFormComponent implements OnInit {
   private readonly crud = inject(AdminCrudFormService);
   private readonly options = inject(FormOptionsService);
   private readonly dialog = inject(MatDialog);
+  private readonly destroyRef = inject(DestroyRef);
+  readonly formTick = signal(0);
 
   readonly module = input.required<string>();
   readonly recordId = input<string | undefined>();
@@ -94,7 +98,6 @@ export class ProductFormComponent implements OnInit {
     productOffers: this.fb.nonNullable.control<number[]>([]),
     productTags: this.fb.nonNullable.control<number[]>([]),
     frequentlyBoughtTogether: this.fb.nonNullable.control<number[]>([]),
-    images: this.fb.nonNullable.control<string[]>([], Validators.required),
     attributeIds: this.fb.nonNullable.control<number[]>([]),
     attributeCustomerDisplay: this.fb.nonNullable.group({}),
     variants: this.fb.array([this.createVariantGroup()]),
@@ -128,8 +131,9 @@ export class ProductFormComponent implements OnInit {
     });
 
     this.form.get('attributeIds')?.valueChanges.subscribe((ids) => {
-      this.syncAttributeDisplayControls(ids || []);
-      this.syncAllVariantAttributes(ids || []);
+      const normalized = this.normalizeAttributeIds(ids);
+      this.syncAttributeDisplayControls(normalized);
+      this.syncAllVariantAttributes(normalized);
     });
 
     this.form.get('category')?.valueChanges.subscribe((id) => {
@@ -138,6 +142,13 @@ export class ProductFormComponent implements OnInit {
         this.childCategoryLevels.set([[]]);
         this.form.patchValue({ childCategories: [] }, { emitEvent: false });
       }
+    });
+
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.formTick.update((n) => n + 1);
+    });
+    this.form.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.formTick.update((n) => n + 1);
     });
 
     const id = this.recordId();
@@ -162,7 +173,7 @@ export class ProductFormComponent implements OnInit {
       name: [data?.name ?? '', Validators.required],
       slug: [
         data?.slug ?? '',
-        [Validators.required, Validators.minLength(3), Validators.pattern(SLUG_PATTERN)],
+        [Validators.required, Validators.pattern(SLUG_PATTERN)],
       ],
       description: [data?.description ?? ''],
       sku: [data?.sku ?? ''],
@@ -178,7 +189,7 @@ export class ProductFormComponent implements OnInit {
   addVariant(): void {
     this.variants.push(this.createVariantGroup());
     this.variantSlugDirty.push(false);
-    this.syncAllVariantAttributes(this.form.value.attributeIds || []);
+    this.syncAllVariantAttributes(this.form.value.attributeIds);
   }
 
   removeVariant(index: number): void {
@@ -203,15 +214,21 @@ export class ProductFormComponent implements OnInit {
     return this.variants.at(index).get('variantAttributes') as FormArray;
   }
 
-  attrSupportsImage(attrId: number): boolean {
-    const attr = this.attributes().find((a) => Number(a.value) === Number(attrId));
+  attrSupportsImage(attrId: number | string | null | undefined): boolean {
+    const id = Number(attrId);
+    if (!Number.isFinite(id)) return false;
+    const attr = this.attributes().find((a) => Number(a.value) === id);
     const name = (attr?.label || '').toLowerCase();
     return Boolean(attr?.supportsImage) || name === 'color' || name.includes('colour');
   }
 
-  displayMode(attrId: number): string {
+  hasImageCapableAttributes(): boolean {
+    return (this.form.value.attributeIds || []).some((id: number) => this.attrSupportsImage(id));
+  }
+
+  displayMode(attrId: number | string | null | undefined): string {
     const group = this.form.get('attributeCustomerDisplay') as FormGroup;
-    return group.get(String(attrId))?.value || 'value';
+    return group.get(String(Number(attrId)))?.value || 'value';
   }
 
   onChildCategory(level: number, value: number | ''): void {
@@ -235,6 +252,41 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
+  private normalizeAttributeIds(ids: Array<number | string> | null | undefined): number[] {
+    return [...new Set((ids || []).map(Number).filter((id) => Number.isFinite(id) && id > 0))];
+  }
+
+  private attributeInputValue(ctrl: AbstractControl | null | undefined): string {
+    const raw = ctrl?.get('value')?.value;
+    if (raw === null || raw === undefined) return '';
+    return String(raw).trim();
+  }
+
+  private variantAttributesFrom(variantCtrl: AbstractControl): Array<{
+    attributeId: number;
+    value: string;
+    code: string;
+    image: string;
+    viewOption: string;
+  }> {
+    const arr = variantCtrl.get('variantAttributes') as FormArray | null;
+    if (!arr) return [];
+    return arr.controls
+      .map((ctrl) => ({
+        attributeId: Number(ctrl.get('attributeId')?.value),
+        value: this.attributeInputValue(ctrl),
+        code: String(ctrl.get('code')?.value || '').trim(),
+        image: String(ctrl.get('image')?.value || '').trim(),
+        viewOption: String(ctrl.get('viewOption')?.value || '').trim(),
+      }))
+      .filter((row) => row.attributeId && row.value);
+  }
+
+  attrLabel(attributeId: number | string | null | undefined): string {
+    const id = Number(attributeId);
+    return this.attributes().find((opt) => Number(opt.value) === id)?.label || 'Attribute';
+  }
+
   private syncAttributeDisplayControls(ids: number[]): void {
     const group = this.form.get('attributeCustomerDisplay') as FormGroup;
     Object.keys(group.controls).forEach((key) => {
@@ -247,23 +299,32 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
-  private syncAllVariantAttributes(ids: number[]): void {
+  private syncAllVariantAttributes(ids: Array<number | string> | null | undefined): void {
+    const uniqueIds = this.normalizeAttributeIds(ids);
     this.variants.controls.forEach((variantCtrl) => {
       const arr = variantCtrl.get('variantAttributes') as FormArray;
-      const existing = new Map(
-        arr.controls.map((c) => [Number(c.value.attributeId), c.value])
+
+      for (let index = arr.length - 1; index >= 0; index--) {
+        const id = Number(arr.at(index).get('attributeId')?.value);
+        if (!uniqueIds.includes(id)) {
+          arr.removeAt(index);
+        }
+      }
+
+      const existingIds = new Set(
+        arr.controls.map((ctrl) => Number(ctrl.get('attributeId')?.value)),
       );
-      arr.clear();
-      ids.forEach((attributeId) => {
-        const prev = existing.get(attributeId);
+
+      uniqueIds.forEach((attributeId) => {
+        if (existingIds.has(attributeId)) return;
         arr.push(
           this.fb.group({
             attributeId: [attributeId],
-            value: [prev?.value ?? '', Validators.required],
-            code: [prev?.code ?? ''],
-            image: [prev?.image ?? ''],
-            viewOption: [prev?.viewOption ?? ''],
-          })
+            value: ['', Validators.required],
+            code: [''],
+            image: [''],
+            viewOption: [''],
+          }),
         );
       });
     });
@@ -317,7 +378,6 @@ export class ProductFormComponent implements OnInit {
       productOffers: normalizeIds(r.productOffers ?? r.offers),
       productTags: normalizeIds(r.productTags ?? r.tags),
       frequentlyBoughtTogether: normalizeIds(r.frequentlyBoughtTogether),
-      images: this.normalizeImageUrls(r.images ?? r.productImages),
       attributeIds,
       publishStatus: r.publishStatus ?? 'draft',
       isActive: Boolean(r.isActive ?? true),
@@ -344,7 +404,7 @@ export class ProductFormComponent implements OnInit {
               ?.setValue(a.viewOption);
           }
           const control = this.variantAttributes(vi).controls.find(
-            (c) => Number(c.value.attributeId) === attrId
+            (c) => Number(c.get('attributeId')?.value) === attrId
           );
           control?.patchValue({
             value: a.value ?? '',
@@ -394,7 +454,76 @@ export class ProductFormComponent implements OnInit {
       });
   }
 
+  variantStepHint(): string {
+    this.formTick();
+    if (!this.variants.length) {
+      return 'Add at least one variant to continue.';
+    }
+
+    for (let i = 0; i < this.variants.length; i++) {
+      const variant = this.variants.at(i).getRawValue();
+      const label = String(variant.name || '').trim() || `Variant #${i + 1}`;
+      const slug = String(variant.slug || '').trim();
+      const price = variant.price;
+      const stock = variant.stock;
+
+      if (!String(variant.name || '').trim()) {
+        return `${label}: name is required.`;
+      }
+      if (!slug || !SLUG_PATTERN.test(slug)) {
+        return `${label}: enter a URL-friendly slug (lowercase letters, numbers, hyphens).`;
+      }
+      if (price === '' || price === null || price === undefined || Number.isNaN(Number(price)) || Number(price) < 0.01) {
+        return `${label}: enter a price greater than 0.`;
+      }
+      if (stock === '' || stock === null || stock === undefined || Number.isNaN(Number(stock)) || Number(stock) < 0) {
+        return `${label}: enter a stock quantity of 0 or more.`;
+      }
+
+      for (const ctrl of this.variantAttributes(i).controls) {
+        const attributeId = Number(ctrl.get('attributeId')?.value);
+        const attrName = this.attrLabel(attributeId);
+        if (!this.attributeInputValue(ctrl)) {
+          return `${label}: ${attrName} value is required.`;
+        }
+        if (!this.attrSupportsImage(attributeId)) {
+          continue;
+        }
+        const display = this.displayMode(attributeId);
+        if (display === 'code' && !String(ctrl.get('code')?.value || '').trim()) {
+          return `${label}: ${attrName} color code is required.`;
+        }
+        if (display === 'image' && !String(ctrl.get('image')?.value || '').trim()) {
+          return `${label}: ${attrName} image is required.`;
+        }
+      }
+    }
+
+    return '';
+  }
+
+  goNext(stepper: MatStepper, step: number): void {
+    if (this.isStepValid(step)) {
+      this.submitError.set('');
+      if (stepper.selected) {
+        stepper.selected.completed = true;
+      }
+      stepper.next();
+      return;
+    }
+
+    if (step === 2) {
+      this.variants.controls.forEach((ctrl) => ctrl.markAllAsTouched());
+      this.submitError.set(this.variantStepHint());
+      return;
+    }
+
+    this.form.markAllAsTouched();
+    this.submitError.set('Please complete all required fields before continuing.');
+  }
+
   isStepValid(step: number): boolean {
+    this.formTick();
     const v = this.form.getRawValue();
     if (step === 1) {
       const categorySelected = Boolean(v.category || (v.childCategories || []).some(Boolean));
@@ -410,36 +539,17 @@ export class ProductFormComponent implements OnInit {
         descriptionText.length >= 2 &&
         !!v.brandId &&
         categorySelected &&
-        (v.images || []).length >= 1 &&
         displayValid &&
         this.form.controls.productName.valid &&
         this.form.controls.productSlug.valid &&
         this.form.controls.shortDescription.valid &&
         this.form.controls.description.valid &&
         this.form.controls.brandId.valid &&
-        this.form.controls.category.valid &&
-        this.form.controls.images.valid
+        this.form.controls.category.valid
       );
     }
     if (step === 2) {
-      if (!this.variants.length) return false;
-      return this.variants.controls.every((ctrl) => {
-        const variant = ctrl.getRawValue();
-        const slug = String(variant.slug || '').trim();
-        if (!String(variant.name || '').trim()) return false;
-        if (!SLUG_PATTERN.test(slug)) return false;
-        if (variant.price === '' || Number(variant.price) < 0.01) return false;
-        if (variant.stock === '' || Number(variant.stock) < 0) return false;
-        if (ctrl.invalid) return false;
-        return (variant.variantAttributes || []).every((a: any) => {
-          if (!String(a.value || '').trim()) return false;
-          if (!this.attrSupportsImage(a.attributeId)) return true;
-          const display = this.displayMode(a.attributeId);
-          if (display === 'code') return Boolean(String(a.code || '').trim());
-          if (display === 'image') return Boolean(String(a.image || '').trim());
-          return true;
-        });
-      });
+      return !this.variantStepHint();
     }
     if (step === 3) {
       const seo = this.form.get('seo');
@@ -472,10 +582,6 @@ export class ProductFormComponent implements OnInit {
       productOffers: v.productOffers,
       productTags: (v.productTags || []).map(Number).filter((id) => Number.isFinite(id) && id > 0),
       frequentlyBoughtTogether: v.frequentlyBoughtTogether,
-      images: (v.images || []).map((url: string, i: number) => ({
-        url,
-        sortOrder: i + 1,
-      })),
       attributes: (v.attributeIds || []).map((id: number) => ({ attributeId: id })),
       variants: this.variants.controls.map((ctrl) => {
         const variant = ctrl.getRawValue();
@@ -492,26 +598,24 @@ export class ProductFormComponent implements OnInit {
             sortOrder: i + 1,
           })),
           productVariantOffers: variant.productVariantOffers || [],
-          variantAttributes: (variant.variantAttributes || [])
-            .filter((a: any) => String(a.value || '').trim())
-            .map((a: any) => {
-              const attributeId = Number(a.attributeId);
-              const p: any = {
-                attributeId,
-                value: String(a.value).trim(),
-              };
-              if (this.attrSupportsImage(attributeId)) {
-                const display = displayGroup.get(String(attributeId))?.value || 'value';
-                p.viewOption = display;
-                if (display === 'code') p.code = normalizeColorCode(a.code);
-                if (display === 'image') p.image = String(a.image || '').trim();
-              } else {
-                if (a.code) p.code = String(a.code).trim();
-                if (a.image) p.image = String(a.image).trim();
-                if (a.viewOption) p.viewOption = a.viewOption;
-              }
-              return p;
-            }),
+          variantAttributes: this.variantAttributesFrom(ctrl).map((a) => {
+            const attributeId = Number(a.attributeId);
+            const p: Record<string, unknown> = {
+              attributeId,
+              value: a.value,
+            };
+            if (this.attrSupportsImage(attributeId)) {
+              const display = displayGroup.get(String(attributeId))?.value || 'value';
+              p['viewOption'] = display;
+              if (display === 'code') p['code'] = normalizeColorCode(a.code);
+              if (display === 'image') p['image'] = String(a.image || '').trim();
+            } else {
+              if (a.code) p['code'] = String(a.code).trim();
+              if (a.image) p['image'] = String(a.image).trim();
+              if (a.viewOption) p['viewOption'] = a.viewOption;
+            }
+            return p;
+          }),
         };
       }),
       seo: {

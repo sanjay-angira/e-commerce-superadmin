@@ -111,29 +111,22 @@
               }
             </mat-select>
           </mat-form-field>
-          <div class="display-modes full" formGroupName="attributeCustomerDisplay">
-            @for (id of form.value.attributeIds || []; track id) {
-              @if (attrSupportsImage(id)) {
-                <mat-form-field appearance="outline">
-                  <mat-label>Display on customer side ({{ attributes().find(a => a.value === id)?.label }})</mat-label>
-                  <mat-select [formControlName]="'' + id">
-                    <mat-option value="value">Name only</mat-option>
-                    <mat-option value="code">Color code (swatch)</mat-option>
-                    <mat-option value="image">Image</mat-option>
-                  </mat-select>
-                </mat-form-field>
+          @if (hasImageCapableAttributes()) {
+            <div class="display-modes full" formGroupName="attributeCustomerDisplay">
+              @for (id of form.value.attributeIds || []; track id) {
+                @if (attrSupportsImage(id)) {
+                  <mat-form-field appearance="outline">
+                    <mat-label>Display on customer side ({{ attributes().find(a => a.value === id)?.label }})</mat-label>
+                    <mat-select [formControlName]="'' + id">
+                      <mat-option value="value">Name only</mat-option>
+                      <mat-option value="code">Color code (swatch)</mat-option>
+                      <mat-option value="image">Image</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                }
               }
-            }
-          </div>
-
-          <div class="full">
-            <app-multi-image-upload
-              label="Product Images"
-              [path]="uploadPaths.products"
-              formControlName="images"
-              [required]="true"
-            />
-          </div>
+            </div>
+          }
 
           <mat-form-field appearance="outline" class="full">
             <mat-label>Apply Offers</mat-label>
@@ -157,8 +150,7 @@
             mat-flat-button
             color="primary"
             type="button"
-            [disabled]="!isStepValid(1)"
-            (click)="stepper.next()"
+            (click)="goNext(stepper, 1)"
           >
             Next
             <mat-icon>arrow_forward</mat-icon>
@@ -186,10 +178,16 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Variant Name</mat-label>
                   <input matInput formControlName="name" (input)="onVariantName(i)" />
+                  @if (variant.get('name')?.touched && variant.get('name')?.hasError('required')) {
+                    <mat-error>Variant name is required</mat-error>
+                  }
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Variant Slug</mat-label>
                   <input matInput formControlName="slug" (input)="markVariantSlugDirty(i)" />
+                  @if (variant.get('slug')?.touched && variant.get('slug')?.invalid) {
+                    <mat-error>Use lowercase letters, numbers, and hyphens</mat-error>
+                  }
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>SKU</mat-label>
@@ -198,10 +196,16 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Price</mat-label>
                   <input matInput type="number" formControlName="price" />
+                  @if (variant.get('price')?.touched && variant.get('price')?.invalid) {
+                    <mat-error>Enter a price greater than 0</mat-error>
+                  }
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Stock</mat-label>
                   <input matInput type="number" formControlName="stock" />
+                  @if (variant.get('stock')?.touched && variant.get('stock')?.invalid) {
+                    <mat-error>Enter a stock quantity of 0 or more</mat-error>
+                  }
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Variant Offers</mat-label>
@@ -214,52 +218,56 @@
                 <div class="full">
                   <app-quill-editor label="Variant Description" formControlName="description" />
                 </div>
-                <div class="full">
-                  <app-multi-image-upload
-                    label="Variant Images"
-                    [path]="uploadPaths.variantImages"
-                    formControlName="images"
-                  />
-                </div>
-                <div class="full attr-box" formArrayName="variantAttributes">
-                  <h4>Attribute Values</h4>
-                  <p class="attr-help">
-                    Enter a value for each attribute. Image-capable attributes may also need a color
-                    code or image based on the display setting chosen above.
-                  </p>
-                  @for (attr of variantAttributes(i).controls; track attr.value.attributeId; let ai = $index) {
-                    <div class="attr-row" [formGroupName]="ai">
-                      <mat-form-field appearance="outline">
-                        <mat-label>
-                          {{ attributes().find(a => a.value === attr.value.attributeId)?.label || 'Attribute' }}
-                          @if (attrSupportsImage(attr.value.attributeId)) {
-                            value
-                          }
-                        </mat-label>
-                        <input
-                          matInput
-                          formControlName="value"
-                          [placeholder]="'Enter ' + (attributes().find(a => a.value === attr.value.attributeId)?.label || 'value')"
-                        />
-                      </mat-form-field>
-                      @if (attrSupportsImage(attr.value.attributeId) && displayMode(attr.value.attributeId) === 'code') {
+                <app-multi-image-upload
+                  class="full"
+                  label="Variant Images"
+                  [path]="uploadPaths.variantImages"
+                  formControlName="images"
+                />
+                @if (variantAttributes(i).length) {
+                  <div class="full attr-box" formArrayName="variantAttributes">
+                    <h4>Attribute Values</h4>
+                    <p class="attr-help">
+                      Enter a value for each selected product attribute. Image-capable attributes may
+                      also need a color code or image based on the display setting chosen above.
+                    </p>
+                    @for (attr of variantAttributes(i).controls; track $index; let ai = $index) {
+                      <div class="attr-row" [formGroupName]="ai">
                         <mat-form-field appearance="outline">
                           <mat-label>
-                            {{ attributes().find(a => a.value === attr.value.attributeId)?.label }} color code
+                            {{ attrLabel(attr.get('attributeId')?.value) }}
+                            @if (attrSupportsImage(attr.get('attributeId')?.value)) {
+                              value
+                            }
                           </mat-label>
-                          <input matInput type="color" formControlName="code" />
+                          <input
+                            matInput
+                            formControlName="value"
+                            [placeholder]="'Enter ' + attrLabel(attr.get('attributeId')?.value)"
+                          />
+                          @if (attr.get('value')?.touched && attr.get('value')?.hasError('required')) {
+                            <mat-error>This attribute value is required</mat-error>
+                          }
                         </mat-form-field>
-                      }
-                      @if (attrSupportsImage(attr.value.attributeId) && displayMode(attr.value.attributeId) === 'image') {
-                        <app-image-upload
-                          [label]="(attributes().find(a => a.value === attr.value.attributeId)?.label || 'Attribute') + ' Image'"
-                          [path]="uploadPaths.attributeColors"
-                          formControlName="image"
-                        />
-                      }
-                    </div>
-                  }
-                </div>
+                        @if (attrSupportsImage(attr.get('attributeId')?.value) && displayMode(attr.get('attributeId')?.value) === 'code') {
+                          <mat-form-field appearance="outline">
+                            <mat-label>
+                              {{ attrLabel(attr.get('attributeId')?.value) }} color code
+                            </mat-label>
+                            <input matInput type="color" formControlName="code" />
+                          </mat-form-field>
+                        }
+                        @if (attrSupportsImage(attr.get('attributeId')?.value) && displayMode(attr.get('attributeId')?.value) === 'image') {
+                          <app-image-upload
+                            [label]="attrLabel(attr.get('attributeId')?.value) + ' Image'"
+                            [path]="uploadPaths.attributeColors"
+                            formControlName="image"
+                          />
+                        }
+                      </div>
+                    }
+                  </div>
+                }
                 <div class="full variant-remove">
                   <button
                     mat-stroked-button
@@ -290,13 +298,15 @@
             mat-flat-button
             color="primary"
             type="button"
-            [disabled]="!isStepValid(2)"
-            (click)="stepper.next()"
+            (click)="goNext(stepper, 2)"
           >
             Next
             <mat-icon>arrow_forward</mat-icon>
           </button>
         </div>
+        @if (variantStepHint()) {
+          <p class="field-error">{{ variantStepHint() }}</p>
+        }
       </mat-step>
 
       <mat-step [completed]="isStepValid(3)">
@@ -338,8 +348,7 @@
             mat-flat-button
             color="primary"
             type="button"
-            [disabled]="!isStepValid(3)"
-            (click)="stepper.next()"
+            (click)="goNext(stepper, 3)"
           >
             Next
             <mat-icon>arrow_forward</mat-icon>

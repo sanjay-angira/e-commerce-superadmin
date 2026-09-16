@@ -37,7 +37,6 @@ export class AttributeFormComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    isFilterable: [true],
     isRequired: [false],
     supportsImage: [false],
   });
@@ -53,7 +52,6 @@ export class AttributeFormComponent implements OnInit {
       if (!data) return;
       this.form.patchValue({
         name: String(data.name ?? ''),
-        isFilterable: Boolean(data.isFilterable ?? true),
         isRequired: Boolean(data.isRequired ?? false),
         supportsImage: Boolean(data.supportsImage ?? false),
       });
@@ -71,7 +69,6 @@ export class AttributeFormComponent implements OnInit {
     this.crud
       .save(this.module(), this.recordId(), {
         name: v.name.trim(),
-        isFilterable: v.isFilterable,
         isRequired: v.isRequired,
         supportsImage: v.supportsImage,
       })

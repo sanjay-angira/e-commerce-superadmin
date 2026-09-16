@@ -75,6 +75,11 @@
   justify-content: flex-end;
 }
 
+.step-actions + .field-error {
+  margin-top: 8px;
+  text-align: right;
+}
+
 .variations-head h3 {
   margin: 0 0 0.75rem;
   font-size: 1.05rem;
@@ -163,7 +168,11 @@
 
 .display-modes {
   display: grid;
-  gap: 8px;
+  gap: 1.25rem;
+}
+
+.display-modes:empty {
+  display: none;
 }
 
 :host ::ng-deep .mat-expansion-panel {

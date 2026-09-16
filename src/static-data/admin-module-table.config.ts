@@ -105,8 +105,6 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
     addLabel: 'Add brand',
     formFields: [
       { key: 'brandName', label: 'Brand Name', type: 'text', required: true },
-      { key: 'slug', label: 'Slug', type: 'text', required: true },
-      { key: 'description', label: 'Description', type: 'textarea' },
       { key: 'website', label: 'Website', type: 'text' },
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
@@ -119,7 +117,6 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
     addLabel: 'Add attribute',
     formFields: [
       { key: 'name', label: 'Name', type: 'text', required: true },
-      { key: 'isFilterable', label: 'Filterable', type: 'toggle' },
       { key: 'isRequired', label: 'Required', type: 'toggle' },
       { key: 'supportsImage', label: 'Supports Image', type: 'toggle' },
     ],

@@ -67,7 +67,6 @@ export const BrandComponentColumns: AdminTableColumnDefinition[] = [
 export const AttributeComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
   { label: 'Name', property: 'name', type: 'text', datatype: 'name', visible: true },
-  { label: 'Filterable', property: 'isFilterable', type: 'text', datatype: 'on-off', visible: true },
   { label: 'Required', property: 'isRequired', type: 'text', datatype: 'on-off', visible: true },
   { label: 'Image / Swatch', property: 'supportsImage', type: 'text', datatype: 'on-off', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },

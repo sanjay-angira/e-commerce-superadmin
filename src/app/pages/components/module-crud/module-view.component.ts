@@ -47,6 +47,20 @@ const HIDDEN_KEYS = new Set([
   'roleIds',
 ]);
 
+const BRAND_REMOVED_KEYS = new Set([
+  'brandSlug',
+  'slug',
+  'shortDescription',
+  'description',
+  'metaTitle',
+  'metaDescription',
+  'metaKeywords',
+]);
+
+const ATTRIBUTE_REMOVED_KEYS = new Set(['isFilterable']);
+
+const CATEGORY_REMOVED_KEYS = new Set(['showOnHomePage']);
+
 @Component({
   selector: 'app-module-view',
   imports: [
@@ -166,12 +180,12 @@ export class ModuleViewComponent {
 
     const formKeys = this.config?.formFields?.map((field) => field.key) ?? [];
     const keys = [...new Set([...preferredKeys, ...formKeys, 'id'])].filter(
-      (key) => !HIDDEN_KEYS.has(key) && key in row,
+      (key) => !this.isHiddenKey(key) && key in row,
     );
 
     if (!keys.length) {
       return Object.keys(row)
-        .filter((key) => !HIDDEN_KEYS.has(key) && !this.isComplex(row[key]))
+        .filter((key) => !this.isHiddenKey(key) && !this.isComplex(row[key]))
         .map((key) => ({
           label: this.prettyLabel(key),
           value: this.formatValue(row[key], key),
@@ -306,6 +320,13 @@ export class ModuleViewComponent {
       .replace(/[_-]+/g, ' ')
       .replace(/^\w/, (char) => char.toUpperCase())
       .trim();
+  }
+
+  private isHiddenKey(key: string): boolean {
+    if (HIDDEN_KEYS.has(key)) return true;
+    if (this.moduleKey() === 'brands' && BRAND_REMOVED_KEYS.has(key)) return true;
+    if (this.moduleKey() === 'attributes' && ATTRIBUTE_REMOVED_KEYS.has(key)) return true;
+    return this.moduleKey() === 'categories' && CATEGORY_REMOVED_KEYS.has(key);
   }
 
   private isComplex(value: unknown): boolean {

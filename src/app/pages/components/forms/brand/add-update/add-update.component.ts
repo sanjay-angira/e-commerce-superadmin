@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
-import { generateSlug, normalizeIds } from '../../shared/form-utils';
+import { normalizeIds } from '../../shared/form-utils';
 
 @Component({
   selector: 'app-brand-form',
@@ -30,7 +30,6 @@ export class BrandFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly crud = inject(AdminCrudFormService);
   private readonly options = inject(FormOptionsService);
-  private slugManuallyDirty = false;
 
   readonly module = input.required<string>();
   readonly recordId = input<string | undefined>();
@@ -45,27 +44,15 @@ export class BrandFormComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     brandName: ['', [Validators.required, Validators.minLength(2)]],
-    brandSlug: ['', Validators.required],
-    shortDescription: [''],
-    description: [''],
     website: [''],
     categoryIds: [[] as number[]],
     offerIds: [[] as number[]],
-    metaTitle: [''],
-    metaDescription: [''],
-    metaKeywords: [''],
     isActive: [true],
   });
 
   ngOnInit(): void {
     this.options.categories().subscribe((rows) => this.categories.set(rows));
     this.options.offers().subscribe((rows) => this.offers.set(rows));
-
-    this.form.controls.brandName.valueChanges.subscribe((name) => {
-      if (!this.isEdit() && !this.slugManuallyDirty) {
-        this.form.controls.brandSlug.setValue(generateSlug(name), { emitEvent: false });
-      }
-    });
 
     const id = this.recordId();
     this.isEdit.set(!!id);
@@ -75,25 +62,14 @@ export class BrandFormComponent implements OnInit {
       this.loading.set(false);
       this.loadError.set(error);
       if (!data) return;
-      this.slugManuallyDirty = true;
       this.form.patchValue({
         brandName: String(data.brandName ?? ''),
-        brandSlug: String(data.brandSlug ?? ''),
-        shortDescription: String(data.shortDescription ?? ''),
-        description: String(data.description ?? ''),
         website: String(data.website ?? ''),
         categoryIds: normalizeIds(data.categoryIds ?? data.categories),
         offerIds: normalizeIds(data.offerIds ?? data.brandOffers ?? data.offers),
-        metaTitle: String(data.metaTitle ?? data.seo?.metaTitle ?? ''),
-        metaDescription: String(data.metaDescription ?? data.seo?.metaDescription ?? ''),
-        metaKeywords: String(data.metaKeywords ?? data.seo?.metaKeywords ?? ''),
         isActive: Boolean(data.isActive ?? true),
       });
     });
-  }
-
-  markSlugDirty(): void {
-    this.slugManuallyDirty = true;
   }
 
   submit(): void {

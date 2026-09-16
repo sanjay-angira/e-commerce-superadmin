@@ -88,13 +88,6 @@
                 {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
               </span>
             </div>
-            <div class="toggle-item">
-              <span>Show On Home Page</span>
-              <mat-slide-toggle formControlName="showOnHomePage" color="primary"></mat-slide-toggle>
-              <span class="status-chip" [class.on]="form.controls.showOnHomePage.value">
-                {{ form.controls.showOnHomePage.value ? 'Active' : 'Not Active' }}
-              </span>
-            </div>
           </div>
         </div>
         <div class="step-actions">
