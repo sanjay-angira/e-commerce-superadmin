@@ -98,6 +98,13 @@ export const routes: Routes = [
             (m) => m.ModuleOrderComponent
           ),
       },
+      {
+        path: 'category-hierarchy',
+        loadComponent: () =>
+          import('./pages/components/category-hierarchy/category-hierarchy.component').then(
+            (m) => m.CategoryHierarchyComponent
+          ),
+      },
       // Config-driven CRUD — mirrors vr-frontend /admin/[module]
       {
         path: ':module',

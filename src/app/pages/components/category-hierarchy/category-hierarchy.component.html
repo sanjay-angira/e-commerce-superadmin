@@ -1,0 +1,92 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Category Hierarchy</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard">
+            <mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon>
+          </a>
+          <span class="dot"></span>
+          <span>Category Hierarchy</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vr-filter-bar">
+      <div class="vr-search-pill">
+        <mat-icon>search</mat-icon>
+        <input type="search" [formControl]="searchControl" placeholder="Search categories..." />
+        @if (searchControl.value) {
+          <mat-icon style="cursor:pointer" (click)="searchControl.setValue('')">close</mat-icon>
+        }
+      </div>
+      <div class="filter-actions">
+        <a mat-flat-button color="primary" routerLink="/admin/categories/add">
+          <mat-icon>add</mat-icon>
+          Add Category
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    @if (error()) {
+      <div class="error-banner">
+        <span>{{ error() }}</span>
+        <button mat-button type="button" (click)="load()">Retry</button>
+      </div>
+    }
+
+    <div class="vr-card joined tree-card">
+      @if (loading()) {
+        <div class="center">
+          <mat-spinner diameter="36"></mat-spinner>
+        </div>
+      } @else if (!visibleTree().length) {
+        <div class="empty">
+          <mat-icon>account_tree</mat-icon>
+          <p>{{ searchControl.value ? 'No categories match your search.' : 'No categories yet.' }}</p>
+          <a mat-flat-button color="primary" routerLink="/admin/categories/add">Add Category</a>
+        </div>
+      } @else {
+        <div class="columns">
+          @for (items of columns(); track $index; let level = $index) {
+            <div class="column">
+              <div class="column-title">
+                {{ level === 0 ? 'Categories' : 'Subcategories' }}
+              </div>
+              @if (!items.length) {
+                <p class="column-empty">No subcategories</p>
+              } @else {
+                @for (node of items; track node.id) {
+                  <div
+                    class="column-row"
+                    [class.active]="selectedIdAt(level) === node.id"
+                    [class.inactive]="node.isActive === false"
+                  >
+                    <button class="column-link" type="button" (click)="select(node, level)">
+                      <mat-icon>{{ node.children?.length ? 'folder' : 'label' }}</mat-icon>
+                      <span>{{ node.categoryName }}</span>
+                      @if (node.children?.length) {
+                        <mat-icon class="chevron">chevron_right</mat-icon>
+                      }
+                    </button>
+                    <button
+                      class="edit-btn"
+                      type="button"
+                      matTooltip="Edit category"
+                      (click)="openEdit(node, $event)"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
