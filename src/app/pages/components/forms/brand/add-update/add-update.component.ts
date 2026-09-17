@@ -9,7 +9,9 @@ import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
+import { ImageUploadComponent } from '../../shared/image-upload.component';
 import { normalizeIds } from '../../shared/form-utils';
+import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
 
 @Component({
   selector: 'app-brand-form',
@@ -22,6 +24,7 @@ import { normalizeIds } from '../../shared/form-utils';
     MatSlideToggleModule,
     MatButtonModule,
     AdminFormShellComponent,
+    ImageUploadComponent,
   ],
   templateUrl: './add-update.component.html',
   styleUrl: './add-update.component.scss'
@@ -41,10 +44,12 @@ export class BrandFormComponent implements OnInit {
   readonly isEdit = signal(false);
   readonly categories = signal<SelectOption[]>([]);
   readonly offers = signal<SelectOption[]>([]);
+  readonly uploadPath = UPLOAD_PATHS.brands;
 
   readonly form = this.fb.nonNullable.group({
     brandName: ['', [Validators.required, Validators.minLength(2)]],
     website: [''],
+    logo: [''],
     categoryIds: [[] as number[]],
     offerIds: [[] as number[]],
     isActive: [true],
@@ -65,6 +70,7 @@ export class BrandFormComponent implements OnInit {
       this.form.patchValue({
         brandName: String(data.brandName ?? ''),
         website: String(data.website ?? ''),
+        logo: String(data.logo ?? ''),
         categoryIds: normalizeIds(data.categoryIds ?? data.categories),
         offerIds: normalizeIds(data.offerIds ?? data.brandOffers ?? data.offers),
         isActive: Boolean(data.isActive ?? true),
@@ -83,7 +89,8 @@ export class BrandFormComponent implements OnInit {
     this.crud
       .save(this.module(), this.recordId(), {
         ...v,
-        website: v.website || undefined,
+        website: v.website.trim() || undefined,
+        logo: v.logo.trim() || null,
       })
       .subscribe((res) => {
         this.saving.set(false);

@@ -17,6 +17,7 @@ export const UPLOAD_PATHS = {
   banners: '/banners/images',
   blogs: '/blog/images',
   users: '/user/images',
+  brands: '/brands/images',
   attributeColors: '/products/attribute-colors',
 } as const;
 

@@ -31,6 +31,7 @@
         }
       </mat-select>
     </mat-form-field>
+    <app-image-upload class="full" label="Brand Logo" [path]="uploadPath" formControlName="logo" />
     <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
     <div class="actions">
       <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">

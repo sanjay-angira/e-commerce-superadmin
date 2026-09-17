@@ -106,6 +106,7 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
     addLabel: 'Add brand',
     formFields: [
       { key: 'brandName', label: 'Brand Name', type: 'text', required: true },
+      { key: 'logo', label: 'Brand Logo', type: 'text' },
       { key: 'website', label: 'Website', type: 'text' },
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
