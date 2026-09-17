@@ -219,7 +219,14 @@ export class ProductFormComponent implements OnInit {
     if (!Number.isFinite(id)) return false;
     const attr = this.attributes().find((a) => Number(a.value) === id);
     const name = (attr?.label || '').toLowerCase();
-    return Boolean(attr?.supportsImage) || name === 'color' || name.includes('colour');
+    const displayType = String(attr?.displayType || '').toLowerCase();
+    return (
+      displayType === 'swatch' ||
+      displayType === 'image' ||
+      Boolean(attr?.supportsImage) ||
+      name === 'color' ||
+      name.includes('colour')
+    );
   }
 
   hasImageCapableAttributes(): boolean {

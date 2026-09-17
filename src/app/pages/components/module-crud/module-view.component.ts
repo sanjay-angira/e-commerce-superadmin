@@ -57,7 +57,20 @@ const BRAND_REMOVED_KEYS = new Set([
   'metaKeywords',
 ]);
 
-const ATTRIBUTE_REMOVED_KEYS = new Set(['isFilterable']);
+const ATTRIBUTE_REMOVED_KEYS = new Set([
+  'isRequired',
+  'supportsImage',
+  'options',
+  'slug',
+]);
+
+const ATTRIBUTE_OPTION_REMOVED_KEYS = new Set([
+  'slug',
+  'extraMeta',
+  'usageCount',
+  'attribute',
+  'attributeId',
+]);
 
 const CATEGORY_REMOVED_KEYS = new Set([
   'showOnHomePage',
@@ -331,6 +344,7 @@ export class ModuleViewComponent {
     if (HIDDEN_KEYS.has(key)) return true;
     if (this.moduleKey() === 'brands' && BRAND_REMOVED_KEYS.has(key)) return true;
     if (this.moduleKey() === 'attributes' && ATTRIBUTE_REMOVED_KEYS.has(key)) return true;
+    if (this.moduleKey() === 'attribute-options' && ATTRIBUTE_OPTION_REMOVED_KEYS.has(key)) return true;
     return this.moduleKey() === 'categories' && CATEGORY_REMOVED_KEYS.has(key);
   }
 

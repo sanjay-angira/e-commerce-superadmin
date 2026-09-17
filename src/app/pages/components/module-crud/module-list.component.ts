@@ -352,11 +352,19 @@ export class ModuleListComponent {
       parentRecord?.['categoryName'] ??
       parentRecord?.['name'] ??
       null;
+    const attribute = row['attribute'];
+    const attributeRecord =
+      attribute && typeof attribute === 'object'
+        ? (attribute as Record<string, unknown>)
+        : null;
+    const attributeName =
+      row['attributeName'] ?? attributeRecord?.['name'] ?? null;
     return {
       ...row,
       name: this.displayName(row) || row['name'],
       role: roles.join(', '),
       parentCategory,
+      attributeName,
     };
   }
 
@@ -374,6 +382,7 @@ export class ModuleListComponent {
       row['offerName'] ||
       row['couponCode'] ||
       row['question'] ||
+      row['value'] ||
       row['orderNumber'] ||
       row['id'] ||
       '',

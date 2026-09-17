@@ -8,12 +8,49 @@
   <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
-      <input matInput formControlName="name" />
+      <input matInput formControlName="name" placeholder="Color" />
+      @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+        <mat-error>Name is required</mat-error>
+      }
+      @if (form.controls.name.hasError('minlength')) {
+        <mat-error>Name must be at least 2 characters</mat-error>
+      }
     </mat-form-field>
-    <mat-slide-toggle formControlName="isRequired">Required</mat-slide-toggle>
-    <mat-slide-toggle formControlName="supportsImage">Allow image / swatch on product</mat-slide-toggle>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Unit</mat-label>
+      <input matInput formControlName="unit" placeholder="GB, inch, kg" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Display Type</mat-label>
+      <mat-select formControlName="displayType">
+        @for (opt of displayTypes; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Input Type</mat-label>
+      <mat-select formControlName="inputType">
+        @for (opt of inputTypes; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sort Order</mat-label>
+      <input matInput type="number" formControlName="sortOrder" />
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="isVariantDefining">Variant defining (creates a new SKU)</mat-slide-toggle>
+    <mat-slide-toggle formControlName="isFilterable">Show in search / category filters</mat-slide-toggle>
+    <mat-slide-toggle formControlName="status">Active</mat-slide-toggle>
+
     <div class="actions">
-      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
         {{ isEdit() ? 'Update Attribute' : 'Create Attribute' }}
       </button>
       <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>

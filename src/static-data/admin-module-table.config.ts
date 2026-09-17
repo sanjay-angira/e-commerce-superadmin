@@ -1,5 +1,6 @@
 import {
   AttributeComponentColumns,
+  AttributeOptionComponentColumns,
   BannerComponentColumns,
   BlogCategoryComponentColumns,
   BlogComponentColumns,
@@ -28,6 +29,7 @@ export type AdminModuleKey =
   | 'categories'
   | 'brands'
   | 'attributes'
+  | 'attribute-options'
   | 'offers'
   | 'coupons'
   | 'banners'
@@ -116,8 +118,28 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
     addLabel: 'Add attribute',
     formFields: [
       { key: 'name', label: 'Name', type: 'text', required: true },
-      { key: 'isRequired', label: 'Required', type: 'toggle' },
-      { key: 'supportsImage', label: 'Supports Image', type: 'toggle' },
+      { key: 'displayType', label: 'Display Type', type: 'select', required: true },
+      { key: 'inputType', label: 'Input Type', type: 'select', required: true },
+      { key: 'unit', label: 'Unit', type: 'text' },
+      { key: 'isVariantDefining', label: 'Variant Defining', type: 'toggle' },
+      { key: 'isFilterable', label: 'Filterable', type: 'toggle' },
+      { key: 'sortOrder', label: 'Sort Order', type: 'number' },
+      { key: 'status', label: 'Status', type: 'toggle' },
+    ],
+  },
+  'attribute-options': {
+    label: 'Attribute Options',
+    description: 'Manage values for product attributes',
+    apiPath: 'attribute-options',
+    columns: AttributeOptionComponentColumns,
+    actions: ['add', 'view', 'edit', 'delete'],
+    addLabel: 'Add attribute option',
+    formFields: [
+      { key: 'attributeId', label: 'Attribute', type: 'number', required: true },
+      { key: 'value', label: 'Value', type: 'text', required: true },
+      { key: 'normalizedValue', label: 'Normalized Value', type: 'text' },
+      { key: 'hexCode', label: 'Hex Code', type: 'text' },
+      { key: 'sortOrder', label: 'Sort Order', type: 'number' },
     ],
   },
   offers: {

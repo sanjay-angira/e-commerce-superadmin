@@ -8,9 +8,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
+import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
+import { ImageUploadComponent } from '../../shared/image-upload.component';
+import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
+import { normalizeColorCode } from '../../shared/form-utils';
 
 @Component({
-  selector: 'app-attribute-form',
+  selector: 'app-attribute-option-form',
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -20,48 +24,40 @@ import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
     MatSlideToggleModule,
     MatButtonModule,
     AdminFormShellComponent,
+    ImageUploadComponent,
   ],
   templateUrl: './add-update.component.html',
   styleUrl: './add-update.component.scss',
 })
-export class AttributeFormComponent implements OnInit {
+export class AttributeOptionFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly crud = inject(AdminCrudFormService);
+  private readonly options = inject(FormOptionsService);
 
   readonly module = input.required<string>();
   readonly recordId = input<string | undefined>();
+  readonly swatchPath = UPLOAD_PATHS.attributeColors;
 
   readonly loading = signal(false);
   readonly loadError = signal('');
   readonly submitError = signal('');
   readonly saving = signal(false);
   readonly isEdit = signal(false);
-
-  readonly displayTypes = [
-    { value: 'swatch', label: 'Swatch' },
-    { value: 'image', label: 'Image' },
-    { value: 'text', label: 'Text' },
-    { value: 'dropdown', label: 'Dropdown' },
-    { value: 'radio', label: 'Radio' },
-  ];
-
-  readonly inputTypes = [
-    { value: 'single', label: 'Single' },
-    { value: 'multiple', label: 'Multiple' },
-  ];
+  readonly attributes = signal<SelectOption[]>([]);
 
   readonly form = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    displayType: ['text', Validators.required],
-    inputType: ['single', Validators.required],
-    unit: ['', Validators.maxLength(20)],
-    isVariantDefining: [true],
-    isFilterable: [true],
+    attributeId: [null as number | null, Validators.required],
+    value: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(150)]],
+    normalizedValue: [''],
+    hexCode: [''],
+    swatchImageUrl: [''],
     sortOrder: [0, [Validators.min(0)]],
     status: [true],
   });
 
   ngOnInit(): void {
+    this.options.attributes().subscribe((rows) => this.attributes.set(rows));
+
     const id = this.recordId();
     this.isEdit.set(!!id);
     if (!id) return;
@@ -71,12 +67,11 @@ export class AttributeFormComponent implements OnInit {
       this.loadError.set(error);
       if (!data) return;
       this.form.patchValue({
-        name: String(data.name ?? ''),
-        displayType: String(data.displayType ?? 'text'),
-        inputType: String(data.inputType ?? 'single'),
-        unit: String(data.unit ?? ''),
-        isVariantDefining: data.isVariantDefining !== false,
-        isFilterable: data.isFilterable !== false,
+        attributeId: data.attributeId != null ? Number(data.attributeId) : null,
+        value: String(data.value ?? ''),
+        normalizedValue: String(data.normalizedValue ?? ''),
+        hexCode: String(data.hexCode ?? ''),
+        swatchImageUrl: String(data.swatchImageUrl ?? ''),
         sortOrder: Number(data.sortOrder ?? 0),
         status: String(data.status ?? 'active') !== 'inactive',
       });
@@ -93,12 +88,11 @@ export class AttributeFormComponent implements OnInit {
     this.submitError.set('');
     this.crud
       .save(this.module(), this.recordId(), {
-        name: v.name.trim(),
-        displayType: v.displayType,
-        inputType: v.inputType,
-        unit: v.unit.trim() || null,
-        isVariantDefining: v.isVariantDefining,
-        isFilterable: v.isFilterable,
+        attributeId: Number(v.attributeId),
+        value: v.value.trim(),
+        normalizedValue: v.normalizedValue.trim() || null,
+        hexCode: v.hexCode.trim() ? normalizeColorCode(v.hexCode) : null,
+        swatchImageUrl: v.swatchImageUrl.trim() || null,
         sortOrder: Number(v.sortOrder || 0),
         status: v.status ? 'active' : 'inactive',
       })

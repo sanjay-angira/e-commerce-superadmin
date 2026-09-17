@@ -5,6 +5,7 @@ import { ApiService } from '../../../../core/services/api.service';
 export type SelectOption = {
   label: string;
   value: number | string;
+  displayType?: string;
   supportsImage?: boolean;
   raw?: Record<string, unknown>;
 };
@@ -28,12 +29,19 @@ export class FormOptionsService {
       .pipe(
         map((res) => {
           const rows: any[] = res?.data?.rows ?? res?.data ?? [];
-          return rows.map((row) => ({
-            label: String(row[labelKey] ?? row.name ?? row.title ?? row.id),
-            value: Number(row.id),
-            supportsImage: Boolean(row.supportsImage),
-            raw: row,
-          }));
+          return rows.map((row) => {
+            const displayType = String(row.displayType ?? 'text');
+            return {
+              label: String(row[labelKey] ?? row.name ?? row.title ?? row.id),
+              value: Number(row.id),
+              displayType,
+              supportsImage:
+                displayType === 'swatch' ||
+                displayType === 'image' ||
+                Boolean(row.supportsImage),
+              raw: row,
+            };
+          });
         })
       );
   }

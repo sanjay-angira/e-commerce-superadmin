@@ -67,10 +67,25 @@ export const BrandComponentColumns: AdminTableColumnDefinition[] = [
 export const AttributeComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
   { label: 'Name', property: 'name', type: 'text', datatype: 'name', visible: true },
-  { label: 'Required', property: 'isRequired', type: 'text', datatype: 'on-off', visible: true },
-  { label: 'Image / Swatch', property: 'supportsImage', type: 'text', datatype: 'on-off', visible: true },
+  { label: 'Display Type', property: 'displayType', type: 'text', datatype: 'text', visible: true },
+  { label: 'Input Type', property: 'inputType', type: 'text', datatype: 'text', visible: true },
+  { label: 'Unit', property: 'unit', type: 'text', datatype: 'text', visible: true },
+  { label: 'Variant Defining', property: 'isVariantDefining', type: 'text', datatype: 'on-off', visible: true },
+  { label: 'Filterable', property: 'isFilterable', type: 'text', datatype: 'on-off', visible: true },
+  { label: 'Status', property: 'status', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
-  { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
+];
+
+export const AttributeOptionComponentColumns: AdminTableColumnDefinition[] = [
+  { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
+  { label: 'Attribute', property: 'attributeName', type: 'text', datatype: 'attributeName', visible: true },
+  { label: 'Value', property: 'value', type: 'text', datatype: 'value', visible: true },
+  { label: 'Normalized Value', property: 'normalizedValue', type: 'text', datatype: 'text', visible: true },
+  { label: 'Hex Code', property: 'hexCode', type: 'text', datatype: 'text', visible: true },
+  { label: 'Sort Order', property: 'sortOrder', type: 'text', datatype: 'text', visible: true },
+  { label: 'Status', property: 'status', type: 'text', datatype: 'status', visible: true },
+  { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
