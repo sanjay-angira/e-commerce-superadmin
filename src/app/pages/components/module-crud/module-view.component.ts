@@ -62,6 +62,7 @@ const ATTRIBUTE_REMOVED_KEYS = new Set([
   'supportsImage',
   'options',
   'slug',
+  'status',
 ]);
 
 const ATTRIBUTE_OPTION_REMOVED_KEYS = new Set([
@@ -70,6 +71,7 @@ const ATTRIBUTE_OPTION_REMOVED_KEYS = new Set([
   'usageCount',
   'attribute',
   'attributeId',
+  'status',
 ]);
 
 const CATEGORY_REMOVED_KEYS = new Set([

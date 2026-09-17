@@ -52,7 +52,7 @@ export class AttributeOptionFormComponent implements OnInit {
     hexCode: [''],
     swatchImageUrl: [''],
     sortOrder: [0, [Validators.min(0)]],
-    status: [true],
+    isActive: [true],
   });
 
   ngOnInit(): void {
@@ -73,7 +73,7 @@ export class AttributeOptionFormComponent implements OnInit {
         hexCode: String(data.hexCode ?? ''),
         swatchImageUrl: String(data.swatchImageUrl ?? ''),
         sortOrder: Number(data.sortOrder ?? 0),
-        status: String(data.status ?? 'active') !== 'inactive',
+        isActive: data.isActive !== false,
       });
     });
   }
@@ -94,7 +94,7 @@ export class AttributeOptionFormComponent implements OnInit {
         hexCode: v.hexCode.trim() ? normalizeColorCode(v.hexCode) : null,
         swatchImageUrl: v.swatchImageUrl.trim() || null,
         sortOrder: Number(v.sortOrder || 0),
-        status: v.status ? 'active' : 'inactive',
+        isActive: v.isActive,
       })
       .subscribe((res) => {
         this.saving.set(false);

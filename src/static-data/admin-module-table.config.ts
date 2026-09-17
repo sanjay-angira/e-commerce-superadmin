@@ -125,7 +125,7 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
       { key: 'isVariantDefining', label: 'Variant Defining', type: 'toggle' },
       { key: 'isFilterable', label: 'Filterable', type: 'toggle' },
       { key: 'sortOrder', label: 'Sort Order', type: 'number' },
-      { key: 'status', label: 'Status', type: 'toggle' },
+      { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
   },
   'attribute-options': {
@@ -141,6 +141,7 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
       { key: 'normalizedValue', label: 'Normalized Value', type: 'text' },
       { key: 'hexCode', label: 'Hex Code', type: 'text' },
       { key: 'sortOrder', label: 'Sort Order', type: 'number' },
+      { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
   },
   offers: {

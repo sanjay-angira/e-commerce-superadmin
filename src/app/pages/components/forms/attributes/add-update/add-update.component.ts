@@ -58,7 +58,7 @@ export class AttributeFormComponent implements OnInit {
     isVariantDefining: [true],
     isFilterable: [true],
     sortOrder: [0, [Validators.min(0)]],
-    status: [true],
+    isActive: [true],
   });
 
   ngOnInit(): void {
@@ -78,7 +78,7 @@ export class AttributeFormComponent implements OnInit {
         isVariantDefining: data.isVariantDefining !== false,
         isFilterable: data.isFilterable !== false,
         sortOrder: Number(data.sortOrder ?? 0),
-        status: String(data.status ?? 'active') !== 'inactive',
+        isActive: data.isActive !== false,
       });
     });
   }
@@ -100,7 +100,7 @@ export class AttributeFormComponent implements OnInit {
         isVariantDefining: v.isVariantDefining,
         isFilterable: v.isFilterable,
         sortOrder: Number(v.sortOrder || 0),
-        status: v.status ? 'active' : 'inactive',
+        isActive: v.isActive,
       })
       .subscribe((res) => {
         this.saving.set(false);

@@ -72,7 +72,7 @@ export const AttributeComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Unit', property: 'unit', type: 'text', datatype: 'text', visible: true },
   { label: 'Variant Defining', property: 'isVariantDefining', type: 'text', datatype: 'on-off', visible: true },
   { label: 'Filterable', property: 'isFilterable', type: 'text', datatype: 'on-off', visible: true },
-  { label: 'Status', property: 'status', type: 'text', datatype: 'status', visible: true },
+  { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
@@ -84,7 +84,7 @@ export const AttributeOptionComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Normalized Value', property: 'normalizedValue', type: 'text', datatype: 'text', visible: true },
   { label: 'Hex Code', property: 'hexCode', type: 'text', datatype: 'text', visible: true },
   { label: 'Sort Order', property: 'sortOrder', type: 'text', datatype: 'text', visible: true },
-  { label: 'Status', property: 'status', type: 'text', datatype: 'status', visible: true },
+  { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
