@@ -34,6 +34,29 @@
   border-bottom: none !important;
 }
 
+.vr-sort-label {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+:host ::ng-deep .mat-sort-header-arrow {
+  color: var(--vr-text);
+  opacity: 0.54;
+}
+
+:host ::ng-deep .mat-sort-header-sorted .mat-sort-header-arrow {
+  opacity: 0.87;
+}
+
 .vr-role-chips {
   display: flex;
   flex-wrap: wrap;

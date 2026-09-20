@@ -93,10 +93,26 @@
         </div>
       } @else {
         <div class="vr-table-scroll">
-          <table mat-table [dataSource]="rows()" class="vr-table">
+          <table
+            mat-table
+            [dataSource]="rows()"
+            class="vr-table"
+            matSort
+            [matSortActive]="sortingColumn()"
+            [matSortDirection]="sortDirection()"
+            [matSortDisableClear]="true"
+          >
           @for (col of dataColumns; track col.property) {
             <ng-container [matColumnDef]="col.property">
-              <th mat-header-cell *matHeaderCellDef>{{ col.label }}</th>
+              <th mat-header-cell *matHeaderCellDef>
+                <span
+                  (click)="onSort(col.property)"
+                  mat-sort-header
+                  class="vr-sort-label"
+                >
+                  {{ col.label }}
+                </span>
+              </th>
               <td mat-cell *matCellDef="let row">
                 @if (col.datatype === 'date' || col.datatype === 'time') {
                   <span class="vr-status active">

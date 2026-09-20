@@ -331,6 +331,11 @@ html {
   background-color: var(--vr-card) !important;
 }
 
+.vr-table .mat-sort-header-arrow,
+.vr-table .mat-mdc-sort-header-arrow {
+  color: var(--vr-text);
+}
+
 .vr-table .mat-mdc-cell,
 .vr-table .mdc-data-table__cell {
   font-weight: 400;
