@@ -37,8 +37,6 @@
 .vr-sort-label {
   display: inline-block;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -49,12 +47,26 @@
 }
 
 :host ::ng-deep .mat-sort-header-arrow {
+  width: 16px;
+  height: 16px;
   color: var(--vr-text);
-  opacity: 0.54;
 }
 
-:host ::ng-deep .mat-sort-header-sorted .mat-sort-header-arrow {
-  opacity: 0.87;
+:host ::ng-deep .mat-sort-header-descending .mat-sort-header-arrow {
+  transform: none;
+}
+
+:host ::ng-deep .mat-sort-header-arrow [matSortHeaderIcon].vr-sort-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 16px;
+  margin: 0;
+  position: relative;
+  top: auto;
+  left: auto;
+  display: block;
+  overflow: hidden;
 }
 
 .vr-role-chips {

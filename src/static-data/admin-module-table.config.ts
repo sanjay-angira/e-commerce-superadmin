@@ -439,3 +439,81 @@ export function getAdminModuleApiPath(module: AdminModuleKey): string {
 export function isAdminModuleKey(module: string): module is AdminModuleKey {
   return module in adminModuleTableConfig;
 }
+
+/** Display columns that are joined/derived and cannot be sent as SQL order fields. */
+const RELATION_SORT_COLUMNS = new Set([
+  'parentCategory',
+  'role',
+  'userName',
+  'isDeleted',
+  'shopName',
+  'sellerStatus',
+  'customerName',
+  'itemCount',
+  'phone',
+]);
+
+/**
+ * Maps a table header property to the API `column` param.
+ * Mirrors vr-admin list `shorting` handlers, with field names for this backend
+ * (e.g. brand `name` instead of `brandName`).
+ */
+export function getAdminModuleSortColumn(
+  module: AdminModuleKey,
+  property: string,
+): string {
+  if (!property || property === 'actions') {
+    return 'id';
+  }
+
+  const nameColumnByModule: Partial<Record<AdminModuleKey, string>> = {
+    users: 'firstName',
+    admins: 'firstName',
+    customers: 'firstName',
+    sellers: 'firstName',
+    'delete-requests': 'firstName',
+    products: 'productName',
+    brands: 'name',
+    categories: 'categoryName',
+    offers: 'offerName',
+    coupons: 'couponCode',
+    reviews: 'comment',
+    'product-reviews': 'comment',
+    'product-faq': 'question',
+  };
+
+  if (property === 'name' && nameColumnByModule[module]) {
+    return nameColumnByModule[module]!;
+  }
+
+  if (property === 'brandName' && module === 'brands') {
+    return 'name';
+  }
+  if (property === 'coupon_code' || (property === 'couponCode' && module === 'coupons')) {
+    return 'couponCode';
+  }
+  if (property === 'comment' && (module === 'reviews' || module === 'product-reviews')) {
+    return 'comment';
+  }
+  if (property === 'question' && module === 'product-faq') {
+    return 'question';
+  }
+
+  if (
+    (property === 'brandName' || property === 'categoryName') &&
+    (module === 'products' || module === 'blogs')
+  ) {
+    return 'id';
+  }
+  if (property === 'productName' && module !== 'products') {
+    return 'id';
+  }
+  if (property === 'attributeName' && module !== 'attribute-options') {
+    return 'id';
+  }
+  if (RELATION_SORT_COLUMNS.has(property)) {
+    return 'id';
+  }
+
+  return property;
+}

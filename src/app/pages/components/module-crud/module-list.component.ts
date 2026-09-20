@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
+import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,6 +20,7 @@ import { DatePipe } from '@angular/common';
 import { ApiService } from '../../../core/services/api.service';
 import {
   getAdminModuleApiPath,
+  getAdminModuleSortColumn,
   getAdminModuleTableConfig,
   isAdminModuleKey,
   type AdminModuleKey,
@@ -70,14 +71,6 @@ export class ModuleListComponent {
   readonly pageSize = signal(10);
   readonly sortingColumn = signal('id');
   readonly sortingOrder = signal<'ASC' | 'DESC'>('DESC');
-
-  private readonly userSortModules = new Set<AdminModuleKey>([
-    'users',
-    'admins',
-    'customers',
-    'sellers',
-    'delete-requests',
-  ]);
 
   moduleKey!: AdminModuleKey;
   apiPath = '';
@@ -193,12 +186,12 @@ export class ModuleListComponent {
     this.load();
   }
 
-  onSort(property: string): void {
-    if (!property || property === 'actions') {
+  onSort(sort: Sort): void {
+    if (!sort.active || sort.active === 'actions') {
       return;
     }
-    this.sortingOrder.update((order) => (order === 'DESC' ? 'ASC' : 'DESC'));
-    this.sortingColumn.set(property);
+    this.sortingColumn.set(sort.active);
+    this.sortingOrder.set(sort.direction === 'asc' ? 'ASC' : 'DESC');
     this.pageNumber.set(1);
     this.load();
   }
@@ -346,29 +339,7 @@ export class ModuleListComponent {
   }
 
   private toApiSortColumn(property: string): string {
-    if (property === 'name' && this.userSortModules.has(this.moduleKey)) {
-      return 'firstName';
-    }
-    if (property === 'brandName' && this.moduleKey === 'products') {
-      return 'id';
-    }
-    if (property === 'categoryName' && this.moduleKey === 'products') {
-      return 'id';
-    }
-    if (property === 'productName' && this.moduleKey !== 'products') {
-      return 'id';
-    }
-    if (
-      property === 'parentCategory' ||
-      property === 'role' ||
-      property === 'userName' ||
-      property === 'isDeleted' ||
-      property === 'shopName' ||
-      property === 'sellerStatus'
-    ) {
-      return 'id';
-    }
-    return property;
+    return getAdminModuleSortColumn(this.moduleKey, property);
   }
 
   private displayName(row: Record<string, unknown>): string {
