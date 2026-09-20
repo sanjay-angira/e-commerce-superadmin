@@ -48,13 +48,16 @@ const HIDDEN_KEYS = new Set([
 ]);
 
 const BRAND_REMOVED_KEYS = new Set([
+  'brandName',
+  'logo',
   'brandSlug',
-  'slug',
   'shortDescription',
-  'description',
-  'metaTitle',
-  'metaDescription',
   'metaKeywords',
+  'slug',
+  'products',
+  'categories',
+  'brandOffers',
+  'productCount',
 ]);
 
 const ATTRIBUTE_REMOVED_KEYS = new Set([

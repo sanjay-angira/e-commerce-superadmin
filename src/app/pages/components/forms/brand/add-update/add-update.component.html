@@ -1,4 +1,3 @@
-
 <app-admin-form-shell
   [title]="isEdit() ? 'Edit Brand' : 'Add Brand'"
   [module]="module()"
@@ -9,12 +8,61 @@
   <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
     <mat-form-field appearance="outline">
       <mat-label>Brand Name</mat-label>
-      <input matInput formControlName="brandName" />
+      <input matInput formControlName="name" />
+      @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+        <mat-error>Brand name is required</mat-error>
+      }
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Website</mat-label>
-      <input matInput formControlName="website" />
+      <input matInput formControlName="website" placeholder="https://" />
     </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Country of origin</mat-label>
+      <input matInput formControlName="countryOfOrigin" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>GST number</mat-label>
+      <input matInput formControlName="gstNumber" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Support email</mat-label>
+      <input matInput type="email" formControlName="supportEmail" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Support phone</mat-label>
+      <input matInput formControlName="supportPhone" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Instagram URL</mat-label>
+      <input matInput formControlName="instagramUrl" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Facebook URL</mat-label>
+      <input matInput formControlName="facebookUrl" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Meta title</mat-label>
+      <input matInput formControlName="metaTitle" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Sort order</mat-label>
+      <input matInput type="number" formControlName="sortOrder" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Meta description</mat-label>
+      <textarea matInput rows="2" formControlName="metaDescription"></textarea>
+    </mat-form-field>
+
+    <div class="full">
+      <app-quill-editor label="Description" minHeight="180px" formControlName="description" />
+    </div>
+
     <mat-form-field appearance="outline">
       <mat-label>Categories</mat-label>
       <mat-select formControlName="categoryIds" multiple>
@@ -31,8 +79,22 @@
         }
       </mat-select>
     </mat-form-field>
-    <app-image-upload class="full" label="Brand Logo" [path]="uploadPath" formControlName="logo" />
+
+    <app-image-upload class="full" label="Brand Logo" [path]="paths.logo" formControlName="logoUrl" />
+    <app-image-upload class="full" label="Banner image" [path]="paths.banner" formControlName="bannerImageUrl" />
+    <app-image-upload class="full" label="OG image" [path]="paths.og" formControlName="ogImageUrl" />
+    <app-image-upload
+      class="full"
+      label="Trademark certificate"
+      [path]="paths.trademark"
+      accept="image/*,.pdf,application/pdf"
+      formControlName="trademarkCertificateUrl"
+    />
+
+    <mat-slide-toggle formControlName="isVerified">Verified brand</mat-slide-toggle>
+    <mat-slide-toggle formControlName="isFeatured">Featured</mat-slide-toggle>
     <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
+
     <div class="actions">
       <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
         {{ isEdit() ? 'Update Brand' : 'Create Brand' }}

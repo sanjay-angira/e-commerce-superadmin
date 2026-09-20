@@ -78,7 +78,7 @@ export class FormOptionsService {
   }
 
   brands() {
-    return this.list('brands', 'brandName');
+    return this.list('brands', 'name');
   }
 
   offers() {

@@ -57,7 +57,9 @@ export const CategoryComponentColumns: AdminTableColumnDefinition[] = [
 
 export const BrandComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
-  { label: 'Brand Name', property: 'brandName', type: 'text', datatype: 'brandName', visible: true },
+  { label: 'Brand Name', property: 'name', type: 'text', datatype: 'brandName', visible: true },
+  { label: 'Verified', property: 'isVerified', type: 'text', datatype: 'on-off', visible: true },
+  { label: 'Featured', property: 'isFeatured', type: 'text', datatype: 'on-off', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
@@ -74,6 +76,7 @@ export const AttributeComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Filterable', property: 'isFilterable', type: 'text', datatype: 'on-off', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
@@ -86,6 +89,7 @@ export const AttributeOptionComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Sort Order', property: 'sortOrder', type: 'text', datatype: 'text', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 

@@ -10,6 +10,7 @@ import { AdminFormShellComponent } from '../../shared/admin-form-shell.component
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
 import { ImageUploadComponent } from '../../shared/image-upload.component';
+import { QuillEditorComponent } from '../../shared/quill-editor.component';
 import { normalizeIds } from '../../shared/form-utils';
 import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
 
@@ -25,9 +26,10 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
     MatButtonModule,
     AdminFormShellComponent,
     ImageUploadComponent,
+    QuillEditorComponent,
   ],
   templateUrl: './add-update.component.html',
-  styleUrl: './add-update.component.scss'
+  styleUrl: './add-update.component.scss',
 })
 export class BrandFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -44,14 +46,29 @@ export class BrandFormComponent implements OnInit {
   readonly isEdit = signal(false);
   readonly categories = signal<SelectOption[]>([]);
   readonly offers = signal<SelectOption[]>([]);
-  readonly uploadPath = UPLOAD_PATHS.brands;
+  readonly paths = UPLOAD_PATHS.brands;
 
   readonly form = this.fb.nonNullable.group({
-    brandName: ['', [Validators.required, Validators.minLength(2)]],
-    website: [''],
-    logo: [''],
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+    website: ['', Validators.maxLength(255)],
+    description: [''],
+    countryOfOrigin: ['', Validators.maxLength(100)],
+    gstNumber: ['', Validators.maxLength(50)],
+    supportEmail: ['', Validators.maxLength(150)],
+    supportPhone: ['', Validators.maxLength(20)],
+    instagramUrl: ['', Validators.maxLength(255)],
+    facebookUrl: ['', Validators.maxLength(255)],
+    metaTitle: ['', Validators.maxLength(160)],
+    metaDescription: ['', Validators.maxLength(300)],
+    sortOrder: [0, [Validators.min(0)]],
+    logoUrl: [''],
+    bannerImageUrl: [''],
+    ogImageUrl: [''],
+    trademarkCertificateUrl: [''],
     categoryIds: [[] as number[]],
     offerIds: [[] as number[]],
+    isVerified: [false],
+    isFeatured: [false],
     isActive: [true],
   });
 
@@ -68,12 +85,27 @@ export class BrandFormComponent implements OnInit {
       this.loadError.set(error);
       if (!data) return;
       this.form.patchValue({
-        brandName: String(data.brandName ?? ''),
+        name: String(data.name ?? data.brandName ?? ''),
         website: String(data.website ?? ''),
-        logo: String(data.logo ?? ''),
+        description: String(data.description ?? ''),
+        countryOfOrigin: String(data.countryOfOrigin ?? ''),
+        gstNumber: String(data.gstNumber ?? ''),
+        supportEmail: String(data.supportEmail ?? ''),
+        supportPhone: String(data.supportPhone ?? ''),
+        instagramUrl: String(data.instagramUrl ?? ''),
+        facebookUrl: String(data.facebookUrl ?? ''),
+        metaTitle: String(data.metaTitle ?? ''),
+        metaDescription: String(data.metaDescription ?? ''),
+        sortOrder: Number(data.sortOrder ?? 0),
+        logoUrl: String(data.logoUrl ?? data.logo ?? ''),
+        bannerImageUrl: String(data.bannerImageUrl ?? ''),
+        ogImageUrl: String(data.ogImageUrl ?? ''),
+        trademarkCertificateUrl: String(data.trademarkCertificateUrl ?? ''),
         categoryIds: normalizeIds(data.categoryIds ?? data.categories),
         offerIds: normalizeIds(data.offerIds ?? data.brandOffers ?? data.offers),
-        isActive: Boolean(data.isActive ?? true),
+        isVerified: Boolean(data.isVerified),
+        isFeatured: Boolean(data.isFeatured),
+        isActive: data.isActive !== false,
       });
     });
   }
@@ -84,13 +116,32 @@ export class BrandFormComponent implements OnInit {
       return;
     }
     const v = this.form.getRawValue();
+    const emptyToNull = (value: string) => value.trim() || null;
     this.saving.set(true);
     this.submitError.set('');
     this.crud
       .save(this.module(), this.recordId(), {
-        ...v,
-        website: v.website.trim() || undefined,
-        logo: v.logo.trim() || null,
+        name: v.name.trim(),
+        website: emptyToNull(v.website),
+        description: emptyToNull(v.description),
+        countryOfOrigin: emptyToNull(v.countryOfOrigin),
+        gstNumber: emptyToNull(v.gstNumber),
+        supportEmail: emptyToNull(v.supportEmail),
+        supportPhone: emptyToNull(v.supportPhone),
+        instagramUrl: emptyToNull(v.instagramUrl),
+        facebookUrl: emptyToNull(v.facebookUrl),
+        metaTitle: emptyToNull(v.metaTitle),
+        metaDescription: emptyToNull(v.metaDescription),
+        sortOrder: Number(v.sortOrder || 0),
+        logoUrl: emptyToNull(v.logoUrl),
+        bannerImageUrl: emptyToNull(v.bannerImageUrl),
+        ogImageUrl: emptyToNull(v.ogImageUrl),
+        trademarkCertificateUrl: emptyToNull(v.trademarkCertificateUrl),
+        categoryIds: v.categoryIds,
+        offerIds: v.offerIds,
+        isVerified: v.isVerified,
+        isFeatured: v.isFeatured,
+        isActive: v.isActive,
       })
       .subscribe((res) => {
         this.saving.set(false);
