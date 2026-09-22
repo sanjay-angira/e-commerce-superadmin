@@ -16,13 +16,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
-import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
+import { FormOptionsService, type CategoryFormConfig, type FormConfigTab, type SelectOption } from '../../shared/form-options.service';
 import { ImageUploadComponent } from '../../shared/image-upload.component';
 import { MultiImageUploadComponent } from '../../shared/multi-image-upload.component';
 import { QuillEditorComponent } from '../../shared/quill-editor.component';
+import { DynamicAttributeTabComponent } from '../../shared/dynamic-attribute-tab.component';
 import { AddTagDialogComponent } from '../add-tag-dialog.component';
 import {
   generateSlug,
@@ -46,10 +49,13 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
     MatButtonModule,
     MatIconModule,
     MatExpansionModule,
+    MatTabsModule,
+    MatRadioModule,
     AdminFormShellComponent,
     ImageUploadComponent,
     MultiImageUploadComponent,
     QuillEditorComponent,
+    DynamicAttributeTabComponent,
   ],
   templateUrl: './add-update.component.html',
   styleUrl: './add-update.component.scss'
@@ -79,6 +85,11 @@ export class ProductFormComponent implements OnInit {
   readonly products = signal<SelectOption[]>([]);
   readonly attributes = signal<SelectOption[]>([]);
   readonly productTags = signal<SelectOption[]>([]);
+  readonly formConfig = signal<CategoryFormConfig | null>(null);
+  readonly formConfigLoading = signal(false);
+  private readonly formConfigCache = new Map<number, CategoryFormConfig>();
+  private lastFormConfigCategoryId: number | null = null;
+  private pendingAttributeValues: Array<{ attributeId: number; optionId?: number | null; value?: string | null }> = [];
 
   private slugDirty = false;
   private variantSlugDirty: boolean[] = [false];
@@ -100,6 +111,7 @@ export class ProductFormComponent implements OnInit {
     frequentlyBoughtTogether: this.fb.nonNullable.control<number[]>([]),
     attributeIds: this.fb.nonNullable.control<number[]>([]),
     attributeCustomerDisplay: this.fb.nonNullable.group({}),
+    attributeValues: this.fb.array([] as FormGroup[]),
     variants: this.fb.array([this.createVariantGroup()]),
     seo: this.fb.group({
       metaTitle: ['', Validators.required],
@@ -114,6 +126,10 @@ export class ProductFormComponent implements OnInit {
 
   get variants(): FormArray {
     return this.form.get('variants') as FormArray;
+  }
+
+  get attributeValues(): FormArray {
+    return this.form.get('attributeValues') as FormArray;
   }
 
   ngOnInit(): void {
@@ -142,6 +158,7 @@ export class ProductFormComponent implements OnInit {
         this.childCategoryLevels.set([[]]);
         this.form.patchValue({ childCategories: [] }, { emitEvent: false });
       }
+      this.onCategoryPathChanged();
     });
 
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -249,6 +266,156 @@ export class ProductFormComponent implements OnInit {
       levels[level] = levels[level] || [];
       this.childCategoryLevels.set(levels);
     }
+    this.onCategoryPathChanged();
+  }
+
+  specTabs(): FormConfigTab[] {
+    return (this.formConfig()?.tabs || []).filter((tab) => tab.type === 'attribute_group');
+  }
+
+  valuesForGroup(groupId: number): FormGroup[] {
+    return this.attributeValues.controls.filter(
+      (ctrl) => Number(ctrl.get('groupId')?.value) === groupId,
+    ) as FormGroup[];
+  }
+
+  isChoiceAttribute(ctrl: AbstractControl): boolean {
+    const displayType = String(ctrl.get('displayType')?.value || '');
+    const options = (ctrl.get('options')?.value || []) as Array<{ id: number }>;
+    return (
+      options.length > 0 &&
+      (displayType === 'dropdown' ||
+        displayType === 'radio' ||
+        displayType === 'swatch' ||
+        displayType === 'image')
+    );
+  }
+
+  isRichtext(ctrl: AbstractControl): boolean {
+    return String(ctrl.get('displayType')?.value || '') === 'richtext';
+  }
+
+  isNumberInput(ctrl: AbstractControl): boolean {
+    return Boolean(String(ctrl.get('unit')?.value || '').trim()) && !this.isChoiceAttribute(ctrl) && !this.isRichtext(ctrl);
+  }
+
+  specStepHint(): string {
+    this.formTick();
+    for (const ctrl of this.attributeValues.controls) {
+      if (!ctrl.get('required')?.value) continue;
+      const label = String(ctrl.get('label')?.value || 'Field');
+      if (this.isChoiceAttribute(ctrl)) {
+        if (!Number(ctrl.get('optionId')?.value)) return `${label} is required.`;
+      } else if (this.isRichtext(ctrl)) {
+        if (!stripHtml(String(ctrl.get('value')?.value || ''))) return `${label} is required.`;
+      } else if (!String(ctrl.get('value')?.value || '').trim()) {
+        return `${label} is required.`;
+      }
+    }
+    return '';
+  }
+
+  private onCategoryPathChanged(): void {
+    const categoryId = this.getDeepestCategoryId();
+    if (!categoryId) {
+      this.formConfig.set(null);
+      this.lastFormConfigCategoryId = null;
+      this.attributeValues.clear();
+      return;
+    }
+    this.loadFormConfig(Number(categoryId));
+  }
+
+  private loadFormConfig(categoryId: number): void {
+    if (this.lastFormConfigCategoryId === categoryId && this.formConfig()) {
+      this.applyPendingAttributeValues();
+      return;
+    }
+    const cached = this.formConfigCache.get(categoryId);
+    if (cached) {
+      this.applyFormConfig(cached, categoryId);
+      return;
+    }
+    this.formConfigLoading.set(true);
+    this.options.categoryFormConfig(categoryId).subscribe({
+      next: (config) => {
+        this.formConfigCache.set(categoryId, config);
+        this.applyFormConfig(config, categoryId);
+        this.formConfigLoading.set(false);
+      },
+      error: () => {
+        this.formConfigLoading.set(false);
+        this.formConfig.set(null);
+      },
+    });
+  }
+
+  private applyFormConfig(config: CategoryFormConfig, categoryId: number): void {
+    const previous = new Map(
+      this.attributeValues.controls.map((ctrl) => [
+        Number(ctrl.get('attributeId')?.value),
+        {
+          optionId: ctrl.get('optionId')?.value ?? null,
+          value: ctrl.get('value')?.value ?? '',
+        },
+      ]),
+    );
+    this.lastFormConfigCategoryId = categoryId;
+    this.formConfig.set(config);
+    this.attributeValues.clear();
+    for (const tab of config.tabs || []) {
+      if (tab.type !== 'attribute_group') continue;
+      for (const group of tab.attributeGroups || []) {
+        for (const row of group.categoryAttributes || []) {
+          const attribute = row.attribute;
+          if (!attribute?.id) continue;
+          const existing = previous.get(attribute.id);
+          const isChoice =
+            (attribute.options || []).length > 0 &&
+            ['dropdown', 'radio', 'swatch', 'image'].includes(attribute.displayType);
+          this.attributeValues.push(
+            this.fb.group({
+              categoryAttributeId: [row.id],
+              attributeId: [attribute.id],
+              tabCode: [tab.code],
+              tabLabel: [tab.label],
+              groupId: [group.id],
+              groupLabel: [group.label],
+              label: [attribute.name],
+              displayType: [attribute.displayType],
+              inputType: [attribute.inputType],
+              unit: [attribute.unit ?? ''],
+              required: [Boolean(row.required)],
+              fullWidth: [Boolean(row.fullWidth)],
+              options: [attribute.options ?? []],
+              optionId: [
+                existing?.optionId ?? '',
+                row.required && isChoice ? Validators.required : [],
+              ],
+              value: [
+                existing?.value ?? '',
+                row.required && !isChoice ? Validators.required : [],
+              ],
+            }),
+          );
+        }
+      }
+    }
+    this.applyPendingAttributeValues();
+  }
+
+  private applyPendingAttributeValues(): void {
+    if (!this.pendingAttributeValues.length) return;
+    this.pendingAttributeValues.forEach((row) => {
+      const ctrl = this.attributeValues.controls.find(
+        (item) => Number(item.get('attributeId')?.value) === Number(row.attributeId),
+      );
+      ctrl?.patchValue({
+        optionId: row.optionId ?? '',
+        value: row.value ?? '',
+      });
+    });
+    this.pendingAttributeValues = [];
   }
 
   private loadChildLevel(level: number, parentId: number): void {
@@ -350,7 +517,7 @@ export class ProductFormComponent implements OnInit {
       .filter(Boolean);
   }
 
-  private getDeepestCategoryId(): number | '' {
+  getDeepestCategoryId(): number | '' {
     const children = this.form.value.childCategories || [];
     for (let i = children.length - 1; i >= 0; i--) {
       if (children[i]) return Number(children[i]);
@@ -361,12 +528,24 @@ export class ProductFormComponent implements OnInit {
 
   private patchFromRecord(r: any): void {
     this.slugDirty = true;
-    const attributeIds = normalizeIds(
-      r.productAttributes?.map((pa: any) => pa.attribute?.id ?? pa.attributeId) ??
-        r.attributes?.map((a: any) => a.attributeId ?? a.id) ??
-        r.attributeIds
-    );
     const variantsRaw = Array.isArray(r.variants) && r.variants.length ? r.variants : [{}];
+    const fromVariants = variantsRaw.flatMap((v: any) =>
+      (v.variantAttributes || []).map((a: any) => Number(a.attributeId ?? a.attribute?.id)),
+    );
+    const productAttrs = r.productAttributes || r.attributeValues || r.attributes || [];
+    this.pendingAttributeValues = productAttrs
+      .map((pa: any) => ({
+        attributeId: Number(pa.attribute?.id ?? pa.attributeId),
+        optionId: pa.optionId ?? pa.option?.id ?? null,
+        value: pa.value ?? '',
+      }))
+      .filter((row: { attributeId: number }) => Number.isFinite(row.attributeId) && row.attributeId > 0);
+    const legacyIds = productAttrs
+      .filter((pa: any) => !pa.optionId && !pa.option?.id && !String(pa.value || '').trim())
+      .map((pa: any) => Number(pa.attribute?.id ?? pa.attributeId));
+    const attributeIds = this.normalizeAttributeIds(
+      fromVariants.length ? fromVariants : (legacyIds.length ? legacyIds : r.attributeIds),
+    );
     this.variants.clear();
     this.variantSlugDirty = [];
     variantsRaw.forEach((v: any) => {
@@ -421,6 +600,7 @@ export class ProductFormComponent implements OnInit {
           });
         });
       });
+      this.onCategoryPathChanged();
     });
   }
 
@@ -520,6 +700,12 @@ export class ProductFormComponent implements OnInit {
     }
 
     if (step === 2) {
+      this.attributeValues.controls.forEach((ctrl) => ctrl.markAllAsTouched());
+      this.submitError.set(this.specStepHint() || 'Please complete required specification fields.');
+      return;
+    }
+
+    if (step === 3) {
       this.variants.controls.forEach((ctrl) => ctrl.markAllAsTouched());
       this.submitError.set(this.variantStepHint());
       return;
@@ -556,20 +742,23 @@ export class ProductFormComponent implements OnInit {
       );
     }
     if (step === 2) {
-      return !this.variantStepHint();
+      return !this.specStepHint();
     }
     if (step === 3) {
+      return !this.variantStepHint();
+    }
+    if (step === 4) {
       const seo = this.form.get('seo');
       return Boolean(seo?.valid);
     }
-    if (step === 4) {
+    if (step === 5) {
       return this.form.controls.publishStatus.valid;
     }
     return true;
   }
 
   submit(): void {
-    if (!this.isStepValid(1) || !this.isStepValid(2) || !this.isStepValid(3) || !this.isStepValid(4)) {
+    if (!this.isStepValid(1) || !this.isStepValid(2) || !this.isStepValid(3) || !this.isStepValid(4) || !this.isStepValid(5)) {
       this.form.markAllAsTouched();
       this.variants.controls.forEach((ctrl) => ctrl.markAllAsTouched());
       this.submitError.set('Please complete all required fields before saving.');
@@ -590,6 +779,17 @@ export class ProductFormComponent implements OnInit {
       productTags: (v.productTags || []).map(Number).filter((id) => Number.isFinite(id) && id > 0),
       frequentlyBoughtTogether: v.frequentlyBoughtTogether,
       attributes: (v.attributeIds || []).map((id: number) => ({ attributeId: id })),
+      attributeValues: this.attributeValues.controls.map((ctrl) => {
+        const row = ctrl.getRawValue();
+        const payload: { attributeId: number; optionId?: number; value?: string } = {
+          attributeId: Number(row.attributeId),
+        };
+        const optionId = Number(row.optionId);
+        if (Number.isFinite(optionId) && optionId > 0) payload.optionId = optionId;
+        const value = this.isRichtext(ctrl) ? String(row.value || '') : String(row.value || '').trim();
+        if (value) payload.value = value;
+        return payload;
+      }),
       variants: this.variants.controls.map((ctrl) => {
         const variant = ctrl.getRawValue();
         return {

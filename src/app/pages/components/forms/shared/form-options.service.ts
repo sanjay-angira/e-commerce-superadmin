@@ -10,6 +10,56 @@ export type SelectOption = {
   raw?: Record<string, unknown>;
 };
 
+export type FormConfigAttributeOption = {
+  id: number;
+  value: string;
+  slug?: string;
+  hexCode?: string | null;
+  swatchImageUrl?: string | null;
+  sortOrder?: number;
+};
+
+export type FormConfigAttribute = {
+  id: number;
+  name: string;
+  slug?: string;
+  displayType: string;
+  inputType: string;
+  unit?: string | null;
+  isActive?: boolean;
+  options?: FormConfigAttributeOption[];
+};
+
+export type FormConfigCategoryAttribute = {
+  id: number;
+  sortOrder: number;
+  required: boolean;
+  fullWidth: boolean;
+  attribute: FormConfigAttribute | null;
+};
+
+export type FormConfigAttributeGroup = {
+  id: number;
+  label: string;
+  sortOrder: number;
+  specTabId?: number;
+  categoryAttributes: FormConfigCategoryAttribute[];
+};
+
+export type FormConfigTab = {
+  id?: number;
+  code: string;
+  label: string;
+  type: 'system' | 'attribute_group';
+  sortOrder: number;
+  attributeGroups: FormConfigAttributeGroup[];
+};
+
+export type CategoryFormConfig = {
+  categoryId: number;
+  tabs: FormConfigTab[];
+};
+
 @Injectable({ providedIn: 'root' })
 export class FormOptionsService {
   private readonly api = inject(ApiService);
@@ -111,6 +161,34 @@ export class FormOptionsService {
 
   productTags() {
     return this.list('product-tags', 'tagName');
+  }
+
+  categoryFormConfig(categoryId: number | string) {
+    return this.api.get(`/categories/${categoryId}/form-config`).pipe(
+      map((res) => (res?.data ?? res) as CategoryFormConfig),
+    );
+  }
+
+  specTabs() {
+    return this.api.get('/spec-tabs').pipe(
+      map((res) => {
+        const rows: any[] = res?.data?.rows ?? res?.data ?? [];
+        return Array.isArray(rows) ? rows : [];
+      }),
+    );
+  }
+
+  attributeGroups(categoryId: number, specTabId?: number) {
+    return this.api
+      .get(`/categories/${categoryId}/attribute-groups`, {
+        ...(specTabId ? { specTabId } : {}),
+      })
+      .pipe(
+        map((res) => {
+          const rows: any[] = res?.data?.rows ?? res?.data ?? [];
+          return Array.isArray(rows) ? rows : [];
+        }),
+      );
   }
 
   users(orderBy = 'firstName') {

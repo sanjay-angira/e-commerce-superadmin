@@ -1,0 +1,79 @@
+<div class="spec-tab">
+  @for (group of groups(); track group.id) {
+    <section class="spec-group">
+      <h3>{{ group.label }}</h3>
+      <div class="spec-grid">
+        @for (ctrl of valuesForGroup(group.id); track ctrl.get('categoryAttributeId')?.value || ctrl.get('attributeId')?.value) {
+          <div
+            class="spec-field"
+            [class.full]="ctrl.get('fullWidth')?.value || isRichtext(ctrl)"
+            [formGroup]="ctrl"
+          >
+            @if (isChoiceAttribute(ctrl) && ctrl.get('displayType')?.value === 'radio') {
+              <label class="spec-label">
+                {{ ctrl.get('label')?.value }}
+                @if (ctrl.get('required')?.value) { * }
+              </label>
+              <mat-radio-group formControlName="optionId">
+                @for (opt of ctrl.get('options')?.value || []; track opt.id) {
+                  <mat-radio-button [value]="opt.id">{{ opt.value }}</mat-radio-button>
+                }
+              </mat-radio-group>
+            } @else if (isChoiceAttribute(ctrl) && ctrl.get('displayType')?.value === 'swatch') {
+              <label class="spec-label">
+                {{ ctrl.get('label')?.value }}
+                @if (ctrl.get('required')?.value) { * }
+              </label>
+              <div class="swatch-row">
+                @for (opt of ctrl.get('options')?.value || []; track opt.id) {
+                  <button
+                    type="button"
+                    class="swatch"
+                    [class.on]="ctrl.get('optionId')?.value === opt.id"
+                    [style.background]="opt.hexCode || '#ccc'"
+                    [title]="opt.value"
+                    (click)="ctrl.get('optionId')?.setValue(opt.id)"
+                  ></button>
+                }
+              </div>
+            } @else if (isChoiceAttribute(ctrl)) {
+              <mat-form-field appearance="outline">
+                <mat-label>
+                  {{ ctrl.get('label')?.value }}
+                  @if (ctrl.get('unit')?.value) {
+                    ({{ ctrl.get('unit')?.value }})
+                  }
+                </mat-label>
+                <mat-select formControlName="optionId">
+                  @for (opt of ctrl.get('options')?.value || []; track opt.id) {
+                    <mat-option [value]="opt.id">{{ opt.value }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            } @else if (isRichtext(ctrl)) {
+              <app-quill-editor
+                [label]="ctrl.get('label')?.value"
+                formControlName="value"
+                [required]="!!ctrl.get('required')?.value"
+              />
+            } @else {
+              <mat-form-field appearance="outline">
+                <mat-label>
+                  {{ ctrl.get('label')?.value }}
+                  @if (ctrl.get('unit')?.value) {
+                    ({{ ctrl.get('unit')?.value }})
+                  }
+                </mat-label>
+                <input
+                  matInput
+                  [type]="isNumberInput(ctrl) ? 'number' : 'text'"
+                  formControlName="value"
+                />
+              </mat-form-field>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+</div>

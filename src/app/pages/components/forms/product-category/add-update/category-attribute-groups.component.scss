@@ -1,0 +1,92 @@
+.groups-editor {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.hint,
+.empty {
+  margin: 0;
+  color: var(--vr-text-muted);
+  font-size: 13px;
+}
+
+.tab-block {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--vr-border);
+  border-radius: 8px;
+  background: var(--vr-card);
+}
+
+.tab-head,
+.group-head,
+.add-row,
+.add-tab-row,
+.rename-row,
+.attach-row,
+.attr-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.add-tab-row,
+.add-row,
+.attach-row,
+.rename-row {
+  flex-wrap: wrap;
+}
+
+.add-tab-row mat-form-field,
+.add-row mat-form-field,
+.attach-row mat-form-field,
+.rename-row mat-form-field {
+  min-width: 240px;
+}
+
+.tab-head,
+.group-head {
+  justify-content: space-between;
+}
+
+.tab-head h3,
+.group-head h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+
+.group-list,
+.attr-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.group-card {
+  padding: 0.75rem;
+  border: 1px solid var(--vr-border);
+  border-radius: 6px;
+  background: var(--vr-surface-subtle, var(--vr-card));
+}
+
+.attr-row {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--vr-border);
+  border-radius: 4px;
+  background: var(--vr-card);
+}
+
+.attr-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  opacity: 0.92;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.4;
+}

@@ -123,6 +123,23 @@
         </div>
       </mat-step>
 
+      @if (isEdit()) {
+        <mat-step [completed]="true">
+          <ng-template matStepLabel>Attribute Groups</ng-template>
+          <app-category-attribute-groups [categoryId]="categoryRecordId()" />
+          <div class="step-actions">
+            <button mat-stroked-button type="button" (click)="stepper.previous()">
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-flat-button color="primary" type="button" (click)="stepper.next()">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </mat-step>
+      }
+
       <mat-step [completed]="isStepValid(3)">
         <ng-template matStepLabel>SEO Settings</ng-template>
         <div class="step-grid" formGroupName="seo">

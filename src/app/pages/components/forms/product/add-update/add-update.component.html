@@ -159,6 +159,38 @@
       </mat-step>
 
       <mat-step [completed]="isStepValid(2)">
+        <ng-template matStepLabel>Specifications</ng-template>
+        @if (formConfigLoading()) {
+          <p class="attr-help">Loading specification fields for this category…</p>
+        } @else if (!getDeepestCategoryId()) {
+          <p class="attr-help">Select a category first. Specification fields are category-specific.</p>
+        } @else if (!specTabs().length || !attributeValues.length) {
+          <p class="attr-help">This category has no specification groups yet. You can continue, or add groups on the category edit screen.</p>
+        } @else {
+          <mat-tab-group animationDuration="0">
+            @for (tab of specTabs(); track tab.code) {
+              <mat-tab [label]="tab.label">
+                <app-dynamic-attribute-tab [groups]="tab.attributeGroups" [form]="attributeValues" />
+              </mat-tab>
+            }
+          </mat-tab-group>
+        }
+        @if (specStepHint()) {
+          <p class="field-error">{{ specStepHint() }}</p>
+        }
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Previous
+          </button>
+          <button mat-flat-button color="primary" type="button" (click)="goNext(stepper, 2)">
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="isStepValid(3)">
         <ng-template matStepLabel>Product Variations</ng-template>
         <div class="variations-head">
           <h3>Variations</h3>
@@ -298,7 +330,7 @@
             mat-flat-button
             color="primary"
             type="button"
-            (click)="goNext(stepper, 2)"
+            (click)="goNext(stepper, 3)"
           >
             Next
             <mat-icon>arrow_forward</mat-icon>
@@ -309,7 +341,7 @@
         }
       </mat-step>
 
-      <mat-step [completed]="isStepValid(3)">
+      <mat-step [completed]="isStepValid(4)">
         <ng-template matStepLabel>Product SEO Settings</ng-template>
         <div formGroupName="seo" class="step-grid">
           <mat-form-field appearance="outline" class="full">
@@ -348,7 +380,7 @@
             mat-flat-button
             color="primary"
             type="button"
-            (click)="goNext(stepper, 3)"
+            (click)="goNext(stepper, 4)"
           >
             Next
             <mat-icon>arrow_forward</mat-icon>
@@ -356,7 +388,7 @@
         </div>
       </mat-step>
 
-      <mat-step [completed]="isStepValid(4)">
+      <mat-step [completed]="isStepValid(5)">
         <ng-template matStepLabel>Product Settings</ng-template>
         <div class="step-grid">
           <mat-form-field appearance="outline">
@@ -384,7 +416,7 @@
             mat-flat-button
             color="primary"
             type="button"
-            [disabled]="saving() || !isStepValid(4)"
+            [disabled]="saving() || !isStepValid(5)"
             (click)="submit()"
           >
             <mat-icon>publish</mat-icon>

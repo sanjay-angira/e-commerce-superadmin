@@ -1,0 +1,145 @@
+<div class="groups-editor">
+  <p class="hint">
+    Spec tabs are global: adding a tab here makes it available on every category and on the product form.
+    Images, Description, and Variants stay built-in product steps. Drag groups to reorder. Attach catalog attributes to each group.
+  </p>
+
+  <div class="add-tab-row">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>New tab name</mat-label>
+      <input matInput [(ngModel)]="newTabLabel" name="new-spec-tab" />
+    </mat-form-field>
+    <button mat-flat-button color="primary" type="button" (click)="addTab()" [disabled]="!newTabLabel.trim()">
+      <mat-icon>add</mat-icon>
+      Add tab
+    </button>
+  </div>
+
+  @if (loading()) {
+    <p class="hint">Loading groups…</p>
+  }
+
+  @for (tab of tabs(); track tab.id) {
+    <section class="tab-block">
+      <header class="tab-head">
+        @if (tab.renaming) {
+          <div class="rename-row">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Tab name</mat-label>
+              <input matInput [(ngModel)]="tab.editingLabel" [name]="'rename-' + tab.id" />
+            </mat-form-field>
+            <button mat-flat-button color="primary" type="button" (click)="renameTab(tab)" [disabled]="!tab.editingLabel.trim()">
+              Save
+            </button>
+            <button mat-stroked-button type="button" (click)="cancelRename(tab)">Cancel</button>
+          </div>
+        } @else {
+          <h3>{{ tab.label }}</h3>
+          <button mat-icon-button type="button" (click)="startRename(tab)" aria-label="Rename tab">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            color="warn"
+            (click)="deleteTab(tab)"
+            [disabled]="tab.groups.length > 0"
+            aria-label="Delete tab"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+        <div class="add-row">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>New group name</mat-label>
+            <input matInput [(ngModel)]="tab.newLabel" [name]="'group-' + tab.id" />
+          </mat-form-field>
+          <button mat-flat-button color="primary" type="button" (click)="addGroup(tab)" [disabled]="!tab.newLabel.trim()">
+            <mat-icon>add</mat-icon>
+            Add group
+          </button>
+        </div>
+      </header>
+
+      <div
+        class="group-list"
+        cdkDropList
+        [cdkDropListData]="tab.groups"
+        (cdkDropListDropped)="dropGroup(tab, $event)"
+      >
+        @for (group of tab.groups; track group.id) {
+          <article class="group-card" cdkDrag>
+            <header class="group-head">
+              <button mat-icon-button type="button" cdkDragHandle aria-label="Drag group">
+                <mat-icon>drag_indicator</mat-icon>
+              </button>
+              <h4>{{ group.label }}</h4>
+              <button mat-icon-button type="button" color="warn" (click)="deleteGroup(group)" aria-label="Delete group">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </header>
+
+            <div
+              class="attr-list"
+              cdkDropList
+              [cdkDropListData]="group.categoryAttributes"
+              (cdkDropListDropped)="dropAttribute(group, $event)"
+            >
+              @for (row of group.categoryAttributes; track row.id) {
+                <div class="attr-row" cdkDrag>
+                  <button mat-icon-button type="button" cdkDragHandle aria-label="Drag attribute">
+                    <mat-icon>drag_indicator</mat-icon>
+                  </button>
+                  <span class="attr-name">{{ row.attribute?.name || 'Attribute' }}</span>
+                  <mat-slide-toggle
+                    color="primary"
+                    [checked]="row.required"
+                    (change)="toggleRequired(row, $event.checked)"
+                  >
+                    Required
+                  </mat-slide-toggle>
+                  <mat-slide-toggle
+                    color="primary"
+                    [checked]="row.fullWidth"
+                    (change)="toggleFullWidth(row, $event.checked)"
+                  >
+                    Full width
+                  </mat-slide-toggle>
+                  <button mat-icon-button type="button" (click)="detachAttribute(row)" aria-label="Detach">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              } @empty {
+                <p class="empty">No attributes in this group yet.</p>
+              }
+            </div>
+
+            <div class="attach-row">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Attach attribute</mat-label>
+                <mat-select
+                  [value]="attachChoice()[group.id] || ''"
+                  (selectionChange)="setAttachChoice(group.id, $event.value)"
+                >
+                  @for (opt of availableAttributes(group); track opt.value) {
+                    <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="attachAttribute(group)"
+                [disabled]="!attachChoice()[group.id]"
+              >
+                Attach
+              </button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty">No groups yet. Add one to start building this tab.</p>
+        }
+      </div>
+    </section>
+  }
+</div>

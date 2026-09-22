@@ -43,6 +43,7 @@ export class AttributeFormComponent implements OnInit {
     { value: 'text', label: 'Text' },
     { value: 'dropdown', label: 'Dropdown' },
     { value: 'radio', label: 'Radio' },
+    { value: 'richtext', label: 'Rich text (paragraph)' },
   ];
 
   readonly inputTypes = [

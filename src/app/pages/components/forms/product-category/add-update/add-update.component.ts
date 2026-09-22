@@ -20,6 +20,7 @@ import { ImageUploadComponent } from '../../shared/image-upload.component';
 import { QuillEditorComponent } from '../../shared/quill-editor.component';
 import { normalizeIds, stripHtml } from '../../shared/form-utils';
 import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
+import { CategoryAttributeGroupsComponent } from './category-attribute-groups.component';
 
 @Component({
   selector: 'app-category-form',
@@ -35,6 +36,7 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
     AdminFormShellComponent,
     ImageUploadComponent,
     QuillEditorComponent,
+    CategoryAttributeGroupsComponent,
   ],
   templateUrl: './add-update.component.html',
   styleUrl: './add-update.component.scss',
@@ -114,6 +116,12 @@ export class CategoryFormComponent implements OnInit {
 
   shortDescLength(): number {
     return this.form.controls.shortDescription.value.length;
+  }
+
+  categoryRecordId(): number | null {
+    const id = this.recordId();
+    const numeric = id ? Number(id) : NaN;
+    return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
   }
 
   metaTitleLength(): number {
