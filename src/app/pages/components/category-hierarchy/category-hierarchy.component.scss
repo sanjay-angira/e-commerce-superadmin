@@ -68,9 +68,36 @@
 
 .column-empty {
   margin: 0;
-  padding: 16px 14px;
+  padding: 16px 14px 8px;
   font-size: 13px;
   color: var(--vr-text-muted);
+}
+
+.column-empty-wrap {
+  display: grid;
+  gap: 8px;
+  padding: 0 14px 16px;
+}
+
+.column-empty-wrap .column-empty {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.leaf-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--vr-text-muted);
+}
+
+.leaf-hint strong {
+  color: var(--vr-text-secondary);
+  font-weight: 600;
+}
+
+.leaf-groups-btn {
+  justify-self: start;
 }
 
 .column-row {

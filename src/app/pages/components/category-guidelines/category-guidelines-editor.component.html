@@ -1,0 +1,182 @@
+<div class="guidelines-editor">
+  <p class="hint">
+    Tell sellers what can and cannot be listed in this leaf category. Optional example
+    images help clarify each rule. Drag items to reorder.
+  </p>
+
+  @if (loading()) {
+    <p class="hint">Loading guidelines…</p>
+  }
+
+  <div class="panels">
+    <section class="panel allowed">
+      <header class="panel-head">
+        <mat-icon>check_circle</mat-icon>
+        <h3>What can be added</h3>
+      </header>
+
+      <div class="add-row">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="grow">
+          <mat-label>New allowed item</mat-label>
+          <input
+            matInput
+            [(ngModel)]="newAllowedText"
+            name="new-allowed"
+            maxlength="255"
+            (keydown.enter)="addItem('allowed')"
+          />
+        </mat-form-field>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="addItem('allowed')"
+          [disabled]="!newAllowedText.trim()"
+        >
+          <mat-icon>add</mat-icon>
+          Add
+        </button>
+      </div>
+
+      <div
+        class="item-list"
+        cdkDropList
+        [cdkDropListData]="allowed()"
+        (cdkDropListDropped)="drop('allowed', $event)"
+      >
+        @for (item of allowed(); track item.id) {
+          <article class="item-card" cdkDrag>
+            <button mat-icon-button type="button" cdkDragHandle aria-label="Drag">
+              <mat-icon>drag_indicator</mat-icon>
+            </button>
+            <div class="item-body">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="full">
+                <mat-label>Text</mat-label>
+                <input matInput [(ngModel)]="item.text" [name]="'allowed-text-' + item.id" maxlength="255" />
+              </mat-form-field>
+              <div class="image-row">
+                @if (item.imageUrl) {
+                  <img [src]="item.imageUrl" [alt]="item.imageAlt || item.text" class="thumb" />
+                  <button mat-stroked-button type="button" (click)="clearImage('allowed', item)">
+                    Remove image
+                  </button>
+                } @else {
+                  <button mat-stroked-button type="button" (click)="pickImage('allowed', item)">
+                    <mat-icon>image</mat-icon>
+                    Add image
+                  </button>
+                }
+              </div>
+            </div>
+            <div class="item-actions">
+              <button mat-icon-button type="button" (click)="saveItem('allowed', item)" aria-label="Save">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                color="warn"
+                (click)="deleteItem('allowed', item)"
+                aria-label="Delete"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty">No allowed items yet.</p>
+        }
+      </div>
+    </section>
+
+    <section class="panel not-allowed">
+      <header class="panel-head">
+        <mat-icon>cancel</mat-icon>
+        <h3>What can't be added</h3>
+      </header>
+
+      <div class="add-row">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="grow">
+          <mat-label>New not-allowed item</mat-label>
+          <input
+            matInput
+            [(ngModel)]="newNotAllowedText"
+            name="new-not-allowed"
+            maxlength="255"
+            (keydown.enter)="addItem('not-allowed')"
+          />
+        </mat-form-field>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="addItem('not-allowed')"
+          [disabled]="!newNotAllowedText.trim()"
+        >
+          <mat-icon>add</mat-icon>
+          Add
+        </button>
+      </div>
+
+      <div
+        class="item-list"
+        cdkDropList
+        [cdkDropListData]="notAllowed()"
+        (cdkDropListDropped)="drop('not-allowed', $event)"
+      >
+        @for (item of notAllowed(); track item.id) {
+          <article class="item-card" cdkDrag>
+            <button mat-icon-button type="button" cdkDragHandle aria-label="Drag">
+              <mat-icon>drag_indicator</mat-icon>
+            </button>
+            <div class="item-body">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="full">
+                <mat-label>Text</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item.text"
+                  [name]="'not-allowed-text-' + item.id"
+                  maxlength="255"
+                />
+              </mat-form-field>
+              <div class="image-row">
+                @if (item.imageUrl) {
+                  <img [src]="item.imageUrl" [alt]="item.imageAlt || item.text" class="thumb" />
+                  <button mat-stroked-button type="button" (click)="clearImage('not-allowed', item)">
+                    Remove image
+                  </button>
+                } @else {
+                  <button mat-stroked-button type="button" (click)="pickImage('not-allowed', item)">
+                    <mat-icon>image</mat-icon>
+                    Add image
+                  </button>
+                }
+              </div>
+            </div>
+            <div class="item-actions">
+              <button
+                mat-icon-button
+                type="button"
+                (click)="saveItem('not-allowed', item)"
+                aria-label="Save"
+              >
+                <mat-icon>save</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                color="warn"
+                (click)="deleteItem('not-allowed', item)"
+                aria-label="Delete"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty">No not-allowed items yet.</p>
+        }
+      </div>
+    </section>
+  </div>
+</div>

@@ -105,6 +105,20 @@ export const routes: Routes = [
             (m) => m.CategoryHierarchyComponent
           ),
       },
+      {
+        path: 'category-attribute-groups/:categoryId',
+        loadComponent: () =>
+          import(
+            './pages/components/category-attribute-groups/category-attribute-groups-page.component'
+          ).then((m) => m.CategoryAttributeGroupsPageComponent),
+      },
+      {
+        path: 'category-guidelines/:categoryId',
+        loadComponent: () =>
+          import(
+            './pages/components/category-guidelines/category-guidelines-page.component'
+          ).then((m) => m.CategoryGuidelinesPageComponent),
+      },
       // Config-driven CRUD — mirrors vr-frontend /admin/[module]
       {
         path: ':module',

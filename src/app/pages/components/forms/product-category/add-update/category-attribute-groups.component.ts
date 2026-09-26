@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges, inject, input, signal } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -63,7 +63,7 @@ type TabRow = {
   templateUrl: './category-attribute-groups.component.html',
   styleUrl: './category-attribute-groups.component.scss',
 })
-export class CategoryAttributeGroupsComponent implements OnChanges {
+export class CategoryAttributeGroupsComponent implements OnInit, OnChanges {
   private readonly api = inject(ApiService);
   private readonly options = inject(FormOptionsService);
   private readonly snack = inject(MatSnackBar);
@@ -77,8 +77,12 @@ export class CategoryAttributeGroupsComponent implements OnChanges {
   readonly attachChoice = signal<Record<number, number | ''>>({});
   newTabLabel = '';
 
+  ngOnInit(): void {
+    this.reload();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['categoryId']) {
+    if (changes['categoryId'] && !changes['categoryId'].firstChange) {
       this.reload();
     }
   }

@@ -1,0 +1,53 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Add Attribute</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard">
+            <mat-icon style="font-size:16px;width:16px;height:16px">home</mat-icon>
+          </a>
+          <span class="dot"></span>
+          <a routerLink="/admin/category-hierarchy">Category Hierarchy</a>
+          <span class="dot"></span>
+          <span>{{ categoryName() || 'Add Attribute' }}</span>
+        </div>
+      </div>
+      <div class="title-actions">
+        <a mat-stroked-button routerLink="/admin/category-hierarchy">
+          <mat-icon>arrow_back</mat-icon>
+          Back to hierarchy
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    @if (loading()) {
+      <div class="vr-card center">
+        <mat-spinner diameter="36"></mat-spinner>
+        <p>Loading category…</p>
+      </div>
+    } @else if (!categoryId()) {
+      <div class="vr-card center">
+        <p>{{ error() || 'Invalid category.' }}</p>
+        <a mat-flat-button color="primary" routerLink="/admin/category-hierarchy">Back</a>
+      </div>
+    } @else {
+      <div class="vr-card page-card">
+        <div class="page-intro">
+          <div>
+            <h2>{{ categoryName() }}</h2>
+            @if (breadcrumb()) {
+              <p class="path">{{ breadcrumb() }}</p>
+            }
+            @if (error()) {
+              <p class="warn">{{ error() }}</p>
+            }
+          </div>
+        </div>
+        <app-category-attribute-groups [categoryId]="categoryId()" />
+      </div>
+    }
+  </div>
+</div>

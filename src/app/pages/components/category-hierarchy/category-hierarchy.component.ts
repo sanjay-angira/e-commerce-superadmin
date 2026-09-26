@@ -86,9 +86,27 @@ export class CategoryHierarchyComponent {
     this.selectedPath.set([...this.selectedPath().slice(0, level), node]);
   }
 
+  /** Last selected node with no children — products attach here. */
+  selectedLeaf(): CategoryTreeNode | null {
+    const path = this.selectedPath();
+    if (!path.length) return null;
+    const last = path[path.length - 1];
+    return last.children?.length ? null : last;
+  }
+
   openEdit(node: CategoryTreeNode, event?: Event): void {
     event?.stopPropagation();
     this.router.navigateByUrl(`/admin/categories/edit/${node.id}`);
+  }
+
+  openAddAttribute(node: CategoryTreeNode, event?: Event): void {
+    event?.stopPropagation();
+    this.router.navigateByUrl(`/admin/category-attribute-groups/${node.id}`);
+  }
+
+  openCategoryGuidelines(node: CategoryTreeNode, event?: Event): void {
+    event?.stopPropagation();
+    this.router.navigateByUrl(`/admin/category-guidelines/${node.id}`);
   }
 
   private onSearch(): void {

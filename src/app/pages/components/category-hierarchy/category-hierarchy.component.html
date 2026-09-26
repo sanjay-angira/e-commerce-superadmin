@@ -22,6 +22,26 @@
         }
       </div>
       <div class="filter-actions">
+        @if (selectedLeaf(); as leaf) {
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="openAddAttribute(leaf)"
+          >
+            <mat-icon>add</mat-icon>
+            Add Attribute
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="openCategoryGuidelines(leaf)"
+          >
+            <mat-icon>rule</mat-icon>
+            Add Category Guideline
+          </button>
+        }
         <a mat-flat-button color="primary" routerLink="/admin/categories/add">
           <mat-icon>add</mat-icon>
           Add Category
@@ -57,7 +77,35 @@
                 {{ level === 0 ? 'Categories' : 'Subcategories' }}
               </div>
               @if (!items.length) {
-                <p class="column-empty">No subcategories</p>
+                <div class="column-empty-wrap">
+                  <p class="column-empty">No subcategories</p>
+                  @if (selectedLeaf(); as leaf) {
+                    <button
+                      mat-stroked-button
+                      color="primary"
+                      type="button"
+                      class="leaf-groups-btn"
+                      (click)="openAddAttribute(leaf)"
+                    >
+                      <mat-icon>add</mat-icon>
+                      Add Attribute
+                    </button>
+                    <button
+                      mat-stroked-button
+                      color="primary"
+                      type="button"
+                      class="leaf-groups-btn"
+                      (click)="openCategoryGuidelines(leaf)"
+                    >
+                      <mat-icon>rule</mat-icon>
+                      Add Category Guideline
+                    </button>
+                    <p class="leaf-hint">
+                      Manage attributes and guidelines for
+                      <strong>{{ leaf.categoryName }}</strong>.
+                    </p>
+                  }
+                </div>
               } @else {
                 @for (node of items; track node.id) {
                   <div

@@ -1,0 +1,50 @@
+.title-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.center {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: 64px 16px;
+  color: var(--vr-text-secondary);
+  text-align: center;
+}
+
+.page-card {
+  padding: 20px;
+  display: grid;
+  gap: 20px;
+}
+
+.page-intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--vr-border);
+}
+
+.page-intro h2 {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--vr-text);
+}
+
+.path {
+  margin: 0;
+  font-size: 13px;
+  color: var(--vr-text-secondary);
+}
+
+.warn {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--vr-warn, #b45309);
+}

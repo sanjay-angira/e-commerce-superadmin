@@ -24,6 +24,7 @@ export const UPLOAD_PATHS = {
     trademark: '/brands/documents',
   },
   attributeColors: '/products/attribute-colors',
+  guidelines: '/product-category/guidelines',
 } as const;
 
 @Injectable({ providedIn: 'root' })
