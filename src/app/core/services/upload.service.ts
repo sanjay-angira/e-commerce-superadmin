@@ -11,6 +11,7 @@ export const UPLOAD_PATHS = {
     image: '/product-category/images',
     video: '/product-category/videos',
     icon: '/product-category/icons',
+    banner: '/product-category/banners',
   },
   offers: '/offers/images',
   coupons: '/coupons/images',

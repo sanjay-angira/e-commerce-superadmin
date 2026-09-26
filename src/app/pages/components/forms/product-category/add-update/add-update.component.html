@@ -89,27 +89,33 @@
         <ng-template matStepLabel>Media Assets</ng-template>
         <div class="media-grid">
           <app-image-upload
+            class="full"
             label="Main Image"
             [path]="paths.image"
             imageType="category"
             formControlName="image"
           />
           <app-image-upload
+            class="full"
             label="Category Icon"
             [path]="paths.icon"
             accept="image/svg+xml,.svg,image/*"
             formControlName="icon"
           />
           <app-image-upload
+            class="full"
+            label="Category Banner"
+            [path]="paths.banner"
+            imageType="category"
+            formControlName="banner"
+          />
+          <app-image-upload
+            class="full"
             label="Category Video"
             [path]="paths.video"
             accept="video/*"
             formControlName="video"
           />
-          <mat-form-field appearance="outline" class="full">
-            <mat-label>Image Alt Text</mat-label>
-            <input matInput formControlName="imageAltText" />
-          </mat-form-field>
         </div>
         <div class="step-actions">
           <button mat-stroked-button type="button" (click)="stepper.previous()">

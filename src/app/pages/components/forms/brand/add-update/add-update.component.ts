@@ -1,11 +1,12 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
@@ -18,12 +19,13 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
   selector: 'app-brand-form',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
+    MatStepperModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatSlideToggleModule,
     MatButtonModule,
+    MatIconModule,
     AdminFormShellComponent,
     ImageUploadComponent,
     QuillEditorComponent,
@@ -48,6 +50,9 @@ export class BrandFormComponent implements OnInit {
   readonly offers = signal<SelectOption[]>([]);
   readonly paths = UPLOAD_PATHS.brands;
 
+  readonly metaTitleMax = 160;
+  readonly metaDescMax = 300;
+
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
     website: ['', Validators.maxLength(255)],
@@ -58,9 +63,9 @@ export class BrandFormComponent implements OnInit {
     supportPhone: ['', Validators.maxLength(20)],
     instagramUrl: ['', Validators.maxLength(255)],
     facebookUrl: ['', Validators.maxLength(255)],
-    metaTitle: ['', Validators.maxLength(160)],
-    metaDescription: ['', Validators.maxLength(300)],
-    sortOrder: [0, [Validators.min(0)]],
+    metaTitle: ['', Validators.maxLength(this.metaTitleMax)],
+    metaDescription: ['', Validators.maxLength(this.metaDescMax)],
+    metaKeywords: [''],
     logoUrl: [''],
     bannerImageUrl: [''],
     ogImageUrl: [''],
@@ -96,7 +101,7 @@ export class BrandFormComponent implements OnInit {
         facebookUrl: String(data.facebookUrl ?? ''),
         metaTitle: String(data.metaTitle ?? ''),
         metaDescription: String(data.metaDescription ?? ''),
-        sortOrder: Number(data.sortOrder ?? 0),
+        metaKeywords: String(data.metaKeywords ?? ''),
         logoUrl: String(data.logoUrl ?? data.logo ?? ''),
         bannerImageUrl: String(data.bannerImageUrl ?? ''),
         ogImageUrl: String(data.ogImageUrl ?? ''),
@@ -108,6 +113,21 @@ export class BrandFormComponent implements OnInit {
         isActive: data.isActive !== false,
       });
     });
+  }
+
+  isStepValid(step: number): boolean {
+    if (step === 1) {
+      return this.form.controls.name.valid;
+    }
+    return true;
+  }
+
+  metaTitleLength(): number {
+    return this.form.controls.metaTitle.value.length;
+  }
+
+  metaDescLength(): number {
+    return this.form.controls.metaDescription.value.length;
   }
 
   submit(): void {
@@ -132,7 +152,7 @@ export class BrandFormComponent implements OnInit {
         facebookUrl: emptyToNull(v.facebookUrl),
         metaTitle: emptyToNull(v.metaTitle),
         metaDescription: emptyToNull(v.metaDescription),
-        sortOrder: Number(v.sortOrder || 0),
+        metaKeywords: emptyToNull(v.metaKeywords),
         logoUrl: emptyToNull(v.logoUrl),
         bannerImageUrl: emptyToNull(v.bannerImageUrl),
         ogImageUrl: emptyToNull(v.ogImageUrl),

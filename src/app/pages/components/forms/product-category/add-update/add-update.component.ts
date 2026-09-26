@@ -70,7 +70,7 @@ export class CategoryFormComponent implements OnInit {
     image: [''],
     video: [''],
     icon: [''],
-    imageAltText: [''],
+    banner: [''],
     seo: this.fb.nonNullable.group({
       metaTitle: ['', [Validators.required, Validators.maxLength(this.metaTitleMax)]],
       metaDescription: ['', [Validators.required, Validators.maxLength(this.metaDescMax)]],
@@ -102,7 +102,7 @@ export class CategoryFormComponent implements OnInit {
         image: String(data.image ?? ''),
         video: String(data.video ?? ''),
         icon: String(data.icon ?? ''),
-        imageAltText: String(data.imageAltText ?? ''),
+        banner: String(data.banner ?? ''),
         seo: {
           metaTitle: String(seo.metaTitle ?? data.metaTitle ?? ''),
           metaDescription: String(seo.metaDescription ?? data.metaDescription ?? ''),
@@ -157,7 +157,7 @@ export class CategoryFormComponent implements OnInit {
         image: v.image || null,
         video: v.video || null,
         icon: v.icon || null,
-        imageAltText: v.imageAltText || null,
+        banner: v.banner || null,
         seo: v.seo,
       })
       .subscribe((res) => {

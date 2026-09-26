@@ -1,105 +1,164 @@
-<app-admin-form-shell
-  [title]="isEdit() ? 'Edit Brand' : 'Add Brand'"
-  [module]="module()"
-  [loading]="loading()"
-  [loadError]="loadError()"
-  [submitError]="submitError()"
->
-  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Brand Name</mat-label>
-      <input matInput formControlName="name" />
-      @if (form.controls.name.touched && form.controls.name.hasError('required')) {
-        <mat-error>Brand name is required</mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Website</mat-label>
-      <input matInput formControlName="website" placeholder="https://" />
-    </mat-form-field>
+<app-admin-form-shell [title]="isEdit() ? 'Edit Brand' : 'Add Brand'" [module]="module()" [loading]="loading()"
+  [loadError]="loadError()" [submitError]="submitError()">
+  <form [formGroup]="form" class="brand-form">
+    <mat-stepper linear #stepper>
+      <mat-step [completed]="isStepValid(1)">
+        <ng-template matStepLabel>General Information</ng-template>
+        <div class="step-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Brand Name</mat-label>
+            <input matInput formControlName="name" />
+            @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+            <mat-error>Brand name is required</mat-error>
+            }
+            @if (form.controls.name.hasError('minlength')) {
+            <mat-error>Brand name must be at least 2 characters</mat-error>
+            }
+          </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Country of origin</mat-label>
-      <input matInput formControlName="countryOfOrigin" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>GST number</mat-label>
-      <input matInput formControlName="gstNumber" />
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Website</mat-label>
+            <input matInput formControlName="website" placeholder="https://" />
+          </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Support email</mat-label>
-      <input matInput type="email" formControlName="supportEmail" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Support phone</mat-label>
-      <input matInput formControlName="supportPhone" />
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country of origin</mat-label>
+            <input matInput formControlName="countryOfOrigin" />
+          </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Instagram URL</mat-label>
-      <input matInput formControlName="instagramUrl" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Facebook URL</mat-label>
-      <input matInput formControlName="facebookUrl" />
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>GST number</mat-label>
+            <input matInput formControlName="gstNumber" />
+          </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Meta title</mat-label>
-      <input matInput formControlName="metaTitle" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Sort order</mat-label>
-      <input matInput type="number" formControlName="sortOrder" />
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Support email</mat-label>
+            <input matInput type="email" formControlName="supportEmail" />
+          </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full">
-      <mat-label>Meta description</mat-label>
-      <textarea matInput rows="2" formControlName="metaDescription"></textarea>
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Support phone</mat-label>
+            <input matInput formControlName="supportPhone" />
+          </mat-form-field>
 
-    <div class="full">
-      <app-quill-editor label="Description" minHeight="180px" formControlName="description" />
-    </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Instagram URL</mat-label>
+            <input matInput formControlName="instagramUrl" />
+          </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Categories</mat-label>
-      <mat-select formControlName="categoryIds" multiple>
-        @for (opt of categories(); track opt.value) {
-          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Offers</mat-label>
-      <mat-select formControlName="offerIds" multiple>
-        @for (opt of offers(); track opt.value) {
-          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Facebook URL</mat-label>
+            <input matInput formControlName="facebookUrl" />
+          </mat-form-field>
 
-    <app-image-upload class="full" label="Brand Logo" [path]="paths.logo" formControlName="logoUrl" />
-    <app-image-upload class="full" label="Banner image" [path]="paths.banner" formControlName="bannerImageUrl" />
-    <app-image-upload class="full" label="OG image" [path]="paths.og" formControlName="ogImageUrl" />
-    <app-image-upload
-      class="full"
-      label="Trademark certificate"
-      [path]="paths.trademark"
-      accept="image/*,.pdf,application/pdf"
-      formControlName="trademarkCertificateUrl"
-    />
 
-    <mat-slide-toggle formControlName="isVerified">Verified brand</mat-slide-toggle>
-    <mat-slide-toggle formControlName="isFeatured">Featured</mat-slide-toggle>
-    <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
+          <div class="full">
+            <app-quill-editor label="Description" minHeight="180px" formControlName="description" />
+          </div>
 
-    <div class="actions">
-      <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
-        {{ isEdit() ? 'Update Brand' : 'Create Brand' }}
-      </button>
-      <a mat-stroked-button [routerLink]="['/admin', module()]">Cancel</a>
-    </div>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Categories</mat-label>
+            <mat-select formControlName="categoryIds" multiple>
+              @for (opt of categories(); track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Offers</mat-label>
+            <mat-select formControlName="offerIds" multiple>
+              @for (opt of offers(); track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+
+          <div class="toggle-row full">
+            <div class="toggle-item">
+              <span>Verified brand</span>
+              <mat-slide-toggle formControlName="isVerified" color="primary"></mat-slide-toggle>
+              <span class="status-chip" [class.on]="form.controls.isVerified.value">
+                {{ form.controls.isVerified.value ? 'Verified' : 'Not Verified' }}
+              </span>
+            </div>
+            <div class="toggle-item">
+              <span>Featured</span>
+              <mat-slide-toggle formControlName="isFeatured" color="primary"></mat-slide-toggle>
+              <span class="status-chip" [class.on]="form.controls.isFeatured.value">
+                {{ form.controls.isFeatured.value ? 'Featured' : 'Not Featured' }}
+              </span>
+            </div>
+            <div class="toggle-item">
+              <span>Active Status</span>
+              <mat-slide-toggle formControlName="isActive" color="primary"></mat-slide-toggle>
+              <span class="status-chip" [class.on]="form.controls.isActive.value">
+                {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-flat-button color="primary" type="button" [disabled]="!isStepValid(1)" (click)="stepper.next()">
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="true">
+        <ng-template matStepLabel>Media Assets</ng-template>
+        <div class="media-grid">
+          <app-image-upload label="Brand Logo" [path]="paths.logo" formControlName="logoUrl" />
+          <app-image-upload label="Banner image" [path]="paths.banner" formControlName="bannerImageUrl" />
+          <app-image-upload label="OG image" [path]="paths.og" formControlName="ogImageUrl" />
+          <app-image-upload label="Trademark certificate" [path]="paths.trademark" accept="image/*,.pdf,application/pdf"
+            formControlName="trademarkCertificateUrl" />
+        </div>
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+          </button>
+          <button mat-flat-button color="primary" type="button" (click)="stepper.next()">
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="true">
+        <ng-template matStepLabel>SEO Settings</ng-template>
+        <div class="step-grid">
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Title</mat-label>
+            <input matInput formControlName="metaTitle" [maxlength]="metaTitleMax" />
+            <mat-hint align="end">{{ metaTitleLength() }}/{{ metaTitleMax }}</mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Description</mat-label>
+            <textarea matInput rows="3" formControlName="metaDescription" [maxlength]="metaDescMax"></textarea>
+            <mat-hint align="end">{{ metaDescLength() }}/{{ metaDescMax }}</mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Meta Keywords</mat-label>
+            <input matInput formControlName="metaKeywords" />
+            <mat-hint>Separate keywords with commas</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="stepper.previous()">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+          </button>
+          <button mat-flat-button color="primary" type="button" [disabled]="saving() || form.invalid"
+            (click)="submit()">
+            <mat-icon>publish</mat-icon>
+            {{ isEdit() ? 'Update Brand' : 'Create Brand' }}
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
   </form>
 </app-admin-form-shell>
