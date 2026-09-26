@@ -101,12 +101,12 @@ export class CategoryHierarchyComponent {
 
   openAddAttribute(node: CategoryTreeNode, event?: Event): void {
     event?.stopPropagation();
-    this.router.navigateByUrl(`/admin/category-attribute-groups/${node.id}`);
+    this.router.navigateByUrl(`/admin/category-hierarchy/attribute-groups/${node.id}`);
   }
 
   openCategoryGuidelines(node: CategoryTreeNode, event?: Event): void {
     event?.stopPropagation();
-    this.router.navigateByUrl(`/admin/category-guidelines/${node.id}`);
+    this.router.navigateByUrl(`/admin/category-hierarchy/guidelines/${node.id}`);
   }
 
   private onSearch(): void {

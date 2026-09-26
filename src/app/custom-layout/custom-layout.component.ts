@@ -64,6 +64,14 @@ export class CustomLayoutComponent implements OnInit {
     matrixParams: 'ignored' as const,
   };
 
+  /** Keep Category Hierarchy nav active on nested attribute/guideline pages. */
+  private readonly routeAliases: Record<string, string[]> = {
+    '/admin/category-hierarchy': [
+      '/admin/category-hierarchy/attribute-groups',
+      '/admin/category-hierarchy/guidelines',
+    ],
+  };
+
   constructor() {
     effect(() => {
       const sections = this.sections();
@@ -106,6 +114,14 @@ export class CustomLayoutComponent implements OnInit {
     return this.sectionHasActiveChild(section);
   }
 
+  navLinkActiveOptions(href: string) {
+    const normalized = this.normalizeHref(href);
+    if (normalized === '/admin/category-hierarchy') {
+      return this.routeMatchOptions;
+    }
+    return { exact: true as const };
+  }
+
   toggleSection(title: string): void {
     this.openTitles.update((current) => {
       if (current.has(title)) {
@@ -140,7 +156,25 @@ export class CustomLayoutComponent implements OnInit {
   }
 
   private sectionHasActiveChild(section: AdminMenuSection): boolean {
-    return section.items.some((item) => this.router.isActive(item.href, this.routeMatchOptions));
+    return section.items.some((item) => this.isNavItemActive(item.href));
+  }
+
+  private isNavItemActive(href: string): boolean {
+    const normalized = this.normalizeHref(href);
+    if (this.router.isActive(normalized, this.routeMatchOptions)) {
+      return true;
+    }
+    const aliases = this.routeAliases[normalized] || [];
+    const url = this.router.url.split('?')[0];
+    return aliases.some(
+      (alias) => url === alias || url.startsWith(`${alias}/`),
+    );
+  }
+
+  private normalizeHref(href: string): string {
+    if (!href) return '';
+    const withSlash = href.startsWith('/') ? href : `/${href}`;
+    return withSlash.replace(/\/+$/, '') || '/';
   }
 
   clearSearch(): void {

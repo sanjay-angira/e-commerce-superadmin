@@ -62,6 +62,7 @@
                       class="nav-item nav-child"
                       [routerLink]="item.href"
                       routerLinkActive="active"
+                      [routerLinkActiveOptions]="navLinkActiveOptions(item.href)"
                       matRipple
                       matRippleColor="rgba(255, 255, 255, 0.06)"
                       (click)="isHandset() && drawer.close()"

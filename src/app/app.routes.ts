@@ -99,25 +99,25 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'category-hierarchy',
-        loadComponent: () =>
-          import('./pages/components/category-hierarchy/category-hierarchy.component').then(
-            (m) => m.CategoryHierarchyComponent
-          ),
-      },
-      {
-        path: 'category-attribute-groups/:categoryId',
+        path: 'category-hierarchy/attribute-groups/:categoryId',
         loadComponent: () =>
           import(
             './pages/components/category-attribute-groups/category-attribute-groups-page.component'
           ).then((m) => m.CategoryAttributeGroupsPageComponent),
       },
       {
-        path: 'category-guidelines/:categoryId',
+        path: 'category-hierarchy/guidelines/:categoryId',
         loadComponent: () =>
           import(
             './pages/components/category-guidelines/category-guidelines-page.component'
           ).then((m) => m.CategoryGuidelinesPageComponent),
+      },
+      {
+        path: 'category-hierarchy',
+        loadComponent: () =>
+          import('./pages/components/category-hierarchy/category-hierarchy.component').then(
+            (m) => m.CategoryHierarchyComponent
+          ),
       },
       // Config-driven CRUD — mirrors vr-frontend /admin/[module]
       {
